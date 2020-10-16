@@ -28,9 +28,13 @@
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css",
               "src/themeResource/css/sb-admin-2.min.css",
-               "src/themeResource/vendor/fontawesome-free/css/all.min.css"
+               "src/themeResource/vendor/fontawesome-free/css/all.css"
+
             ],
-            "scripts": []
+            "scripts": [
+              "src/themeResource/vendor/jquery/jquery.min.js",
+              "src/themeResource/vendor/jquery-easing/jquery.easing.min.js"
+            ]
           },
           "configurations": {
             "production": {
