@@ -26,7 +26,9 @@
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "src/styles.css"
+              "src/styles.css",
+              "src/themeResource/css/sb-admin-2.min.css",
+               "src/themeResource/vendor/fontawesome-free/css/all.min.css"
             ],
             "scripts": []
           },

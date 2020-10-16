@@ -1,4 +1,5 @@
 ﻿using HospitalManagement.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,15 +10,13 @@ namespace HospitalManagement.Data
 {
   
 
-    public class HospitalManagementDbContext : DbContext
+    public class HospitalManagementDbContext :IdentityDbContext<User, UserRole, long>
     {
         public HospitalManagementDbContext(DbContextOptions<HospitalManagementDbContext> options)
             : base(options)
         {
+
         }
-
-        public DbSet<User> Users { get; set; }
-
 
     }
 }
