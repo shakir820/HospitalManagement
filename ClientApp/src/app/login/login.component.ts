@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../models/user.model';
 import { UserService } from '../services/user.service';
 
@@ -10,7 +11,7 @@ import { UserService } from '../services/user.service';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private route:ActivatedRoute, private router:Router) { }
 
   ngOnInit(): void {
 
@@ -31,6 +32,11 @@ export class LoginComponent implements OnInit {
 
 
   async onSubmit(){
+
+    this.router.navigate(['dashboard']);
+    return;
+
+
      console.log(this.signinForm);
      this.submitted = true;
      this.emailDoesntExist = false;

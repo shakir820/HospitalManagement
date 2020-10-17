@@ -28,12 +28,22 @@
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css",
               "src/themeResource/css/sb-admin-2.min.css",
-               "src/themeResource/vendor/fontawesome-free/css/all.css"
-
+               "src/themeResource/vendor/fontawesome-free/css/all.min.css",
+               "src/themeResource/vendor/fontawesome-free/css/brands.min.css",
+               "src/themeResource/vendor/fontawesome-free/css/duotone.min.css",
+               "src/themeResource/vendor/fontawesome-free/css/fontawesome.min.css",
+               "src/themeResource/vendor/fontawesome-free/css/light.min.css",
+               "src/themeResource/vendor/fontawesome-free/css/regular.min.css",
+               "src/themeResource/vendor/fontawesome-free/css/solid.min.css"
             ],
             "scripts": [
-              "src/themeResource/vendor/jquery/jquery.min.js",
-              "src/themeResource/vendor/jquery-easing/jquery.easing.min.js"
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+              "src/themeResource/vendor/jquery-easing/jquery.easing.min.js",
+              "src/themeResource/js/sb-admin-2.min.js",
+              "src/themeResource/vendor/chart.js/Chart.min.js",
+              "src/themeResource/js/demo/chart-area-demo.js",
+              "src/themeResource/js/demo/chart-pie-demo.js"
             ]
           },
           "configurations": {

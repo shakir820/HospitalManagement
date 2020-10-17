@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 import { CounterComponent } from "./counter/counter.component";
+import { DashboardComponent } from "./dashboard/dashboard.component";
 import { FetchDataComponent } from "./fetch-data/fetch-data.component";
 import { HomeComponent } from "./home/home.component";
 import { LoginComponent } from "./login/login.component";
@@ -11,7 +12,8 @@ export const appRoutes: Routes = [
   { path: 'counter', component: CounterComponent },
   { path: 'login', component: LoginComponent },
   { path: 'fetch-data', component: FetchDataComponent },
-  { path: "register", component: RegistrationComponent }
+  { path: "register", component: RegistrationComponent },
+  { path: "dashboard", component: DashboardComponent }
 ]
 
 @NgModule({
