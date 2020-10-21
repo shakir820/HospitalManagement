@@ -14,6 +14,7 @@ namespace HospitalManagement.ViewModels
         public UserModel user { get; set; }
         public string msg { get; set; }
         public bool emailExist { get; set; } = true;
+        public bool wrong_password { get; set; } = false;
 
     }
 
@@ -24,6 +25,7 @@ namespace HospitalManagement.ViewModels
         public bool success { get; set; } = false;
         public long user_id { get; set; }
         public string user_name { get; set; }
+        public string username { get; set; }
         public string user_gender { get; set; }
         public int user_age { get; set; }
         public bool error { get; set; } = false;

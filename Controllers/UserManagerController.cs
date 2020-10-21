@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HospitalManagement.Controllers
 {
@@ -20,6 +21,8 @@ namespace HospitalManagement.Controllers
         UserManager<User> _userManager;
         RoleManager<UserRole> _roleManager;
         SignInManager<User> _signInManager;
+
+
 
         public UserManagerController(
             HospitalManagementDbContext context,
@@ -48,7 +51,6 @@ namespace HospitalManagement.Controllers
                 user.Age = userModel.Age;
                 user.Gender = userModel.Gender;
                 user.UserName = userModel.Email;
-
                 var result = await _userManager.CreateAsync(user, userModel.Password);
                 if (result.Succeeded)
                 {
@@ -69,7 +71,8 @@ namespace HospitalManagement.Controllers
                                     user_age = userModel.Age,
                                     user_gender = userModel.Gender,
                                     role_list = new List<string> { userModel.Role },
-                                    user_name = user.Name
+                                    user_name = user.Name,
+                                    username = user.UserName
                                 });
                             }
                             else
@@ -86,6 +89,7 @@ namespace HospitalManagement.Controllers
                                     error_msg = "Cannot add User role",
                                     user_id = user.Id,
                                     user_name = user.Name,
+                                    username = user.UserName,
                                     error = true,
                                     error_list = roleErrorList
                                 });
@@ -105,6 +109,7 @@ namespace HospitalManagement.Controllers
                                 error_msg = "Cannot create User role",
                                 user_id = user.Id,
                                 user_name = user.Name,
+                                username = user.UserName,
                                 error = true,
                                 error_list = roleErrorList
                             });
@@ -120,7 +125,9 @@ namespace HospitalManagement.Controllers
                                 success = true,
                                 user_id = user.Id,
                                 user_name = user.Name,
-                                error = false
+                                username = user.UserName,
+                                error = false,
+                                role_list = new List<string> { userModel.Role }
                             });
                         }
                         else
@@ -135,6 +142,7 @@ namespace HospitalManagement.Controllers
                             {
                                 success = false,
                                 error_msg = "Cannot add role to User",
+                                username = user.UserName,
                                 user_id = user.Id,
                                 error = true,
                                 error_list = roleErrorList
@@ -154,7 +162,8 @@ namespace HospitalManagement.Controllers
                     {
                         success = false,
                         error = true,
-                        error_list = errorList
+                        error_list = errorList,
+                        error_msg = "Something went wrong"
                     });
                 }
             }
@@ -186,23 +195,49 @@ namespace HospitalManagement.Controllers
 
                     if (canSignin)
                     {
-                        await _signInManager.SignInAsync(user, true);
-                        var roleCollection = await _userManager.GetRolesAsync(user);
-
-                        return new JsonResult(new ViewModels.SignInResult
+                       
+                        var signInResult = await _signInManager.CheckPasswordSignInAsync(user, userModel.Password, false);
+                        if (signInResult.Succeeded)
                         {
-                            success = true,
-                            user = new UserModel
+                            var roleCollection = await _userManager.GetRolesAsync(user);
+
+                            return new JsonResult(new ViewModels.SignInResult
                             {
-                                Age = user.Age,
-                                Email = user.Email,
-                                Gender = user.Gender,
-                                Name = user.Name,
-                                Roles = roleCollection,
-                                Username = user.UserName
-                            }
-                            
-                        });
+                                success = true,
+                                user = new UserModel
+                                {
+                                    Id = user.Id,
+                                    Age = user.Age,
+                                    Email = user.Email,
+                                    Gender = user.Gender,
+                                    Name = user.Name,
+                                    Roles = roleCollection,
+                                    Username = user.UserName
+                                }
+
+                            });
+                        }
+                        else
+                        {
+                            return new JsonResult(new ViewModels.SignInResult
+                            {
+                                success = false,
+                                user = new UserModel
+                                {
+                                    Id = user.Id,
+                                    Age = user.Age,
+                                    Email = user.Email,
+                                    Gender = user.Gender,
+                                    Name = user.Name,
+                                    Username = user.UserName
+                                },
+                                wrong_password = true,
+                                error = false,
+                                msg = "Password is wrong"
+
+                            });
+                        }
+                       
                     }
                     else
                     {
@@ -243,8 +278,85 @@ namespace HospitalManagement.Controllers
 
 
 
+        
+        public async Task<IActionResult> getUserById(long id)
+        {
+            try
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(a=>a.Id == id);
+                if (user != null)
+                {
+                    var userRoleIds = await _context.UserRoles.Where(a => a.UserId == user.Id).ToListAsync();
+                    var roleCollection = new List<string>();
+                    foreach(var identityRole in userRoleIds)
+                    {
+                        var user_role = await  _context.Roles.FirstOrDefaultAsync(a=>a.Id == identityRole.RoleId);
+                        if (user_role != null)
+                        {
+                            roleCollection.Add(user_role.Name);
+                        }
+                    }
+
+                    return new JsonResult(new ViewModels.SignInResult
+                    {
+                        success = true,
+                        user = new UserModel
+                        {
+                            Age = user.Age,
+                            Email = user.Email,
+                            Gender = user.Gender,
+                            Name = user.Name,
+                            Roles = roleCollection,
+                            Username = user.UserName,
+                            Id = user.Id
+                        }
+
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new ViewModels.SignInResult
+                    {
+                        success = false,
+                        msg = "User doesn't exist",
+                        error = false
+                    });
+                } 
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new ViewModels.SignInResult
+                {
+                    error_msg = ex.Message,
+                    error = true,
+                    success = false
+                });
+            }
+        }
 
 
 
+
+
+
+        public async Task<IActionResult> CheckForUniqueUsername(string username)
+        {
+            var normalizedUsername = username.Normalize();
+            var user = await _context.Users.FirstOrDefaultAsync(a => a.NormalizedUserName == normalizedUsername);
+            if(user == null)
+            {
+                return new JsonResult(new
+                {
+                    unique_username = true
+                }) ;
+            }
+            else
+            {
+                return new JsonResult(new
+                {
+                    unique_username = false
+                });
+            }
+        }
     }
 }

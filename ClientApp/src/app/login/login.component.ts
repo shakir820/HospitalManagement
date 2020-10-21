@@ -10,8 +10,10 @@ import { UserService } from '../services/user.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  title = "login";
+  constructor(private userService: UserService, private route: ActivatedRoute, private router: Router) {
 
-  constructor(private userService: UserService, private route:ActivatedRoute, private router:Router) { }
+  }
 
   ngOnInit(): void {
 
@@ -20,47 +22,45 @@ export class LoginComponent implements OnInit {
 
   @ViewChild('f') signinForm: NgForm;
 
-  submitted:boolean = false;
-  emailDoesntExist:boolean = false;
-  rememberMe:boolean = false;
+  submitted: boolean = false;
+  emailDoesntExist: boolean = false;
+  rememberMe: boolean = false;
   loggingIn: boolean = false;
   emailOrPasswordWrong: boolean = false;
-  error_msg:string;
+  error_msg: string;
 
 
 
 
 
-  async onSubmit(){
+  async onSubmit() {
 
-    this.router.navigate(['dashboard']);
-    return;
+    console.log(this.signinForm);
+    this.submitted = true;
+    this.emailDoesntExist = false;
+    //check for valid form
+    if (this.signinForm.valid) {
+      this.submitted = false;
+      this.loggingIn = true;
+      var result = await this.userService.SignIn(this.signinForm.controls['email'].value, this.signinForm.controls['password'].value);
+      this.loggingIn = false;
+      if (result.success == true) {
+        this.userService.isLoggedIn = true;
+        this.router.navigate(['dashboard']);
 
-
-     console.log(this.signinForm);
-     this.submitted = true;
-     this.emailDoesntExist = false;
-     //check for valid form
-     if(this.signinForm.valid){
-       this.submitted = false;
-       this.loggingIn = true;
-        var result = await this.userService.SignIn( this.signinForm.controls['email'].value,  this.signinForm.controls['password'].value);
-        this.loggingIn = false;
-        if(result.success == true){
-
+      }
+      else {
+        if (result.emailExist == false) {
+          this.emailDoesntExist = true;
         }
-        else{
-          if(result.emailExist == false){
-            this.emailDoesntExist = true;
-          }
-          else{
-            this.error_msg = result.msg;
-          }
+        else {
+          this.error_msg = result.msg;
         }
-     }
-     else{
+      }
+    }
+    else {
 
-     }
+    }
   }
 }
 

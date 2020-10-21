@@ -16,5 +16,14 @@ namespace HospitalManagement.Models
         public string Role { get; set; }
         public IEnumerable<string> Roles { get; set; }
         public int Age { get; set; }
+        public string country_name { get; set; }
+        public string country_short_name { get; set; }
+        public int country_phone_code { get; set; }
+        public string state_name { get; set; }
+        public string city_name { get; set; }
+        public string bloodGroup { get; set; }
+        public string bmdc_certifcate { get; set; }
+
+        public byte[] profilePic { get; set; }
     }
 }

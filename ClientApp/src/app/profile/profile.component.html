@@ -1,0 +1,302 @@
+
+<div class=" container-fluid">
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Profile</h1>
+  </div>
+
+  <div class="row">
+    <div class=" col-12">
+      <div class="card mb-4">
+        <div class="card-header">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h4>Profile Data</h4>
+            </div>
+            <div>
+              <h4 class="small font-weight-bold">Profile completed <span class="float-right">70%</span></h4>
+              <div class="progress" style="width: 200px; height: 8px;">
+                <div class="progress-bar bg-success" role="progressbar" style="width: 70%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-12">
+                <div>
+                  <form (ngSubmit)="onSubmit()" #f="ngForm">
+                    <div class="row">
+                      <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
+                        <h4 class="mb-4 text-center" style="font-size: medium;">Profile Photo</h4>
+                        <div class="avatar-upload">
+                          <div class="avatar-edit">
+                              <input class="photo-input" type='file' #imageInput (change)="onImageChange($event)" id="imageUpload" accept=".png, .jpg, .jpeg" />
+                              <label id="imageInputLabel" for="imageUpload"><div class="d-flex justify-content-center" style="height: 100%;">
+                                <i class=" fa fas fa-pencil text-center align-self-center"></i>
+                              </div></label>
+                          </div>
+                          <div class="avatar-preview">
+                              <div id="imagePreview" class="avatar-preview-inner-div" #imagePreview >
+                              </div>
+                          </div>
+                      </div>
+                      </div>
+
+                      <div class="col-sm-12 col-md-12 col-lg-9 col-xl-9">
+
+                        <div class="row">
+                          <div class="col-sm-12 col-md-6">
+                            <div class=" form-group">
+                              <label for="user_name">Name</label>
+                              <input type="text" class="form-control"
+                                    [(ngModel)]="user_name"
+                                     required
+                                     placeholder="Enter name"
+                                     name="user_name"
+                                     id="user_name">
+                              <small id="nameError" *ngIf="!f.form.controls['user_name'].valid" class="text-danger">Name is required</small>
+                            </div>
+                          </div>
+                          <div class="col-sm-12 col-md-6">
+                            <div class=" form-group">
+                              <div class=" d-flex align-items-center">
+                                <div class="flex-fill">
+                                  <label for="username">Username</label>
+                                  <input type="text"
+                                  class="form-control"
+                                        required
+                                        [(ngModel)]="proposedUsername"
+                                        placeholder="Enter username"
+                                        name="username"
+                                        id="username"
+                                        (input)="onUsernameInput($event)">
+                                        <div>
+                                          <small id="uernameError" *ngIf="(f.form.controls['username'].errors != null) && f.form.controls['username'].errors['required']" class="text-danger">Username is required</small>
+                                        </div>
+                                        <div *ngIf="!uniqueUsername && !checkingUsername">
+                                          <small id="uernameError1" class="text-danger" >Username is taken</small>
+                                        </div>
+                                </div>
+
+                               <div *ngIf="checkingUsername" class="ml-4" style="margin-top: 20px;">
+                                <div class="lds-spinner">
+                                  <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                               </div>
+                               </div>
+
+                               <div *ngIf="uniqueUsername && !checkingUsername" class="ml-4" style="margin-top: 20px;">
+                                <i class="fa fas fa-2x fa-check text-success"></i>
+                               </div>
+
+                               <div *ngIf="!uniqueUsername && !checkingUsername" class="ml-4" style="margin-top: 20px;">
+                                <i class="fad fa-2x fa-times text-danger"></i>
+                               </div>
+                              </div>
+
+
+                            </div>
+                          </div>
+                        </div>
+
+                      <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                          <div class=" d-flex align-items-center">
+                            <div class=" flex-fill">
+                              <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email"
+                                      name="email"
+                                      required
+                                      [(ngModel)]="proposedEmail"
+                                      class="form-control"
+                                      id="email"
+                                      email
+                                      (input)="onEmailInput($event)"
+                                      aria-describedby="emailHelp"
+                                      placeholder="Enter email">
+                              <div>
+                                <div *ngIf="!isUniqueEmailAddress && !checkingEmail">
+                                  <small id="emailError" class="text-danger">Email is already taken</small>
+                                </div>
+                                <div *ngIf="f.form.controls['email'].errors">
+                                  <div *ngIf="( (f.form.controls['email'].errors['email'] == true) && (f.form.controls['email'].touched) )">
+                                    <small id="emailError" class="text-danger">Enter a valid email</small>
+                                  </div>
+                                  <div *ngIf="(f.form.controls['email'].errors['required'] == true && f.form.controls['email'].touched) || (f.form.controls['email'].errors['required'] == true && submitted == true)">
+                                    <small id="emailError1" *ngIf="!f.controls['email'].valid || f.controls['email'].errors['required']" class="text-danger">Email is required</small>
+                                  </div>
+                                </div>
+                              </div>
+                              </div>
+                            </div>
+
+                            <div *ngIf="checkingEmail" class="ml-4" style="margin-top: 12px;">
+                              <div class="lds-spinner">
+                                <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                             </div>
+                             </div>
+
+                              <div *ngIf="(isUniqueEmailAddress && !checkingEmail && (f.form.controls['email'].errors == null))" class="ml-4" style="margin-top: 20px;">
+                                <i class="fa fas fa-2x fa-check text-success"></i>
+                               </div>
+
+
+                             <div *ngIf="!isUniqueEmailAddress && !checkingEmail" class="ml-4" style="margin-bottom: 15px;">
+                              <i class="fad fa-2x fa-times text-danger"></i>
+                             </div>
+
+                          </div>
+
+
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                          <div class="form-group">
+                            <label for="mobile">Mobile</label>
+                            <input type="text"
+                                   name="mobile"
+                                   ngModel
+                                   (input)="validatePhoneNumber($event)"
+                                   class="form-control"
+                                   id="mobile"
+                                   placeholder="Enter mobile">
+                            <div *ngIf="invalidMobileNumber">
+                              <small  id="mobileError" class="text-danger">Enter a valid mobile number</small>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+
+                      <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                          <div class="form-group">
+                            <label for="age">Age</label>
+                            <input type="number"
+                                   class="form-control"
+                                   ngModel
+                                   name="age"
+                                   (input)="validateAge($event)"
+                                   placeholder="25"
+                                   id="age"
+                                   required>
+                                   <div>
+                                    <small id="ageError" class="text-danger" *ngIf="(!f.form.controls['age'].valid && f.form.controls['age'].touched) || (!f.form.controls['age'].valid && submitted)">Age is required</small>
+                                   </div>
+                                   <div *ngIf="invalidAge">
+                              <small id="ageError1" class="text-danger">Only numbers are allowed</small>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                          <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select class="form-control" id="gender"
+                                    [(ngModel)]="selectedGender"
+                                    name="gender"
+                                    required>
+                              <option *ngFor="let item of genders" [value]="item">{{item}}</option>
+                            </select>
+
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                          <div class="form-group">
+                            <label for="bloodGroup">Blood Group</label>
+                            <select name="bloodGroup" id="bloodGroup" class="form-control"
+                            [(ngModel)]="selectedBlood">
+                              <option *ngFor="let item of bloodGroups" [value]="item">{{item}}</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                          <div class="form-group">
+                            <div>
+                              <label for="role">Who am I ?</label>
+                              <select name="role" id="role" [(ngModel)]="selectedRole" class="form-control">
+                                <option *ngFor="let item of roles" [value]="item">{{item}}</option>
+                              </select>
+                              <div *ngIf="selectedRole == 'Doctor'">
+                                <small class=" text-warning">If you are a doctor you must be verified by Admin to do doctor stuffs. Please
+                                  enter your BMDC certificate number
+                                </small>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                          <div class=" form-group">
+                            <label for="country">Country</label>
+                            <select [(ngModel)]="selectedCountry">
+                              <option *ngFor="let item of location_service.countryList" [value]="item.country_name">{{item.country_name}}</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                          <div class="form-group" *ngIf="selectedRole == 'Doctor'">
+                            <label for="bmdc_certificate">BMDC Certificate</label>
+                            <input type="text" class="form-control" id="bmdc_certificate"
+                            name="bmdc" ngModel>
+                          </div>
+                        </div>
+                      </div>
+
+
+                      <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                          <div class=" form-group">
+                            <label for="state">State</label>
+                            <select name="state" name="state" id="state" class="form-control">
+                              <option>Dhaka Division</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                          <div class="form-group">
+                            <label for="city">City</label>
+                            <select name="city" name="city" id="city" class="form-control">
+                              <option>Dhaka</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+
+
+
+
+                    </div>
+                    </div>
+
+
+                  </form>
+                </div>
+
+
+            </div>
+          </div>
+        </div>
+
+        <div class=" card-footer">
+          <div class=" d-flex flex-row-reverse">
+            <button type="submit" class="btn btn-primary">
+              <div class=" d-flex">
+                <div class="flex-grow-1">
+                  Save
+                </div>
+                <div class="spinner-border text-light mr-3" *ngIf="savingProfileData" role="status">
+                </div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+

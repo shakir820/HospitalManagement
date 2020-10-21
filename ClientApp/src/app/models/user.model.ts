@@ -1,12 +1,12 @@
 export class User{
 
-  public Id:number;
-  public Name:string;
-  public Username:string;
-  public Email:string;
-  public Age:number;
-  public Gender:string;
-  public Password:string;
-  public Roles:string[];
-  public Role:string;
+  public id:number;
+  public name:string;
+  public username:string;
+  public email:string;
+  public age:number;
+  public gender:string;
+  public password:string;
+  public roles:string[] = [];
+  public role:string;
 }

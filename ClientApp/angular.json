@@ -43,7 +43,8 @@
               "src/themeResource/js/sb-admin-2.min.js",
               "src/themeResource/vendor/chart.js/Chart.min.js",
               "src/themeResource/js/demo/chart-area-demo.js",
-              "src/themeResource/js/demo/chart-pie-demo.js"
+              "src/themeResource/js/demo/chart-pie-demo.js",
+              "src/scripts/javascripts.js"
             ]
           },
           "configurations": {
