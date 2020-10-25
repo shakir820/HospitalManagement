@@ -20,83 +20,94 @@
             </div>
           </div>
         </div>
+
+
+
+
+        <form (ngSubmit)="onSubmit()" #f="ngForm">
         <div class="card-body">
           <div class="row">
             <div class="col-sm-12">
-                <div>
-                  <form (ngSubmit)="onSubmit()" #f="ngForm">
-                    <div class="row">
-                      <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
-                        <h4 class="mb-4 text-center" style="font-size: medium;">Profile Photo</h4>
-                        <div class="avatar-upload">
-                          <div class="avatar-edit">
-                              <input class="photo-input" type='file' #imageInput (change)="onImageChange($event)" id="imageUpload" accept=".png, .jpg, .jpeg" />
-                              <label id="imageInputLabel" for="imageUpload"><div class="d-flex justify-content-center" style="height: 100%;">
-                                <i class=" fa fas fa-pencil text-center align-self-center"></i>
-                              </div></label>
-                          </div>
-                          <div class="avatar-preview">
-                              <div id="imagePreview" class="avatar-preview-inner-div" #imagePreview >
-                              </div>
-                          </div>
-                      </div>
-                      </div>
+              <div>
 
-                      <div class="col-sm-12 col-md-12 col-lg-9 col-xl-9">
-
-                        <div class="row">
-                          <div class="col-sm-12 col-md-6">
-                            <div class=" form-group">
-                              <label for="user_name">Name</label>
-                              <input type="text" class="form-control"
-                                    [(ngModel)]="user_name"
-                                     required
-                                     placeholder="Enter name"
-                                     name="user_name"
-                                     id="user_name">
-                              <small id="nameError" *ngIf="!f.form.controls['user_name'].valid" class="text-danger">Name is required</small>
+                  <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
+                      <h4 class="mb-4 text-center" style="font-size: medium;">Profile Photo</h4>
+                      <div class="avatar-upload">
+                        <div class="avatar-edit">
+                          <input class="photo-input" type='file'
+                          ngModel
+                          name="profile_pic"
+                          #imageInput (change)="onImageChange($event)" id="imageUpload" accept=".png, .jpg, .jpeg" />
+                          <label id="imageInputLabel" for="imageUpload">
+                            <div class="d-flex justify-content-center" style="height: 100%;">
+                              <i class=" fa fas fa-pencil text-center align-self-center"></i>
                             </div>
-                          </div>
-                          <div class="col-sm-12 col-md-6">
-                            <div class=" form-group">
-                              <div class=" d-flex align-items-center">
-                                <div class="flex-fill">
-                                  <label for="username">Username</label>
-                                  <input type="text"
-                                  class="form-control"
-                                        required
-                                        [(ngModel)]="proposedUsername"
-                                        placeholder="Enter username"
-                                        name="username"
-                                        id="username"
-                                        (input)="onUsernameInput($event)">
-                                        <div>
-                                          <small id="uernameError" *ngIf="(f.form.controls['username'].errors != null) && f.form.controls['username'].errors['required']" class="text-danger">Username is required</small>
-                                        </div>
-                                        <div *ngIf="!uniqueUsername && !checkingUsername">
-                                          <small id="uernameError1" class="text-danger" >Username is taken</small>
-                                        </div>
-                                </div>
-
-                               <div *ngIf="checkingUsername" class="ml-4" style="margin-top: 20px;">
-                                <div class="lds-spinner">
-                                  <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-                               </div>
-                               </div>
-
-                               <div *ngIf="uniqueUsername && !checkingUsername" class="ml-4" style="margin-top: 20px;">
-                                <i class="fa fas fa-2x fa-check text-success"></i>
-                               </div>
-
-                               <div *ngIf="!uniqueUsername && !checkingUsername" class="ml-4" style="margin-top: 20px;">
-                                <i class="fad fa-2x fa-times text-danger"></i>
-                               </div>
-                              </div>
-
-
-                            </div>
+                          </label>
+                        </div>
+                        <div class="avatar-preview">
+                          <div id="imagePreview" class="avatar-preview-inner-div" #imagePreview>
                           </div>
                         </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-9 col-xl-9">
+
+                      <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                          <div class=" form-group">
+                            <label for="user_name">Name</label>
+                            <input type="text" class="form-control"
+                                   [(ngModel)]="user_name"
+                                   required
+                                   placeholder="Enter name"
+                                   name="user_name"
+                                   id="user_name">
+                            <small id="nameError" *ngIf="!f.form.controls['user_name'].valid" class="text-danger">Name is required</small>
+                          </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                          <div class=" form-group">
+                            <div class=" d-flex align-items-center">
+                              <div class="flex-fill">
+                                <label for="username">Username</label>
+                                <input type="text"
+                                       class="form-control"
+                                       required
+                                       [(ngModel)]="proposedUsername"
+                                       placeholder="Enter username"
+                                       name="username"
+                                       id="username"
+                                       (input)="onUsernameInput($event)">
+                                <div *ngIf="f.form.controls['username'].errors != null">
+                                  <small id="uernameError" *ngIf="(f.form.controls['username'].errors['required'] && f.form.controls['username'].touched) ||
+                                  (f.form.controls['username'].errors['required'] && submitted)" class="text-danger">Username is required</small>
+                                </div>
+                                <div *ngIf="!uniqueUsername && !checkingUsername">
+                                  <small id="uernameError1" class="text-danger">Username is taken</small>
+                                </div>
+                              </div>
+
+                              <div *ngIf="checkingUsername" class="ml-4" style="margin-top: 20px;">
+                                <div class="lds-spinner">
+                                  <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                                </div>
+                              </div>
+
+                              <div *ngIf="uniqueUsername && !checkingUsername" class="ml-4" style="margin-top: 20px;">
+                                <i class="fa fas fa-2x fa-check text-success"></i>
+                              </div>
+
+                              <div *ngIf="!uniqueUsername && !checkingUsername" class="ml-4" style="margin-top: 20px;">
+                                <i class="fad fa-2x fa-times text-danger"></i>
+                              </div>
+                            </div>
+
+
+                          </div>
+                        </div>
+                      </div>
 
                       <div class="row">
                         <div class="col-md-6 col-sm-12">
@@ -105,45 +116,46 @@
                               <div class="form-group">
                                 <label for="email">Email</label>
                                 <input type="email"
-                                      name="email"
-                                      required
-                                      [(ngModel)]="proposedEmail"
-                                      class="form-control"
-                                      id="email"
-                                      email
-                                      (input)="onEmailInput($event)"
-                                      aria-describedby="emailHelp"
-                                      placeholder="Enter email">
-                              <div>
-                                <div *ngIf="!isUniqueEmailAddress && !checkingEmail">
-                                  <small id="emailError" class="text-danger">Email is already taken</small>
-                                </div>
-                                <div *ngIf="f.form.controls['email'].errors">
-                                  <div *ngIf="( (f.form.controls['email'].errors['email'] == true) && (f.form.controls['email'].touched) )">
-                                    <small id="emailError" class="text-danger">Enter a valid email</small>
+                                       name="email"
+                                       required
+                                       [(ngModel)]="proposedEmail"
+                                       class="form-control"
+                                       id="email"
+                                       email
+                                       (input)="onEmailInput($event)"
+                                       aria-describedby="emailHelp"
+                                       placeholder="Enter email">
+                                <div>
+                                  <div *ngIf="!isUniqueEmailAddress && !checkingEmail">
+                                    <small id="emailError" class="text-danger">Email is already taken</small>
                                   </div>
-                                  <div *ngIf="(f.form.controls['email'].errors['required'] == true && f.form.controls['email'].touched) || (f.form.controls['email'].errors['required'] == true && submitted == true)">
-                                    <small id="emailError1" *ngIf="!f.controls['email'].valid || f.controls['email'].errors['required']" class="text-danger">Email is required</small>
+                                  <div *ngIf="f.form.controls['email'].errors != null">
+                                    <div *ngIf="(f.form.controls['email'].errors['email'] && f.form.controls['email'].touched )">
+                                      <small id="emailError" class="text-danger">Enter a valid email</small>
+                                    </div>
+                                    <div *ngIf="(f.form.controls['email'].errors['required'] && f.form.controls['email'].touched) ||
+                                    (f.form.controls['email'].errors['required'] && submitted)">
+                                      <small id="emailError1" class="text-danger">Email is required</small>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
                               </div>
                             </div>
 
                             <div *ngIf="checkingEmail" class="ml-4" style="margin-top: 12px;">
                               <div class="lds-spinner">
                                 <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-                             </div>
-                             </div>
+                              </div>
+                            </div>
 
-                              <div *ngIf="(isUniqueEmailAddress && !checkingEmail && (f.form.controls['email'].errors == null))" class="ml-4" style="margin-top: 20px;">
-                                <i class="fa fas fa-2x fa-check text-success"></i>
-                               </div>
+                            <div *ngIf="(isUniqueEmailAddress && !checkingEmail && (f.form.controls['email'].errors == null))" class="ml-4" style="margin-top: 20px;">
+                              <i class="fa fas fa-2x fa-check text-success"></i>
+                            </div>
 
 
-                             <div *ngIf="!isUniqueEmailAddress && !checkingEmail" class="ml-4" style="margin-bottom: 15px;">
+                            <div *ngIf="!isUniqueEmailAddress && !checkingEmail" class="ml-4" style="margin-bottom: 15px;">
                               <i class="fad fa-2x fa-times text-danger"></i>
-                             </div>
+                            </div>
 
                           </div>
 
@@ -154,13 +166,13 @@
                             <label for="mobile">Mobile</label>
                             <input type="text"
                                    name="mobile"
-                                   ngModel
+                                   [(ngModel)]="phoneNumber"
                                    (input)="validatePhoneNumber($event)"
                                    class="form-control"
                                    id="mobile"
                                    placeholder="Enter mobile">
                             <div *ngIf="invalidMobileNumber">
-                              <small  id="mobileError" class="text-danger">Enter a valid mobile number</small>
+                              <small id="mobileError" class="text-danger">Enter a valid mobile number</small>
                             </div>
                           </div>
                         </div>
@@ -173,16 +185,16 @@
                             <label for="age">Age</label>
                             <input type="number"
                                    class="form-control"
-                                   ngModel
+                                   [(ngModel)]="selectedAge"
                                    name="age"
                                    (input)="validateAge($event)"
                                    placeholder="25"
                                    id="age"
                                    required>
-                                   <div>
-                                    <small id="ageError" class="text-danger" *ngIf="(!f.form.controls['age'].valid && f.form.controls['age'].touched) || (!f.form.controls['age'].valid && submitted)">Age is required</small>
-                                   </div>
-                                   <div *ngIf="invalidAge">
+                            <div>
+                              <small id="ageError" class="text-danger" *ngIf="(!f.form.controls['age'].valid && f.form.controls['age'].touched) || (!f.form.controls['age'].valid && submitted)">Age is required</small>
+                            </div>
+                            <div *ngIf="invalidAge">
                               <small id="ageError1" class="text-danger">Only numbers are allowed</small>
                             </div>
                           </div>
@@ -205,7 +217,7 @@
                           <div class="form-group">
                             <label for="bloodGroup">Blood Group</label>
                             <select name="bloodGroup" id="bloodGroup" class="form-control"
-                            [(ngModel)]="selectedBlood">
+                                    [(ngModel)]="selectedBlood">
                               <option *ngFor="let item of bloodGroups" [value]="item">{{item}}</option>
                             </select>
                           </div>
@@ -218,7 +230,8 @@
                                 <option *ngFor="let item of roles" [value]="item">{{item}}</option>
                               </select>
                               <div *ngIf="selectedRole == 'Doctor'">
-                                <small class=" text-warning">If you are a doctor you must be verified by Admin to do doctor stuffs. Please
+                                <small class=" text-warning">
+                                  If you are a doctor you must be verified by Admin to do doctor stuffs. Please
                                   enter your BMDC certificate number
                                 </small>
                               </div>
@@ -231,7 +244,7 @@
                         <div class="col-sm-12 col-md-6">
                           <div class=" form-group">
                             <label for="country">Country</label>
-                            <select [(ngModel)]="selectedCountry">
+                            <select [(ngModel)]="selectedCountry" (change)="onCountryChanged($event)" id="country" class="form-control" name="country">
                               <option *ngFor="let item of location_service.countryList" [value]="item.country_name">{{item.country_name}}</option>
                             </select>
                           </div>
@@ -240,7 +253,11 @@
                           <div class="form-group" *ngIf="selectedRole == 'Doctor'">
                             <label for="bmdc_certificate">BMDC Certificate</label>
                             <input type="text" class="form-control" id="bmdc_certificate"
-                            name="bmdc" ngModel>
+                                   name="bmdc" [(ngModel)]="bmdc_certificate" required>
+                                   <div *ngIf="f.form.controls['bmdc'].errors != null">
+                                     <small *ngIf="(f.form.controls['bmdc'].errors['required'] == true && f.form.controls['bmdc'].touched) ||
+                                     (f.form.controls['bmdc'].errors['required'] == true && submitted)" class="text-danger">BMDC Certificate is required</small>
+                                   </div>
                           </div>
                         </div>
                       </div>
@@ -250,16 +267,16 @@
                         <div class="col-sm-12 col-md-6">
                           <div class=" form-group">
                             <label for="state">State</label>
-                            <select name="state" name="state" id="state" class="form-control">
-                              <option>Dhaka Division</option>
+                            <select name="state" [(ngModel)]="selectedState" (change)="onStateChanged($event)" id="state" class="form-control">
+                              <option *ngFor="let item of location_service.stateList" [value]="item" >{{item}}</option>
                             </select>
                           </div>
                         </div>
                         <div class="col-sm-12 col-md-6">
                           <div class="form-group">
                             <label for="city">City</label>
-                            <select name="city" name="city" id="city" class="form-control">
-                              <option>Dhaka</option>
+                            <select name="city" [(ngModel)]="selectedCity" id="city" class="form-control">
+                              <option *ngFor="let item of location_service.cityList" [value]="item">{{item}}</option>
                             </select>
                           </div>
                         </div>
@@ -267,13 +284,12 @@
 
 
 
-
                     </div>
-                    </div>
+                  </div>
 
 
-                  </form>
-                </div>
+
+              </div>
 
 
             </div>
@@ -281,18 +297,26 @@
         </div>
 
         <div class=" card-footer">
-          <div class=" d-flex flex-row-reverse">
-            <button type="submit" class="btn btn-primary">
-              <div class=" d-flex">
-                <div class="flex-grow-1">
-                  Save
+          <div class=" d-flex flex-row-reverse align-items-center">
+            <button type="submit" class="btn btn-success">
+              <div class=" d-flex align-items-center">
+                <div class="flex-grow-1 ml-3 mr-3">
+                  {{savingProfileData? 'Saving': 'Save'}}
                 </div>
-                <div class="spinner-border text-light mr-3" *ngIf="savingProfileData" role="status">
+               <div *ngIf="savingProfileData" class="align-self-center d-flex">
+                <div class="spinner-border align-self-center spinner-border-sm text-light"  role="status">
                 </div>
+               </div>
               </div>
             </button>
           </div>
         </div>
+
+      </form>
+
+
+
+
       </div>
 
     </div>

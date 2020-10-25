@@ -15,9 +15,11 @@ export class LocationService {
     this._baseUrl = baseUrl;
   }
 
-  countryList: Country[] = [];
-  access_token:string;
-  myToken = "w8Ii6e0BzpIFlvWK-51EVXbGpnDimtfy58jlUYHNQ_xE-PosqApOGl7Stjedo4SI-Ds";
+  public countryList: Country[] = [];
+  public stateList: string[] = [];
+  public cityList: string[] = [];
+  public access_token:string;
+  private myToken = "w8Ii6e0BzpIFlvWK-51EVXbGpnDimtfy58jlUYHNQ_xE-PosqApOGl7Stjedo4SI-Ds";
 
 
   getAccessToken():Promise<boolean>{
@@ -85,13 +87,65 @@ getCountryList(): Promise<Country[]>{
 
 
 
-  getStateList(selectedCountry: string){
+  getStateList(selectedCountry: string): Promise<string[]> {
+    let promise = new Promise<string[]>((resolve, rejects)=>{
 
+      if(this.access_token == null || this.access_token == undefined){
+        resolve(null);
+        return;
+      }
+
+      this.httpClient.get<{ state_name: string }[]>( `https://www.universal-tutorial.com/api/states/${selectedCountry}`,
+      {headers: {'Accept': 'application/json', 'Authorization': `Bearer ${this.access_token}` }}).subscribe(result=>{
+          console.log(result);
+          if(result != null){
+            this.stateList = [];
+            result.forEach(val=>{
+              this.stateList.push(val.state_name);
+            });
+            resolve(this.stateList);
+          }
+          else{
+            resolve(null);
+          }
+        }, error=> {
+          resolve(null);
+          console.log(error);
+        });
+    });
+
+    return promise;
   }
 
 
-  getCityList(selectedState: string){
+  getCityList(selectedState: string): Promise<string[]> {
+    let promise = new Promise<string[]>((resolve, rejects)=>{
 
+      if(this.access_token == null || this.access_token == undefined){
+        resolve(null);
+        return;
+      }
+
+      this.httpClient.get<{ city_name: string }[]>( `https://www.universal-tutorial.com/api/cities/${selectedState}`,
+      {headers: {'Accept': 'application/json', 'Authorization': `Bearer ${this.access_token}` }}).subscribe(result=>{
+          console.log(result);
+          if(result != null){
+            this.cityList = [];
+            result.forEach(val=>{
+              this.cityList.push(val.city_name);
+            });
+            resolve(this.cityList);
+          }
+          else{
+            resolve(null);
+          }
+        }, error=> {
+          resolve(null);
+          console.log(error);
+        });
+    });
+
+    return promise;
   }
 
 

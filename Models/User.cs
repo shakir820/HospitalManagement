@@ -11,10 +11,10 @@ namespace HospitalManagement.Models
     {
         public string Name { get; set; }
         public string Gender { get; set; }
-        public int Age { get; set; }
+        public int? Age { get; set; }
         public string country_name { get; set; }
         public string country_short_name { get; set; }
-        public int country_phone_code { get; set; }
+        public int? country_phone_code { get; set; }
         public string state_name { get; set; }
         public string city_name { get; set; }
         public string BloodGroup { get; set; }

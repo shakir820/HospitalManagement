@@ -9,10 +9,10 @@
             <input type="text" class="form-control" ngModel
                    required
                    placeholder="Enter name"
-                   name="name"
+                   name="user_name"
                    id="name">
-            <small id="nameError" class="text-danger" *ngIf="((f.form.controls['name'].valid === false && f.form.controls['name'].touched === true) ||
-           (f.form.controls['name'].valid === false && submitted === true ))">Name is required</small>
+            <small id="nameError" class="text-danger" *ngIf="((f.form.controls['user_name'].valid === false && f.form.controls['user_name'].touched === true) ||
+           (f.form.controls['user_name'].valid === false && submitted === true ))">Name is required</small>
           </div>
           <div class="form-group">
             <label for="email">Email</label>
@@ -26,7 +26,7 @@
                    aria-describedby="emailHelp"
                    placeholder="Enter email">
             <div *ngIf="(f.form.controls['email'].valid == false && f.form.controls['email'].touched) || (f.form.controls['email'].valid == false && submitted == true)">
-              <small id="emailError1" *ngIf="!f.controls['email'].valid || f.controls['email'].errors['required']" class="text-danger">A valid email address is required</small>
+              <small id="emailError1" *ngIf="!f.form.controls['email'].valid || f.form.controls['email'].errors['required']" class="text-danger">A valid email address is required</small>
             </div>
             <div *ngIf="!isUniqueEmailAddress">
               <small id="emailError" class="text-danger">Email address is already taken</small>
@@ -55,7 +55,7 @@
                       required>
                 <option *ngFor="let item of genders" [value]="item">{{item}}</option>
               </select>
-              <small id="genderError" class="text-danger" *ngIf="!f.controls['gender'].valid && f.controls['gender'].touched">Gender is required</small>
+              <small id="genderError" class="text-danger" *ngIf="!f.form.controls['gender'].valid && f.form.controls['gender'].touched">Gender is required</small>
             </div>
           </div>
 
@@ -78,8 +78,8 @@
             <small id="passwordError" *ngIf="(!f.form.controls['password'].valid && f.form.controls['password'].touched) || (!f.form.controls['password'].valid && submitted)" class="text-danger">Password is required</small>
           </div>
 
-          <div *ngFor="let errorItem of errorList">
-            <small class="text-danger">{{ errorItem }}</small>
+          <div *ngIf="error_msg">
+            <small class="text-danger">{{ error_msg }}</small>
           </div>
 
           <div class=" d-flex mt-3">

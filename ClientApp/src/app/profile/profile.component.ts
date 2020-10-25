@@ -1,6 +1,8 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { EmailValidator, NgForm } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { LocationService } from '../services/location.service';
+import { ProfileService } from '../services/profile.service';
 import { UserService } from '../services/user.service';
 
 @Component({
@@ -8,23 +10,29 @@ import { UserService } from '../services/user.service';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit , AfterViewInit{
+export class ProfileComponent implements OnInit, AfterViewInit {
 
-  constructor(private userService: UserService, locationService: LocationService) {
+  constructor(public userService: UserService, locationService: LocationService, private profileService: ProfileService,
+    private httpClient: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     this.location_service = locationService;
-   }
+    this._baseUrl = baseUrl;
+  }
 
-   ngAfterViewInit():void{
-     this.userName = this.userService.user.username;
-     this.proposedEmail = this.userService.user.email;
-     this.email = this.userService.user.email;
-     this.proposedUsername = this.userService.user.username;
-     this.selectedGender = this.userService.user.gender;
-     this.selectedRole = this.userService.user.roles[0];
-     this.user_name = this.userService.user.name;
-     this.resolveCountryStateCity();
+  ngAfterViewInit(): void {
+    this.userName = this.userService.user.username;
+    this.proposedEmail = this.userService.user.email;
+    this.email = this.userService.user.email;
+    this.proposedUsername = this.userService.user.username;
+    this.selectedGender = this.userService.user.gender;
+    this.selectedRole = this.userService.user.roles[0];
+    this.user_name = this.userService.user.name;
+    this.selectedAge = this.userService.user.age;
+    this.phoneNumber = this.userService.user.phoneNumber;
+    this.selectedBlood = this.userService.user.bloodGroup;
+    this.ShowProfileImage();
+    this.resolveCountryStateCity();
 
-   }
+  }
 
 
 
@@ -34,6 +42,9 @@ export class ProfileComponent implements OnInit , AfterViewInit{
 
   @ViewChild('f') profileForm: NgForm;
 
+  //#region  variables
+  //variables
+  _baseUrl: string
   genders: string[] = ["Male", "Female", "Other"];
   location_service: LocationService;
   submitted: boolean = false;
@@ -42,86 +53,106 @@ export class ProfileComponent implements OnInit , AfterViewInit{
   selectedRole: string = "Patient";
   roles: string[] = ['Doctor', 'Patient'];
   email: string;
-  proposedEmail:string;
+  proposedEmail: string;
   registering: boolean = false;
-  errorList: string[] = [];
+  error_msg: string;
   bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
   selectedBlood: string;
-  placeHolderImage:string = 'assets/default-avatar.png';
-  negativeAgeValue:boolean = false;
-  invalidAge:boolean = false;
+  phoneNumber: string;
+  selectedAge: number;
+  bmdc_certificate: string;
+  negativeAgeValue: boolean = false;
+  invalidAge: boolean = false;
   checkingUsername: boolean = false;
   invalidMobileNumber: boolean = false;
   uniqueUsername: boolean = true;
-  userName:string;
-  proposedUsername:string;
+  userName: string;
+  proposedUsername: string;
   checkingEmail: boolean = false;
-  user_name:string;
-  validPhoneNumber: boolean = true;
+  user_name: string;
   savingProfileData: boolean = false;
   selectedCountry: string;
+  selectedState: string;
+  selectedCity: string;
+  imgData: any;
+  //#endregion
 
 
 
-   onSubmit() {
-     this.savingProfileData = true;
-    console.log(this.profileForm);
+
+  @ViewChild('imageInput', { static: true }) imageInputRef: ElementRef;
+  @ViewChild('imagePreview', { static: true }) imagePreviewRef: ElementRef;
+
+
+
+
+
+  ShowProfileImage() {
+    (<HTMLElement>this.imagePreviewRef.nativeElement).style.backgroundImage = `url(${this._baseUrl}` +
+    'api/usermanager/GetProfilePic?id=' + this.userService.user.id.toString() + ')';
+    }
+
+
+
+  async resolveCountryStateCity() {
+    if(this.location_service.access_token == undefined || this.location_service.access_token == '' || this.location_service.access_token == null){
+      await this.location_service.getAccessToken();
+    }
+    if(this.location_service.countryList.length == 0){
+      await this.location_service.getCountryList();
+    }
+
+    if (this.userService.user.country_name != null || this.userService.user.country_name != undefined) {
+      console.log(this.userService.user.country_name);
+      this.selectedCountry = this.userService.user.country_name;
+      await this.location_service.getStateList(this.selectedCountry);
+      if (this.userService.user.state_name != null || this.userService.user.state_name != undefined) {
+        this.selectedState = this.userService.user.state_name;
+        await this.location_service.getCityList(this.selectedState);
+        if (this.userService.user.city_name != null || this.userService.user.city_name != undefined) {
+          this.selectedCity = this.userService.user.city_name;
+        }
+      }
+    }
   }
 
-  @ViewChild('imageInput', {static: true}) imageInputRef: ElementRef;
-  @ViewChild('imagePreview', {static: true}) imagePreviewRef: ElementRef;
 
-   imgData: any;
+  onEmailInput(event_data) {
+    if (this.profileForm.controls['email'].valid == true) {
 
-
-
-   async resolveCountryStateCity(){
-     if(this.location_service.countryList.length == 0){
-       await this.location_service.getCountryList();
-
-     }
-
-   }
-
-   onEmailInput(event_data){
-     if(this.profileForm.controls['email'].valid == true){
-
-      if(this.checkingEmail == false){
+      if (this.checkingEmail == false) {
         //check for email
         this.checkingEmail = true;
-        setTimeout(async ()=>{
-          if(this.profileForm.controls['email'].valid == true){
-            if(this.userService.user.email != this.proposedEmail){
+        setTimeout(async () => {
+          if (this.profileForm.controls['email'].valid == true) {
+            if (this.userService.user.email != this.proposedEmail) {
               this.isUniqueEmailAddress = await this.userService.checkIfEmailisUnique(this.proposedEmail);
-              console.log(this.isUniqueEmailAddress);
+
               this.checkingEmail = false;
             }
-            else{
+            else {
               this.isUniqueEmailAddress = true;
               this.checkingEmail = false;
             }
           }
-          else{
+          else {
             this.checkingEmail = false;
           }
         }, 2000);
 
       }
-     }
-     else{
-       this.checkingEmail = false;
-     }
-   }
+    }
+    else {
+      this.checkingEmail = false;
+    }
+  }
 
 
-  onImageChange(event_data){
+  onImageChange(event_data) {
     var reader = new FileReader();
-    console.log(event_data);
-    reader.onload = e=>{
-      console.log(e);
+    reader.onload = e => {
       let result_data = e.target.result;
       (<HTMLElement>this.imagePreviewRef.nativeElement).style.backgroundImage = `url(${result_data})`;
-
     }
     reader.readAsDataURL(event_data.target.files[0]);
   }
@@ -129,33 +160,27 @@ export class ProfileComponent implements OnInit , AfterViewInit{
 
 
 
-  onUsernameInput(event_data){
-    console.log(event_data);
-    console.log(this.checkingUsername);
-    console.log(this.userName);
-    console.log(this.proposedUsername);
-
-    if(this.proposedUsername === null || this.proposedUsername === '' || this.proposedUsername == undefined ){
+  onUsernameInput(event_data) {
+    if (this.proposedUsername === null || this.proposedUsername === '' || this.proposedUsername == undefined) {
       return;
     }
-    if(this.checkingUsername == false){
+    if (this.checkingUsername == false) {
       //check for username
       this.checkingUsername = true;
-      setTimeout(async ()=>{
-        if(this.proposedUsername !== null && this.proposedUsername !== '' && this.proposedUsername !== undefined ){
-          if(this.userName != this.proposedUsername){
-            console.log(this.userName);
-            console.log(this.proposedUsername);
+      setTimeout(async () => {
+        if (this.proposedUsername !== null && this.proposedUsername !== '' && this.proposedUsername !== undefined) {
+          if (this.userName != this.proposedUsername) {
+
             this.uniqueUsername = await this.userService.checkForUniqueUsername(this.proposedUsername);
             this.checkingUsername = false;
-            console.log(this.uniqueUsername);
+
           }
-          else{
+          else {
             this.uniqueUsername = true;
             this.checkingUsername = false;
           }
         }
-        else{
+        else {
           this.checkingUsername = false;
         }
       }, 2000);
@@ -165,50 +190,148 @@ export class ProfileComponent implements OnInit , AfterViewInit{
 
 
 
-  validatePhoneNumber(event_data){
-    let enteredPhoneNumber:string = event_data.target.value;
+  validatePhoneNumber(event_data) {
+    let enteredPhoneNumber: string = event_data.target.value;
     let plusExpression: RegExp = /^\+/;
     let regexExpression: RegExp = /\D/;
 
-    if(regexExpression.test(enteredPhoneNumber)){
-      if(plusExpression.test(enteredPhoneNumber)){
+    if (regexExpression.test(enteredPhoneNumber)) {
+      if (plusExpression.test(enteredPhoneNumber)) {
         let enteredPhoneNumber2 = enteredPhoneNumber.slice(1);
-        console.log(enteredPhoneNumber2);
-        console.log(regexExpression.test(enteredPhoneNumber2));
-        if(regexExpression.test(enteredPhoneNumber2)){
+
+        if (regexExpression.test(enteredPhoneNumber2)) {
           this.invalidMobileNumber = true;
         }
-        else{
+        else {
           this.invalidMobileNumber = false;
         }
       }
-      else{
+      else {
         this.invalidMobileNumber = true;
       }
     }
-    else{
+    else {
       this.invalidMobileNumber = false;
     }
-
-    //this.invalidMobileNumber = regexExpression.test(enteredPhoneNumber);
   }
 
 
 
 
 
-  validateAge(event_data){
+  validateAge(event_data) {
     var enteredAge = event_data.target.value;
     let regexExpression: RegExp = /\D/;
 
-    if(regexExpression.test(enteredAge)){
+    if (regexExpression.test(enteredAge)) {
       this.invalidAge = true;
     }
-    else{
+    else {
       this.invalidAge = false;
     }
-
   }
 
+
+
+
+  async onCountryChanged(event_data){
+    if(this.selectedCountry != null || this.selectedCountry != undefined){
+      this.selectedCity = undefined;
+      this.selectedState = undefined;
+      await this.location_service.getStateList(this.selectedCountry);
+    }
+  }
+
+
+  async onStateChanged(event_data){
+    if(this.selectedState != null || this.selectedState != undefined){
+      this.selectedCity = undefined;
+      this.location_service.getCityList(this.selectedState);
+    }
+  }
+
+
+
+ async onSubmit() {
+
+    this.submitted = true;
+    //this.savingProfileData = true;
+    //return;
+
+    if(this.profileForm.valid && this.isUniqueEmailAddress && !this.invalidAge && !this.invalidMobileNumber && this.uniqueUsername){
+
+      try {
+
+        this.savingProfileData = true;
+        this.submitted = false;
+
+        var formData = new FormData();
+
+        if(this.proposedEmail != this.email){
+          formData.append('email', this.proposedEmail);
+        }
+
+        formData.append('age', this.profileForm.controls['age'].value);
+
+        if(this.proposedUsername != this.userName){
+          formData.append('username', this.proposedUsername);
+        }
+
+        formData.append('name', this.profileForm.controls['user_name'].value);
+        formData.append('id', this.userService.user.id.toString());
+        formData.append('phoneNumber', this.profileForm.controls['mobile'].value);
+        formData.append('gender', this.selectedGender);
+        formData.append('role', this.selectedRole);
+
+        if(this.selectedCountry !== null && this.selectedCountry !== undefined){
+          var selectedCountry_obj = this.location_service.countryList.find(a=> a.country_name == this.selectedCountry);
+          formData.append('country_name', this.selectedCountry);
+          formData.append('country_short_name', selectedCountry_obj.country_short_name);
+          formData.append('country_phone_code', selectedCountry_obj.country_phone_code.toString());
+          formData.append('state_name', this.selectedState);
+          formData.append('city_name', this.selectedCity);
+        }
+
+        formData.append('bloodGroup', this.selectedBlood);
+
+        if(this.selectedRole === 'Doctor'){
+          var bmdc_cert_no =  this.profileForm.controls['bmdc'].value;
+          formData.append('bmdc_certifcate', bmdc_cert_no);
+        }
+
+        var selectedFiles  = (<HTMLInputElement>this.imageInputRef.nativeElement).files;
+        if(selectedFiles.length > 0){
+          var profile_pic_fie = selectedFiles[0];
+          formData.append('profilePic', profile_pic_fie, profile_pic_fie.name);
+        }
+
+        this.httpClient.post<{
+          error_msg: string,
+          error: boolean,
+          success: boolean,
+          role_added
+        }>(this._baseUrl + 'api/UserManager/UpdateProfileData',  formData, {headers: {'enctype': 'multipart/form-data'}} ).subscribe(result => {
+          this.savingProfileData = false;
+          console.log(result);
+          if (result.success == true) {
+           //Do success stuff
+           //this.userService.fetchProfilePic(this.userService.user.id);
+            this.userService.tryLoginUser();
+          }
+          else {
+            this.error_msg = result.error_msg;
+          }
+        }, error => {
+          console.error(error);
+          this.savingProfileData = false;
+        });
+      }
+       catch (error) {
+        console.log(error);
+      }
+
+
+  }
+}
 
 }

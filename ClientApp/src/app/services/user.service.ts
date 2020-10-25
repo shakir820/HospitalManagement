@@ -8,6 +8,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { promise } from 'protractor';
 import { stringify } from 'querystring';
 import { observable, Observable } from 'rxjs';
+import { URL } from 'url';
 import { User } from '../models/user.model';
 
 @Injectable({
@@ -29,7 +30,7 @@ export class UserService {
 
     let user_id_str = this.cookieService.get('skt_hospital_user_id');
 
-    console.log(user_id_str);
+    //console.log(user_id_str);
     if (user_id_str !== null && user_id_str !== '' && user_id_str != undefined) {
       this.isLoggedIn = true;
 
@@ -37,23 +38,39 @@ export class UserService {
         error_msg: string,
         error: boolean,
         success: boolean,
-        user: { age: number, id: number, name: string, username: string, role: string, roles: string[], gender: string, email: string, password: string },
+        user: { age: number, id: number, name: string, username: string, role: string, roles: string[], gender: string, email: string, password: string, bloodGroup: string,
+          bmdc_certifcate: string, city_name: string, country_name: string, country_phone_code: number, country_short_name: string, state_name: string, phoneNumber: string },
         msg: string
       }>(this._baseUrl + 'api/UserManager/getUserById', { params: { id: user_id_str } }).subscribe(result => {
         if (result.success) {
-          this.user = new User();
+          if(this.user === null || this.user === undefined){
+            this.user = new User();
+          }
+
           this.user.age = result.user.age;
           this.user.email = result.user.email;
           this.user.gender = result.user.gender;
           this.user.id = result.user.id;
           this.user.name = result.user.name;
           this.user.username = result.user.username;
-          console.log(result.user.roles);
+          this.user.phoneNumber = result.user.phoneNumber?? undefined;
+          //console.log(result.user.roles);
           this.user.roles = [];
           result.user.roles.forEach(val => {
             this.user.roles.push(val);
           });
-          console.log(this.user.roles);
+          this.user.bloodGroup = result.user.bloodGroup;
+          this.user.bmdc_certifcate = result.user.bmdc_certifcate;
+          this.user.city_name = result.user.city_name;
+          this.user.country_name = result.user.country_name;
+          this.user.country_phone_code = result.user.country_phone_code;
+          this.user.country_short_name = result.user.country_short_name;
+          this.user.state_name = result.user.state_name;
+          //console.log(this.user.roles);
+
+          //console.log(this.user);
+          // get profile pic
+          this.fetchProfilePic(this.user.id);
         }
         else {
           // do some error stuff here
@@ -64,6 +81,30 @@ export class UserService {
     return this.isLoggedIn;
 
   }
+
+
+
+
+  fetchProfilePic(user_id: number){
+    if(user_id == null || user_id == undefined){
+      return;
+    }
+    this.httpClient.get(this._baseUrl + 'api/usermanager/GetProfilePic', {params: {id: user_id.toString()}, responseType: 'blob'}).subscribe(result=>{
+      if(result != null && result != undefined){
+        var reader = new FileReader();
+        reader.onload = (e)=>{
+          var base64 =   e.target.result;
+          if(this.user != null){
+            this.user.profile_pic = base64;
+          }
+
+        };
+        reader.readAsDataURL(result);
+      }
+    });
+  }
+
+
 
 
 
@@ -86,6 +127,7 @@ export class UserService {
     this.cookieService.set('skt_hospital_user_id', this.user.id.toString());
     this.cookieService.set('skt_hospital_user_email', this.user.email);
     this.cookieService.set('skt_hospital_user_role_count', this.user.roles.length.toString());
+
     this.user.roles.forEach((val, index) => {
       this.cookieService.set(`skt_hospital_user_roles[${index}]`, val);
     });
@@ -125,12 +167,14 @@ export class UserService {
         error_msg: string,
         error: boolean,
         success: boolean,
-        user: { age: number, id: number, name: string, username: string, role: string, roles: string[], gender: string, email: string, password: string }
+        user: { age: number, id: number, name: string, username: string, role: string, roles: string[], gender: string, email: string, password: string, bloodGroup: string,
+          bmdc_certifcate: string, city_name: string, country_name: string, country_phone_code: number, country_short_name: string, state_name: string, phoneNumber: string }
         msg: string,
         emailExist: boolean,
         wrong_password: boolean
-      }>(this._baseUrl + 'api/UserManager/SigninUser', { Email: email, Password: password }).subscribe(result => {
+      }>(this._baseUrl + 'api/UserManager/SigninUser', { email: email, Password: password }).subscribe(result => {
         if (result.success == true) {
+          console.log(result);
           this.user = new User();
           this.user.age = result.user.age;
           this.user.id = result.user.id;
@@ -138,10 +182,20 @@ export class UserService {
           this.user.gender = result.user.gender;
           this.user.name = result.user.name;
           this.user.username = result.user.username;
+          this.user.phoneNumber = result.user.phoneNumber;
           this.user.roles = [];
           result.user.roles.forEach(val => {
             this.user.roles.push(val);
           });
+          this.user.bloodGroup = result.user.bloodGroup;
+          this.user.bmdc_certifcate = result.user.bmdc_certifcate;
+          this.user.city_name = result.user.city_name;
+          this.user.country_name = result.user.country_name;
+          this.user.country_phone_code = result.user.country_phone_code;
+          this.user.country_short_name = result.user.country_short_name;
+          this.user.state_name = result.user.state_name;
+         // console.log(this.user.roles);
+          this.fetchProfilePic(result.user.id);
           this.SaveUserCredientials();
           resolve({ msg: result.msg, success: true, emailExist: true });
 
@@ -168,13 +222,14 @@ export class UserService {
 
 
 
-  CreateNewUser(name: string, password: string, email: string, role: string, age: number, gender: string): Promise<{ error: boolean, error_msg: string, error_list: string[], success: boolean, msg: string }> {
-    console.log(email);
-    let promise = new Promise<{ error: boolean, error_msg: string, error_list: string[], success: boolean, msg: string }>((resolve, reject) => {
+  CreateNewUser(name: string, password: string, email: string, role: string, age: number, gender: string):
+  Promise<{ error: boolean, error_msg: string, success: boolean, msg: string }> {
+
+    let promise = new Promise<{ error: boolean, error_msg: string, success: boolean, msg: string }>((resolve, reject) => {
       this.httpClient.post<{ success: boolean, user_id: number, username:string, user_name: string, user_gender: string, user_age: number, error: boolean, error_msg: string, error_list: string[], role_list: string[] }>(
-        this._baseUrl + "api/usermanager/CreateNewUser", { Name: name, Password: password, Email: email, Role: role, Gender: gender, Age: age }).subscribe(result => {
+        this._baseUrl + "api/usermanager/CreateNewUser", { name: name, password: password, email: email, role: role, gender: gender, age: age }).subscribe(result => {
           if (result.success == true && result.user_id != null) {
-            console.log(email);
+
             this.user = new User();
             this.user.email = email;
             this.user.id = result.user_id;
@@ -188,16 +243,12 @@ export class UserService {
             this.user.username = email;
             this.SaveUserCredientials();
             this.isLoggedIn = true;
-            resolve({ error: false, error_msg: null, error_list: null, success: true, msg: null });
+            this.fetchProfilePic(result.user_id);
+            resolve({ error: false, error_msg: null, success: true, msg: null });
           }
           else {
-            let errorList = [];
-            if (result.error_list) {
-              result.error_list.forEach(val => {
-                errorList.push(val);
-              });
-            }
-            resolve({ error: result.error, error_msg: result.error_msg, error_list: errorList, success: false, msg: result.error_msg });
+
+            resolve({ error: result.error, error_msg: result.error_msg, success: false, msg: null });
           }
 
         }, error => console.error(error)
