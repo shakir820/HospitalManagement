@@ -28,6 +28,7 @@ namespace HospitalManagement.ViewModels
         public string username { get; set; }
         public string user_gender { get; set; }
         public int user_age { get; set; }
+        public bool approved { get; set; }
         public bool error { get; set; } = false;
         public string error_msg { get; set; }
         public IEnumerable<string> error_list { get; set; }

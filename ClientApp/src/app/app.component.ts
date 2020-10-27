@@ -1,3 +1,4 @@
+import { areAllEquivalent } from '@angular/compiler/src/output/output_ast';
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
@@ -17,38 +18,56 @@ export class AppComponent  implements OnInit{
 
   disableBtns:boolean = true;
   disabledSidebarItems:boolean = false;
-
-
+  initializing:boolean = true;
+  isApproved:boolean = false;
+  isDoctor:boolean = false;
+  isAdmin:boolean = false;
+  isPatient: boolean = false;
   ngOnInit(){
 
+    this.userService.approvedChanged.subscribe((val)=>{
+      this.isApproved = val;
+    });
+
+    this.userService.roleChanged.subscribe((roles: string[])=>{
+      if(roles.length > 0){
+        var adminRole = roles.find(a=>a == 'Admin');
+        if(adminRole){
+          this.isAdmin = true;
+        }
+        else{
+          this.isAdmin = false;
+        }
+        var doctorRole = roles.find(a=>a == 'Doctor');
+        if(doctorRole){
+          this.isDoctor = true;
+        }
+        else{
+          this.isDoctor = false;
+        }
+
+        var patientRole = roles.find(a=>a == 'Patient');
+        if(patientRole){
+          this.isPatient = true;
+        }
+        else{
+          this.isPatient = false;
+        }
+      }
+    });
+
     this.LoginUser();
-    // this.router.navigate(['dashboard']);
-    // this.userService.isLoggedIn = true;
-
-  //   this.router.events.subscribe(value => {
-  //     console.log(value);
-  //     if(value instanceof NavigationStart){
-  //       if(value.url == "/" || value.url == "/home" || value.url == "/login" || value.url == "/register"){
-  //         this.disableBtns = true;
-  //         this.disabledSidebarItems = true;
-  //       }
-  //       else{
-  //         this.disableBtns = false;
-  //         this.disabledSidebarItems = false;
-  //       }
-  //     }
-  //     else if(value instanceof NavigationEnd){
-  //       this.disableBtns = true;
-  //       this.disabledSidebarItems = true;
-  //     }
-
-  // });
   }
 
   async LoginUser(){
-    var userLoggedIn:boolean = this.userService.tryLoginUser();
+    this.initializing = true;
+    var userLoggedIn:boolean = await this.userService.tryLoginUser();
+    setTimeout(()=>{
+      this.initializing = false;
+    }, 2000);
+
     if(userLoggedIn){
-      //this.router.navigate(['dashboard']);
+
     }
   }
 
@@ -56,7 +75,7 @@ export class AppComponent  implements OnInit{
 
 
   onActivate(route_event){
-    if(route_event.title == "Home" || route_event.title == "login" || route_event.title == "register"){
+    if(route_event.title == "Home" || route_event.title == "login" || route_event.title == "register" || route_event.title == 'admin-login'){
       this.disableBtns = true;
       this.disabledSidebarItems = true;
     }
@@ -66,18 +85,31 @@ export class AppComponent  implements OnInit{
     }
   }
 
-  // onDeactive(route_event){
-  //   this.router.navigate[''];
-  // }
-
 
 
 
 
   onLogout(){
     this.userService.isLoggedIn = false;
-    this.userService.clearUserData();
+    this.userService.clearUserData('/');
+    this.userService.clearUserData('/admin');
     this.router.navigate(['']);
   }
 
+
+
+
+  onDashboadClick(event_data){
+
+    if(this.userService.isLoggedIn){
+      var admin_role = this.userService.user.roles.find(a=>a == 'Admin');
+      console.log(admin_role);
+      if(admin_role){
+        this.router.navigate(['admin/dashboard']);
+      }
+      else{
+        this.router.navigate(['dashboard']);
+      }
+    }
+  }
 }

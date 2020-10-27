@@ -1,3 +1,4 @@
+import { state, style, trigger } from '@angular/animations';
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
@@ -29,6 +30,9 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     this.selectedAge = this.userService.user.age;
     this.phoneNumber = this.userService.user.phoneNumber;
     this.selectedBlood = this.userService.user.bloodGroup;
+    this.bmdc_certificate = this.userService.user.bmdc_certifcate;
+    this.doctorApproved = this.userService.user.approved;
+
     this.ShowProfileImage();
     this.resolveCountryStateCity();
 
@@ -61,6 +65,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   phoneNumber: string;
   selectedAge: number;
   bmdc_certificate: string;
+  doctorApproved: boolean = false;
   negativeAgeValue: boolean = false;
   invalidAge: boolean = false;
   checkingUsername: boolean = false;
@@ -279,7 +284,10 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
         formData.append('name', this.profileForm.controls['user_name'].value);
         formData.append('id', this.userService.user.id.toString());
-        formData.append('phoneNumber', this.profileForm.controls['mobile'].value);
+        if(this.phoneNumber !== null && this.phoneNumber !== undefined){
+          formData.append('phoneNumber', this.phoneNumber);
+        }
+
         formData.append('gender', this.selectedGender);
         formData.append('role', this.selectedRole);
 
@@ -309,14 +317,45 @@ export class ProfileComponent implements OnInit, AfterViewInit {
           error_msg: string,
           error: boolean,
           success: boolean,
-          role_added
+          role_added: boolean,
+          user:  { age: number, id: number, name: string, username: string, role: string, roles: string[], gender: string, email: string,
+            password: string, bloodGroup: string, bmdc_certifcate: string, city_name: string, country_name: string, country_phone_code: number,
+            country_short_name: string, state_name: string, phoneNumber: string, approved:boolean }
         }>(this._baseUrl + 'api/UserManager/UpdateProfileData',  formData, {headers: {'enctype': 'multipart/form-data'}} ).subscribe(result => {
           this.savingProfileData = false;
           console.log(result);
           if (result.success == true) {
            //Do success stuff
            //this.userService.fetchProfilePic(this.userService.user.id);
-            this.userService.tryLoginUser();
+            //this.userService.tryLoginUser();
+
+          this.userService.user.age = result.user.age;
+          this.userService.user.id = result.user.id;
+          this.userService.user.email = result.user.email;
+          this.userService.user.gender = result.user.gender;
+          this.userService.user.name = result.user.name;
+          this.userService.user.username = result.user.username;
+          this.userService.user.phoneNumber = result.user.phoneNumber;
+          this.userService.user.roles = [];
+          result.user.roles.forEach(val => {
+            this.userService.user.roles.push(val);
+          });
+          this.userService.roleChanged.emit(this.userService.user.roles);
+          this.userService.user.bloodGroup = result.user.bloodGroup;
+          this.userService.user.bmdc_certifcate = result.user.bmdc_certifcate;
+          this.userService.user.approved = result.user.approved;
+          this.userService.user.city_name = result.user.city_name;
+          this.userService.user.country_name = result.user.country_name;
+          this.userService.user.country_phone_code = result.user.country_phone_code;
+          this.userService.user.country_short_name = result.user.country_short_name;
+          this.userService.user.state_name = result.user.state_name;
+         // console.log(this.user.roles);
+          this.userService.fireUserApprovedChangedEvent();
+          this.userService.fetchProfilePic(result.user.id);
+          this.userService.clearUserData('/');
+          this.userService.clearUserData('/admin');
+          this.userService.SaveUserCredientials();
+
           }
           else {
             this.error_msg = result.error_msg;
@@ -332,6 +371,17 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
 
   }
+}
+
+
+ProgressProfileComplete(event_data){
+  console.log('input/change event: I am from 2nd event handler');
+  console.log(event_data);
+// console.log("I am from Mobile input 2nd event");
+// var currentWidth = document.getElementById('profileCompleteProgressBar');
+// var animationObj = document.getElementById('profileCompleteProgressBar').animate([{width: '0%', easing: 'ease-in', offset: 0 },
+// {width: '45%', easing: 'ease-out', offset: 1}], {fill: 'forwards', duration: 500});
+
 }
 
 }

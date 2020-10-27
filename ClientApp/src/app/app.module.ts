@@ -17,6 +17,10 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { CookieService } from 'ngx-cookie-service';
 import { ProfileComponent } from './profile/profile.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
+import { AdminLoginComponent } from './admin/admin-login/admin-login.component';
+import { InitialLoadingComponent } from './loaders/initial-loading/initial-loading.component';
+import { AdminDoctorListComponent } from './admin/admin-doctor-list/admin-doctor-list.component';
 
 @NgModule({
   declarations: [
@@ -28,14 +32,17 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     LoginComponent,
     RegistrationComponent,
     DashboardComponent,
-    ProfileComponent
+    ProfileComponent,
+    AdminDashboardComponent,
+    AdminLoginComponent,
+    InitialLoadingComponent,
+    AdminDoctorListComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
     AppRoutingModule,
-    BrowserModule,
     BrowserAnimationsModule
   ],
   providers: [CookieService],

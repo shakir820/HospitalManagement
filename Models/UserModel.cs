@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
 namespace HospitalManagement.Models
@@ -26,5 +27,6 @@ namespace HospitalManagement.Models
         public string bloodGroup { get; set; }
         public string bmdc_certifcate { get; set; }
         public IFormFile profilePic { get; set; }
+        public bool approved { get; set; } = false;
     }
 }

@@ -15,7 +15,7 @@
             <div>
               <h4 class="small font-weight-bold">Profile completed <span class="float-right">70%</span></h4>
               <div class="progress" style="width: 200px; height: 8px;">
-                <div class="progress-bar bg-success" role="progressbar" style="width: 70%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                <div id="profileCompleteProgressBar" class="progress-bar bg-success" role="progressbar"  aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
           </div>
@@ -35,7 +35,7 @@
                       <h4 class="mb-4 text-center" style="font-size: medium;">Profile Photo</h4>
                       <div class="avatar-upload">
                         <div class="avatar-edit">
-                          <input class="photo-input" type='file'
+                          <input class="photo-input" type='file' (change)="ProgressProfileComplete($event)"
                           ngModel
                           name="profile_pic"
                           #imageInput (change)="onImageChange($event)" id="imageUpload" accept=".png, .jpg, .jpeg" />
@@ -61,6 +61,7 @@
                             <input type="text" class="form-control"
                                    [(ngModel)]="user_name"
                                    required
+                                   (input)="ProgressProfileComplete($event)"
                                    placeholder="Enter name"
                                    name="user_name"
                                    id="user_name">
@@ -79,6 +80,7 @@
                                        placeholder="Enter username"
                                        name="username"
                                        id="username"
+                                       (input)="ProgressProfileComplete($event)"
                                        (input)="onUsernameInput($event)">
                                 <div *ngIf="f.form.controls['username'].errors != null">
                                   <small id="uernameError" *ngIf="(f.form.controls['username'].errors['required'] && f.form.controls['username'].touched) ||
@@ -122,6 +124,7 @@
                                        class="form-control"
                                        id="email"
                                        email
+                                       (input)="ProgressProfileComplete($event)"
                                        (input)="onEmailInput($event)"
                                        aria-describedby="emailHelp"
                                        placeholder="Enter email">
@@ -168,6 +171,7 @@
                                    name="mobile"
                                    [(ngModel)]="phoneNumber"
                                    (input)="validatePhoneNumber($event)"
+                                   (input)="ProgressProfileComplete($event)"
                                    class="form-control"
                                    id="mobile"
                                    placeholder="Enter mobile">
@@ -188,6 +192,7 @@
                                    [(ngModel)]="selectedAge"
                                    name="age"
                                    (input)="validateAge($event)"
+                                   (input)="ProgressProfileComplete($event)"
                                    placeholder="25"
                                    id="age"
                                    required>
@@ -217,7 +222,8 @@
                           <div class="form-group">
                             <label for="bloodGroup">Blood Group</label>
                             <select name="bloodGroup" id="bloodGroup" class="form-control"
-                                    [(ngModel)]="selectedBlood">
+                                    [(ngModel)]="selectedBlood"
+                                    (change)="ProgressProfileComplete($event)">
                               <option *ngFor="let item of bloodGroups" [value]="item">{{item}}</option>
                             </select>
                           </div>
@@ -226,14 +232,20 @@
                           <div class="form-group">
                             <div>
                               <label for="role">Who am I ?</label>
-                              <select name="role" id="role" [(ngModel)]="selectedRole" class="form-control">
+                              <select name="role"
+                              id="role" [(ngModel)]="selectedRole"
+                              (change)="ProgressProfileComplete($event)"
+                               class="form-control">
                                 <option *ngFor="let item of roles" [value]="item">{{item}}</option>
                               </select>
-                              <div *ngIf="selectedRole == 'Doctor'">
+                              <div *ngIf="selectedRole == 'Doctor' && !doctorApproved">
                                 <small class=" text-warning">
                                   If you are a doctor you must be verified by Admin to do doctor stuffs. Please
                                   enter your BMDC certificate number
                                 </small>
+                              </div>
+                              <div *ngIf="selectedRole == 'Doctor' && doctorApproved">
+                                <span class="badge badge-success">Approved</span>
                               </div>
                             </div>
                           </div>
@@ -244,7 +256,9 @@
                         <div class="col-sm-12 col-md-6">
                           <div class=" form-group">
                             <label for="country">Country</label>
-                            <select [(ngModel)]="selectedCountry" (change)="onCountryChanged($event)" id="country" class="form-control" name="country">
+                            <select [(ngModel)]="selectedCountry"
+                            (change)="ProgressProfileComplete($event)"
+                            (change)="onCountryChanged($event)" id="country" class="form-control" name="country">
                               <option *ngFor="let item of location_service.countryList" [value]="item.country_name">{{item.country_name}}</option>
                             </select>
                           </div>
@@ -253,6 +267,7 @@
                           <div class="form-group" *ngIf="selectedRole == 'Doctor'">
                             <label for="bmdc_certificate">BMDC Certificate</label>
                             <input type="text" class="form-control" id="bmdc_certificate"
+                            (input)="ProgressProfileComplete($event)"
                                    name="bmdc" [(ngModel)]="bmdc_certificate" required>
                                    <div *ngIf="f.form.controls['bmdc'].errors != null">
                                      <small *ngIf="(f.form.controls['bmdc'].errors['required'] == true && f.form.controls['bmdc'].touched) ||
@@ -267,7 +282,10 @@
                         <div class="col-sm-12 col-md-6">
                           <div class=" form-group">
                             <label for="state">State</label>
-                            <select name="state" [(ngModel)]="selectedState" (change)="onStateChanged($event)" id="state" class="form-control">
+                            <select name="state" [(ngModel)]="selectedState"
+                            (change)="onStateChanged($event)"
+                            (change)="ProgressProfileComplete($event)"
+                            id="state" class="form-control">
                               <option *ngFor="let item of location_service.stateList" [value]="item" >{{item}}</option>
                             </select>
                           </div>
@@ -275,7 +293,9 @@
                         <div class="col-sm-12 col-md-6">
                           <div class="form-group">
                             <label for="city">City</label>
-                            <select name="city" [(ngModel)]="selectedCity" id="city" class="form-control">
+                            <select name="city" [(ngModel)]="selectedCity" id="city"
+                            (change)="ProgressProfileComplete($event)"
+                            class="form-control">
                               <option *ngFor="let item of location_service.cityList" [value]="item">{{item}}</option>
                             </select>
                           </div>

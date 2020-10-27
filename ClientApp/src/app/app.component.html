@@ -1,5 +1,11 @@
 <!-- Page Wrapper -->
-<div class="d-flex customFullHeight">
+
+
+
+<app-initial-loading *ngIf="initializing"></app-initial-loading>
+
+
+<div *ngIf="!initializing" class="d-flex customFullHeight">
 
   <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar"  *ngIf="!disableBtns">
 
@@ -15,8 +21,8 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item active">
-      <a class="nav-link" [routerLink]="['dashboard']" routerLinkActive="active">
+    <li class="nav-item" routerLinkActive="active">
+      <a class="nav-link" (click)="onDashboadClick($event)"  style="cursor: pointer;">
         <i class="fas fa-fw fa-tachometer-alt"></i>
         <span>Dashboard</span>
       </a>
@@ -34,13 +40,19 @@
 
 
     <!-- Nav Item - Charts -->
-    <li class="nav-item">
-      <a class="nav-link" href="charts.html">
+    <li class="nav-item" *ngIf="isPatient">
+      <a class="nav-link">
         <i class="fas fa-fw fa-calendar-check"></i>
         <span>Appointment</span>
       </a>
     </li>
 
+    <li class="nav-item" routerLinkActive="active" *ngIf="isAdmin">
+      <a class="nav-link" [routerLink]="['admin/doctorList']"  >
+        <i class="fas fa-fw fa-calendar-check"></i>
+        <span>Doctor List</span>
+      </a>
+    </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
@@ -104,7 +116,7 @@
         </li>
 
         <li class="nav-item" *ngIf="userService.isLoggedIn">
-          <a class="nav-link text-dark" [routerLink]="['/dashboard']" routerLinkActive="active">Dashboard</a>
+          <a (click)="onDashboadClick($event)" style="cursor: pointer;" class="nav-link text-dark" routerLinkActive="active">Dashboard</a>
         </li>
 
 
@@ -218,8 +230,18 @@
         <!-- Nav Item - User Information -->
         <li class="nav-item dropdown no-arrow" *ngIf="userService.isLoggedIn">
           <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="mr-2 d-none d-lg-inline text-gray-600 small"> {{ userService.user.name }} </span>
-            <img class="img-profile rounded-circle" [src]="userService.user.profile_pic">
+            <div class="d-flex align-items-center">
+              <div class="d-flex flex-column">
+                <div class="mr-2 d-none d-lg-inline text-gray-600 small"> {{ userService.user.name }} </div>
+                <div *ngIf="isDoctor">
+                  <span *ngIf="isApproved" class="badge badge-success">Approved</span>
+                  <span *ngIf="!isApproved" class="badge badge-warning">Pending</span>
+                </div>
+              </div>
+              <div>
+                <img class="img-profile rounded-circle" style="object-fit:cover;" [src]="userService.user.profile_pic">
+              </div>
+            </div>
           </a>
           <!-- Dropdown - User Information -->
           <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">

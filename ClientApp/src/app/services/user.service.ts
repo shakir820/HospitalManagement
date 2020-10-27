@@ -1,11 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Variable } from '@angular/compiler/src/render3/r3_ast';
 import { ValueConverter } from '@angular/compiler/src/render3/view/template';
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, Output } from '@angular/core';
 import { rejects } from 'assert';
-import { resolve } from 'dns';
 import { CookieService } from 'ngx-cookie-service';
-import { promise } from 'protractor';
+import { EventEmitter } from '@angular/core';
 import { stringify } from 'querystring';
 import { observable, Observable } from 'rxjs';
 import { URL } from 'url';
@@ -23,62 +22,81 @@ export class UserService {
   _baseUrl: string;
   user: User;
   isLoggedIn: boolean = false;
+  loggingInProgress:boolean = false;
+
+
+  approvedChanged = new EventEmitter<boolean>();
+  roleChanged = new EventEmitter<string[]>();
 
 
 
-  tryLoginUser(): boolean {
+  tryLoginUser(): Promise<boolean> {
+    this.loggingInProgress = true;
+    var promise = new Promise<boolean>((resolve, rejects) =>{
+      let user_id_str = this.cookieService.get('skt_hospital_user_id');
+      if (user_id_str !== null && user_id_str !== '' && user_id_str != undefined) {
 
-    let user_id_str = this.cookieService.get('skt_hospital_user_id');
+        this.httpClient.get<{
+          error_msg: string,
+          error: boolean,
+          success: boolean,
+          user: { age: number, id: number, name: string, username: string, role: string, roles: string[], gender: string, email: string,
+            password: string, bloodGroup: string, bmdc_certifcate: string, city_name: string, country_name: string, country_phone_code: number,
+            country_short_name: string, state_name: string, phoneNumber: string, approved:boolean },
+          msg: string
+        }>(this._baseUrl + 'api/UserManager/getUserById', { params: { id: user_id_str } }).subscribe(result => {
+          if (result.success) {
+            if(this.user === null || this.user === undefined){
+              this.user = new User();
+            }
 
-    //console.log(user_id_str);
-    if (user_id_str !== null && user_id_str !== '' && user_id_str != undefined) {
-      this.isLoggedIn = true;
+            this.user.age = result.user.age;
+            this.user.email = result.user.email;
+            this.user.gender = result.user.gender;
+            this.user.id = result.user.id;
+            this.user.name = result.user.name;
+            this.user.username = result.user.username;
+            this.user.phoneNumber = result.user.phoneNumber;
+            //console.log(result.user.roles);
+            this.user.roles = [];
+            result.user.roles.forEach(val => {
+              this.user.roles.push(val);
+            });
 
-      this.httpClient.get<{
-        error_msg: string,
-        error: boolean,
-        success: boolean,
-        user: { age: number, id: number, name: string, username: string, role: string, roles: string[], gender: string, email: string, password: string, bloodGroup: string,
-          bmdc_certifcate: string, city_name: string, country_name: string, country_phone_code: number, country_short_name: string, state_name: string, phoneNumber: string },
-        msg: string
-      }>(this._baseUrl + 'api/UserManager/getUserById', { params: { id: user_id_str } }).subscribe(result => {
-        if (result.success) {
-          if(this.user === null || this.user === undefined){
-            this.user = new User();
+            this.roleChanged.emit(this.user.roles);
+
+
+            this.user.bloodGroup = result.user.bloodGroup;
+            this.user.bmdc_certifcate = result.user.bmdc_certifcate;
+            this.user.approved = result.user.approved;
+            this.user.city_name = result.user.city_name;
+            this.user.country_name = result.user.country_name;
+            this.user.country_phone_code = result.user.country_phone_code;
+            this.user.country_short_name = result.user.country_short_name;
+            this.user.state_name = result.user.state_name;
+            this.fireUserApprovedChangedEvent();
+            this.fetchProfilePic(this.user.id);
+            this.isLoggedIn = true;
+            this.loggingInProgress = false;
+
+            resolve(true);
           }
+          else {
+            // do some error stuff here
+            this.loggingInProgress = false;
+            resolve(false);
+          }
+        });
+      }
+      else{
+        this.loggingInProgress = false;
+        this.isLoggedIn = false;
+        resolve(false);
+      }
+    });
 
-          this.user.age = result.user.age;
-          this.user.email = result.user.email;
-          this.user.gender = result.user.gender;
-          this.user.id = result.user.id;
-          this.user.name = result.user.name;
-          this.user.username = result.user.username;
-          this.user.phoneNumber = result.user.phoneNumber?? undefined;
-          //console.log(result.user.roles);
-          this.user.roles = [];
-          result.user.roles.forEach(val => {
-            this.user.roles.push(val);
-          });
-          this.user.bloodGroup = result.user.bloodGroup;
-          this.user.bmdc_certifcate = result.user.bmdc_certifcate;
-          this.user.city_name = result.user.city_name;
-          this.user.country_name = result.user.country_name;
-          this.user.country_phone_code = result.user.country_phone_code;
-          this.user.country_short_name = result.user.country_short_name;
-          this.user.state_name = result.user.state_name;
-          //console.log(this.user.roles);
 
-          //console.log(this.user);
-          // get profile pic
-          this.fetchProfilePic(this.user.id);
-        }
-        else {
-          // do some error stuff here
-
-        }
-      });
-    }
-    return this.isLoggedIn;
+    return promise;
 
   }
 
@@ -122,7 +140,7 @@ export class UserService {
   }
 
 
-  private SaveUserCredientials() {
+  public SaveUserCredientials() {
 
     this.cookieService.set('skt_hospital_user_id', this.user.id.toString());
     this.cookieService.set('skt_hospital_user_email', this.user.email);
@@ -137,8 +155,8 @@ export class UserService {
 
 
 
-  clearUserData(){
-    this.cookieService.deleteAll();
+  clearUserData(path:string){
+    this.cookieService.deleteAll(path, 'localhost');
   }
 
 
@@ -167,8 +185,9 @@ export class UserService {
         error_msg: string,
         error: boolean,
         success: boolean,
-        user: { age: number, id: number, name: string, username: string, role: string, roles: string[], gender: string, email: string, password: string, bloodGroup: string,
-          bmdc_certifcate: string, city_name: string, country_name: string, country_phone_code: number, country_short_name: string, state_name: string, phoneNumber: string }
+        user: { age: number, id: number, name: string, username: string, role: string, roles: string[], gender: string, email: string,
+          password: string, bloodGroup: string, bmdc_certifcate: string, city_name: string, country_name: string, country_phone_code: number,
+          country_short_name: string, state_name: string, phoneNumber: string, approved:boolean }
         msg: string,
         emailExist: boolean,
         wrong_password: boolean
@@ -187,15 +206,21 @@ export class UserService {
           result.user.roles.forEach(val => {
             this.user.roles.push(val);
           });
+
+          this.roleChanged.emit(this.user.roles);
           this.user.bloodGroup = result.user.bloodGroup;
           this.user.bmdc_certifcate = result.user.bmdc_certifcate;
+          this.user.approved = result.user.approved;
           this.user.city_name = result.user.city_name;
           this.user.country_name = result.user.country_name;
           this.user.country_phone_code = result.user.country_phone_code;
           this.user.country_short_name = result.user.country_short_name;
           this.user.state_name = result.user.state_name;
          // console.log(this.user.roles);
+          this.fireUserApprovedChangedEvent();
           this.fetchProfilePic(result.user.id);
+          this.clearUserData('/');
+          this.clearUserData('/admin');
           this.SaveUserCredientials();
           resolve({ msg: result.msg, success: true, emailExist: true });
 
@@ -226,7 +251,7 @@ export class UserService {
   Promise<{ error: boolean, error_msg: string, success: boolean, msg: string }> {
 
     let promise = new Promise<{ error: boolean, error_msg: string, success: boolean, msg: string }>((resolve, reject) => {
-      this.httpClient.post<{ success: boolean, user_id: number, username:string, user_name: string, user_gender: string, user_age: number, error: boolean, error_msg: string, error_list: string[], role_list: string[] }>(
+      this.httpClient.post<{ success: boolean, user_id: number, username:string, approved: boolean, user_name: string, user_gender: string, user_age: number, error: boolean, error_msg: string, error_list: string[], role_list: string[] }>(
         this._baseUrl + "api/usermanager/CreateNewUser", { name: name, password: password, email: email, role: role, gender: gender, age: age }).subscribe(result => {
           if (result.success == true && result.user_id != null) {
 
@@ -241,8 +266,11 @@ export class UserService {
               this.user.roles.push(val);
             });
             this.user.username = email;
+            this.user.approved = result.approved;
             this.SaveUserCredientials();
             this.isLoggedIn = true;
+            this.roleChanged.emit(this.user.roles);
+            this.fireUserApprovedChangedEvent();
             this.fetchProfilePic(result.user_id);
             resolve({ error: false, error_msg: null, success: true, msg: null });
           }
@@ -256,5 +284,12 @@ export class UserService {
     });
 
     return promise;
+  }
+
+
+
+
+  fireUserApprovedChangedEvent(){
+    this.approvedChanged.emit(this.user.approved);
   }
 }

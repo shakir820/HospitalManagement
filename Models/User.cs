@@ -19,7 +19,7 @@ namespace HospitalManagement.Models
         public string city_name { get; set; }
         public string BloodGroup { get; set; }
         public string BMDC_certifcate { get; set; }
-       
+        public bool Approved { get; set; } = false;
         public byte[] ProfilePic { get; set; }
 
     }

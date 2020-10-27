@@ -1,4 +1,3 @@
-import { HexBase64BinaryEncoding } from "crypto";
 
 export class User{
 
@@ -16,9 +15,11 @@ export class User{
   // extra info
   public bloodGroup: string;
   public bmdc_certifcate: string;
+  public approved: boolean = false;
   public city_name: string;
   public country_name: string;
   public country_phone_code: number;
   public country_short_name: string;
   public state_name: string;
+
 }

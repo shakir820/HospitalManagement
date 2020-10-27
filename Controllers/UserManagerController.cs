@@ -83,7 +83,8 @@ namespace HospitalManagement.Controllers
                                         user_gender = userModel.gender,
                                         role_list = new List<string> { userModel.role },
                                         user_name = user.Name,
-                                        username = user.UserName
+                                        username = user.UserName,
+                                        approved = false
                                     });
                                 }
                                 else
@@ -239,7 +240,8 @@ namespace HospitalManagement.Controllers
                                     country_phone_code = user.country_phone_code,
                                     country_short_name = user.country_short_name,
                                     state_name = user.state_name,
-                                    phoneNumber = user.PhoneNumber
+                                    phoneNumber = user.PhoneNumber,
+                                    approved = user.Approved
                                     
                                 }
 
@@ -344,7 +346,8 @@ namespace HospitalManagement.Controllers
                             country_phone_code = user.country_phone_code,
                             country_short_name = user.country_short_name,
                             state_name = user.state_name,
-                            phoneNumber = user.PhoneNumber
+                            phoneNumber = user.PhoneNumber,
+                            approved = user.Approved
                             //profilePic = user.ProfilePic
                         }
 
@@ -443,7 +446,22 @@ namespace HospitalManagement.Controllers
                         user.Age = userModel.age;
                         user.BloodGroup = userModel.bloodGroup;
                         user.city_name = userModel.city_name;
-                        user.BMDC_certifcate = user.BMDC_certifcate;
+
+                        if(userModel.role == "Doctor")
+                        {
+                            if (userModel.bmdc_certifcate != null)
+                            {
+                                if (user.BMDC_certifcate != userModel.bmdc_certifcate)
+                                {
+                                    user.BMDC_certifcate = userModel.bmdc_certifcate;
+                                    user.Approved = false;
+                                }
+                            }
+                        }
+                     
+                        
+
+                       
                         user.country_name = userModel.country_name;
                         user.country_phone_code = userModel.country_phone_code;
                         user.country_short_name = userModel.country_short_name;
@@ -544,11 +562,34 @@ namespace HospitalManagement.Controllers
 
                         await transaction.CommitAsync();
 
+                        var userRoles = await _userManager.GetRolesAsync(user);
+
+                        var userResult = new UserModel
+                        {
+                            age = user.Age,
+                            approved = user.Approved,
+                            bloodGroup = user.BloodGroup,
+                            bmdc_certifcate = user.BMDC_certifcate,
+                            city_name = user.city_name,
+                            country_name = user.country_name,
+                            country_phone_code = user.country_phone_code,
+                            country_short_name = user.country_short_name,
+                            email = user.Email,
+                            gender = user.Gender,
+                            id = user.Id,
+                            name = user.Name,
+                            phoneNumber = user.PhoneNumber,
+                            roles = userRoles,
+                            state_name = user.state_name,
+                            username = user.UserName
+                        };
+
                         return new JsonResult(new
                         {
                             success = true,
                             error = false,
-                            role_added = roleAdded
+                            role_added = roleAdded,
+                            user = userResult
                         });
 
 
