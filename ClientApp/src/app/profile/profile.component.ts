@@ -2,6 +2,8 @@ import { state, style, trigger } from '@angular/animations';
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Language } from '../models/langauge.model';
+import { Speciality } from '../models/speciality.model';
 import { LocationService } from '../services/location.service';
 import { ProfileService } from '../services/profile.service';
 import { UserService } from '../services/user.service';
@@ -35,7 +37,8 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
     this.ShowProfileImage();
     this.resolveCountryStateCity();
-
+    this.resolveSpecialityTag();
+    this.resolveLanguages();
   }
 
 
@@ -80,6 +83,20 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   selectedState: string;
   selectedCity: string;
   imgData: any;
+
+
+  //doctor's info
+  showDoctorInfoForm: boolean = false;
+  specialityTagIsRequired: boolean = false;
+  selectedSpeciality: number;
+  suggestedSpecialities: Speciality[] = [];
+  allSpecialities: Speciality[] = [];
+  selectedSpecialities: Speciality[] = [];
+  languageTagIsRequired: boolean = false;
+  selectedLanguage: number;
+  suggestedLanguages: Language[] = [];
+  selectedLanguages: Language[] = [];
+
   //#endregion
 
 
@@ -94,16 +111,29 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   ShowProfileImage() {
     (<HTMLElement>this.imagePreviewRef.nativeElement).style.backgroundImage = `url(${this._baseUrl}` +
-    'api/usermanager/GetProfilePic?id=' + this.userService.user.id.toString() + ')';
+      'api/usermanager/GetProfilePic?id=' + this.userService.user.id.toString() + ')';
+  }
+
+
+
+
+  selectedRoleChanged(evet_data){
+    if(this.selectedRole == 'Doctor'){
+      this.showDoctorInfoForm = true;
     }
+    else{
+      this.showDoctorInfoForm = false;
+    }
+  }
+
 
 
 
   async resolveCountryStateCity() {
-    if(this.location_service.access_token == undefined || this.location_service.access_token == '' || this.location_service.access_token == null){
+    if (this.location_service.access_token == undefined || this.location_service.access_token == '' || this.location_service.access_token == null) {
       await this.location_service.getAccessToken();
     }
-    if(this.location_service.countryList.length == 0){
+    if (this.location_service.countryList.length == 0) {
       await this.location_service.getCountryList();
     }
 
@@ -239,8 +269,8 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
 
 
-  async onCountryChanged(event_data){
-    if(this.selectedCountry != null || this.selectedCountry != undefined){
+  async onCountryChanged(event_data) {
+    if (this.selectedCountry != null || this.selectedCountry != undefined) {
       this.selectedCity = undefined;
       this.selectedState = undefined;
       await this.location_service.getStateList(this.selectedCountry);
@@ -248,8 +278,8 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   }
 
 
-  async onStateChanged(event_data){
-    if(this.selectedState != null || this.selectedState != undefined){
+  async onStateChanged(event_data) {
+    if (this.selectedState != null || this.selectedState != undefined) {
       this.selectedCity = undefined;
       this.location_service.getCityList(this.selectedState);
     }
@@ -257,13 +287,48 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
 
 
- async onSubmit() {
+
+  checkIfSpecialityTagsAreRequired():boolean{
+    if(this.selectedRole == 'Doctor'){
+      if(this.selectedSpecialities.length > 0){
+        return false;
+      }
+      else{
+        return true;
+      }
+    }
+    else{
+      return false;
+    }
+  }
+
+
+  checkIfLanguageTagsAreRequired():boolean{
+    if(this.selectedRole == 'Doctor'){
+      if(this.selectedLanguages.length > 0){
+        return false;
+      }
+      else{
+        return true;
+      }
+    }
+    else{
+      return false;
+    }
+  }
+
+
+
+  async onSubmit() {
 
     this.submitted = true;
-    //this.savingProfileData = true;
-    //return;
 
-    if(this.profileForm.valid && this.isUniqueEmailAddress && !this.invalidAge && !this.invalidMobileNumber && this.uniqueUsername){
+
+    this.specialityTagIsRequired = this.checkIfSpecialityTagsAreRequired();
+    this.languageTagIsRequired = this.checkIfLanguageTagsAreRequired();
+
+    if (this.profileForm.valid && this.isUniqueEmailAddress && !this.invalidAge && !this.invalidMobileNumber && this.uniqueUsername
+      && !this.specialityTagIsRequired && !this.languageTagIsRequired) {
 
       try {
 
@@ -272,27 +337,27 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
         var formData = new FormData();
 
-        if(this.proposedEmail != this.email){
+        if (this.proposedEmail != this.email) {
           formData.append('email', this.proposedEmail);
         }
 
         formData.append('age', this.profileForm.controls['age'].value);
 
-        if(this.proposedUsername != this.userName){
+        if (this.proposedUsername != this.userName) {
           formData.append('username', this.proposedUsername);
         }
 
         formData.append('name', this.profileForm.controls['user_name'].value);
         formData.append('id', this.userService.user.id.toString());
-        if(this.phoneNumber !== null && this.phoneNumber !== undefined){
+        if (this.phoneNumber !== null && this.phoneNumber !== undefined) {
           formData.append('phoneNumber', this.phoneNumber);
         }
 
         formData.append('gender', this.selectedGender);
         formData.append('role', this.selectedRole);
 
-        if(this.selectedCountry !== null && this.selectedCountry !== undefined){
-          var selectedCountry_obj = this.location_service.countryList.find(a=> a.country_name == this.selectedCountry);
+        if (this.selectedCountry !== null && this.selectedCountry !== undefined) {
+          var selectedCountry_obj = this.location_service.countryList.find(a => a.country_name == this.selectedCountry);
           formData.append('country_name', this.selectedCountry);
           formData.append('country_short_name', selectedCountry_obj.country_short_name);
           formData.append('country_phone_code', selectedCountry_obj.country_phone_code.toString());
@@ -302,59 +367,68 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
         formData.append('bloodGroup', this.selectedBlood);
 
-        if(this.selectedRole === 'Doctor'){
-          var bmdc_cert_no =  this.profileForm.controls['bmdc'].value;
-          formData.append('bmdc_certifcate', bmdc_cert_no);
-        }
-
-        var selectedFiles  = (<HTMLInputElement>this.imageInputRef.nativeElement).files;
-        if(selectedFiles.length > 0){
+        var selectedFiles = (<HTMLInputElement>this.imageInputRef.nativeElement).files;
+        if (selectedFiles.length > 0) {
           var profile_pic_fie = selectedFiles[0];
           formData.append('profilePic', profile_pic_fie, profile_pic_fie.name);
         }
+
+        if (this.selectedRole == 'Doctor') {
+          var bmdc_cert_no = this.profileForm.controls['bmdc'].value;
+          formData.append('bmdc_certifcate', bmdc_cert_no);
+          // formData.append('bmdc_certifcate', bmdc_cert_no);
+          // formData.append('bmdc_certifcate', bmdc_cert_no);
+          // formData.append('bmdc_certifcate', bmdc_cert_no);
+
+
+        }
+
+
 
         this.httpClient.post<{
           error_msg: string,
           error: boolean,
           success: boolean,
           role_added: boolean,
-          user:  { age: number, id: number, name: string, username: string, role: string, roles: string[], gender: string, email: string,
+          user: {
+            age: number, id: number, name: string, username: string, role: string, roles: string[], gender: string, email: string,
             password: string, bloodGroup: string, bmdc_certifcate: string, city_name: string, country_name: string, country_phone_code: number,
-            country_short_name: string, state_name: string, phoneNumber: string, approved:boolean }
-        }>(this._baseUrl + 'api/UserManager/UpdateProfileData',  formData, {headers: {'enctype': 'multipart/form-data'}} ).subscribe(result => {
+            country_short_name: string, state_name: string, phoneNumber: string, approved: boolean
+          }
+        }>(this._baseUrl + 'api/UserManager/UpdateProfileData', formData, { headers: { 'enctype': 'multipart/form-data' } }).subscribe(result => {
           this.savingProfileData = false;
           console.log(result);
           if (result.success == true) {
-           //Do success stuff
-           //this.userService.fetchProfilePic(this.userService.user.id);
+            //Do success stuff
+            //this.userService.fetchProfilePic(this.userService.user.id);
             //this.userService.tryLoginUser();
 
-          this.userService.user.age = result.user.age;
-          this.userService.user.id = result.user.id;
-          this.userService.user.email = result.user.email;
-          this.userService.user.gender = result.user.gender;
-          this.userService.user.name = result.user.name;
-          this.userService.user.username = result.user.username;
-          this.userService.user.phoneNumber = result.user.phoneNumber;
-          this.userService.user.roles = [];
-          result.user.roles.forEach(val => {
-            this.userService.user.roles.push(val);
-          });
-          this.userService.roleChanged.emit(this.userService.user.roles);
-          this.userService.user.bloodGroup = result.user.bloodGroup;
-          this.userService.user.bmdc_certifcate = result.user.bmdc_certifcate;
-          this.userService.user.approved = result.user.approved;
-          this.userService.user.city_name = result.user.city_name;
-          this.userService.user.country_name = result.user.country_name;
-          this.userService.user.country_phone_code = result.user.country_phone_code;
-          this.userService.user.country_short_name = result.user.country_short_name;
-          this.userService.user.state_name = result.user.state_name;
-         // console.log(this.user.roles);
-          this.userService.fireUserApprovedChangedEvent();
-          this.userService.fetchProfilePic(result.user.id);
-          this.userService.clearUserData('/');
-          this.userService.clearUserData('/admin');
-          this.userService.SaveUserCredientials();
+            this.userService.user.age = result.user.age;
+            this.userService.user.id = result.user.id;
+            this.userService.user.email = result.user.email;
+            this.userService.user.gender = result.user.gender;
+            this.userService.user.name = result.user.name;
+            this.userService.user.username = result.user.username;
+            this.userService.user.phoneNumber = result.user.phoneNumber;
+            this.userService.user.roles = [];
+            result.user.roles.forEach(val => {
+              this.userService.user.roles.push(val);
+            });
+            this.userService.roleChanged.emit(this.userService.user.roles);
+            this.userService.user.bloodGroup = result.user.bloodGroup;
+            this.userService.user.bmdc_certifcate = result.user.bmdc_certifcate;
+            this.userService.user.approved = result.user.approved;
+            this.userService.user.city_name = result.user.city_name;
+            this.userService.user.country_name = result.user.country_name;
+            this.userService.user.country_phone_code = result.user.country_phone_code;
+            this.userService.user.country_short_name = result.user.country_short_name;
+            this.userService.user.state_name = result.user.state_name;
+            // console.log(this.user.roles);
+            this.userService.fireUserApprovedChangedEvent();
+            this.userService.fetchProfilePic(result.user.id);
+            this.userService.clearUserData('/');
+            this.userService.clearUserData('/admin');
+            this.userService.SaveUserCredientials();
 
           }
           else {
@@ -365,23 +439,92 @@ export class ProfileComponent implements OnInit, AfterViewInit {
           this.savingProfileData = false;
         });
       }
-       catch (error) {
+      catch (error) {
         console.log(error);
       }
 
 
+    }
   }
-}
 
 
-ProgressProfileComplete(event_data){
-  console.log('input/change event: I am from 2nd event handler');
-  console.log(event_data);
-// console.log("I am from Mobile input 2nd event");
-// var currentWidth = document.getElementById('profileCompleteProgressBar');
-// var animationObj = document.getElementById('profileCompleteProgressBar').animate([{width: '0%', easing: 'ease-in', offset: 0 },
-// {width: '45%', easing: 'ease-out', offset: 1}], {fill: 'forwards', duration: 500});
+  ProgressProfileComplete(event_data) {
+    console.log('input/change event: I am from 2nd event handler');
+    console.log(event_data);
+  }
 
-}
+
+
+
+
+  //#region speciality tag
+
+  deleting_tags = false;
+  resolveSpecialityTag(){
+    if(this.userService.doctorSpecialityTags !== undefined && this.userService.doctorSpecialityTags.length > 0){
+
+      this.allSpecialities = this.userService.doctorSpecialityTags;
+      this.suggestedSpecialities = this.allSpecialities.slice();
+
+    }
+  }
+
+
+
+  onSpecialityChanged(event_data) {
+
+    if (this.selectedSpeciality !== undefined && this.selectedSpeciality !== null && this.selectedSpeciality != -1 && this.deleting_tags == false) {
+
+      var selected_tag = this.suggestedSpecialities.find(a => a.id == this.selectedSpeciality);
+      if (selected_tag != null) {
+        this.selectedSpecialities.push(selected_tag);
+      }
+    }
+  }
+
+  onSpecialityDeleteClicked(tag_id: number) {
+    var selected_tag = this.selectedSpecialities.find(a => a.id == tag_id);
+    if (selected_tag !== undefined && selected_tag !== null) {
+      var startIndex = this.selectedSpecialities.indexOf(selected_tag);
+      this.selectedSpecialities.splice(startIndex, 1);
+    }
+  }
+
+
+  //#endregion
+
+
+
+
+  //#region  languages
+  resolveLanguages(){
+    this.suggestedLanguages = this.userService.languageList;
+  }
+
+
+  onLanguageChanged(event_data){
+    if(this.selectedLanguage != undefined && this.selectedLanguage != -1, this.selectedLanguage != null){
+      var selected_lang = this.suggestedLanguages.find(a => a.id == this.selectedLanguage);
+      if (selected_lang != null) {
+        this.selectedLanguages.push(selected_lang);
+        this.selectedLanguage = -1;
+      }
+    }
+  }
+
+
+
+  onLanguageDeleteClicked(tag_id: number) {
+    var selected_tag = this.selectedLanguages.find(a => a.id == tag_id);
+    if (selected_tag !== undefined && selected_tag !== null) {
+      var startIndex = this.selectedLanguages.indexOf(selected_tag);
+      this.selectedLanguages.splice(startIndex, 1);
+    }
+  }
+
+
+
+
+  //#endregion
 
 }

@@ -15,8 +15,14 @@ namespace HospitalManagement.Data
         public HospitalManagementDbContext(DbContextOptions<HospitalManagementDbContext> options)
             : base(options)
         {
-
+            
         }
+
+        public DbSet<Language> Languages { get; set; }
+        public DbSet<SelectedLanguage> SelectedLanguages { get; set; }
+        public DbSet<Schedule> Schedules { get; set; }
+        public DbSet<Speciality> Specialities { get; set; }
+        public DbSet<SelectedSpecialityTag> SelectedSpecialityTags { get; set; }
 
     }
 }

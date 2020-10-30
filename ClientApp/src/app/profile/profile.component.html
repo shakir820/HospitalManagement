@@ -235,6 +235,7 @@
                               <select name="role"
                               id="role" [(ngModel)]="selectedRole"
                               (change)="ProgressProfileComplete($event)"
+                              (change)="selectedRoleChanged($event)"
                                class="form-control">
                                 <option *ngFor="let item of roles" [value]="item">{{item}}</option>
                               </select>
@@ -304,16 +305,140 @@
 
 
 
+
+
+                      <!-- doctor's info -->
+                      <div *ngIf="showDoctorInfoForm">
+                        <div class="my-3 p-3 bg-gray-100">
+                          <h5 class="text-muted font-weight-bold">Doctor Info</h5>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-sm-12 col-md-6">
+                            <div class=" form-group">
+                              <label for="doctor_title">Title</label>
+                              <input name="doctor_title" ngModel type="text"
+                              (change)="ProgressProfileComplete($event)"
+                              required
+                              id="doctor_title" class="form-control"/>
+                              <small class="text-danger" *ngIf="(submitted && !f.form.controls['doctor_title'].valid)||
+                              (!f.form.controls['doctor_title'].valid && f.form.controls['doctor_title'].touched)">Title is required</small>
+                            </div>
+                          </div>
+                          <div class="col-sm-12 col-md-6">
+                            <div class=" form-group">
+                              <label for="degree_title">Degree title</label>
+                              <input name="degree_title" ngModel type="text"
+                              required
+                              (change)="ProgressProfileComplete($event)"
+                              id="degree_title" class="form-control"/>
+
+                              <small class="text-danger" *ngIf="(submitted && !f.form.controls['degree_title'].valid)||
+                              (!f.form.controls['degree_title'].valid && f.form.controls['degree_title'].touched)">Degree title is required</small>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-sm-12 col-md-6">
+                            <div class=" form-group">
+                              <label for="specialities">Specialities</label>
+
+                              <select [(ngModel)]="selectedSpeciality" class="form-control" id="specialities" (change)="onSpecialityChanged($event)" name="specialities">
+                                <option *ngFor="let item of suggestedSpecialities"
+                                [value]="item.id">{{item.specialityName}}</option>
+                              </select>
+                              <div class="row justify-content-start">
+                                <div class="col-auto" *ngFor="let item of selectedSpecialities">
+                                  <app-speciality-tag [tagName]="item.specialityName" [tagId]="item.id" (tagDeleteClicked)="onSpecialityDeleteClicked($event)">
+                                  </app-speciality-tag>
+                                </div>
+                              </div>
+                              <small class="text-danger" *ngIf="(submitted && specialityTagIsRequired)">Speciality is required</small>
+                            </div>
+                          </div>
+                          <div class="col-sm-12 col-md-6">
+                            <div class=" form-group">
+                              <label for="year_of_experience">Experience</label>
+                              <div class="input-group">
+                                <input type="number" class="form-control"
+                                name="year_of_experience"
+                                required
+                                ngModel
+                                id="year_of_experience"
+                                >
+                                <div class="input-group-append">
+                                  <span class="input-group-text">Years</span>
+                                </div>
+
+                              </div>
+                              <small class="text-danger" *ngIf="(submitted && !f.form.controls['year_of_experience'].valid)||
+                              (!f.form.controls['year_of_experience'].valid && f.form.controls['year_of_experience'].touched)">Year of experience is required</small>
+                            </div>
+                          </div>
+                        </div>
+
+
+
+                        <div class="row">
+                          <div class="col-sm-12 col-md-6">
+                            <div class=" form-group">
+                              <label for="languages">Languages</label>
+
+                              <select [(ngModel)]="selectedLanguage" class="form-control" id="languages"
+                              (change)="onLanguageChanged($event)" name="languages">
+                                <option *ngFor="let item of suggestedLanguages"
+                                [value]="item.id">{{item.languageName}}</option>
+                              </select>
+                              <div class="row justify-content-start">
+                                <div class="col-auto" *ngFor="let item of selectedLanguages">
+                                  <app-speciality-tag [tagName]="item.languageName" [tagId]="item.id" (tagDeleteClicked)="onLanguageDeleteClicked($event)">
+                                  </app-speciality-tag>
+                                </div>
+                              </div>
+                              <small class="text-danger" *ngIf="(submitted && languageTagIsRequired)">Language is required</small>
+                            </div>
+                          </div>
+                          <div class="col-sm-12 col-md-6">
+                            <div class=" form-group">
+                              <label for="types_of">Types of</label>
+                              <div class="input-group">
+                                <input type="text" class="form-control"
+                                name="types_of"
+                                ngModel
+                                id="types_of"
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- bio data -->
+                        <div class="row">
+                          <div class="col-sm-12 col-md-12">
+                            <div class=" form-group">
+                              <label for="biography">Bio</label>
+                              <textarea type="text" id="biography" name="biography"
+                              class="form-control" rows="3"
+                              ngModel></textarea>>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-
-
-
               </div>
-
-
             </div>
           </div>
+
+
+
+
+
+
+
+
+
         </div>
 
         <div class=" card-footer">

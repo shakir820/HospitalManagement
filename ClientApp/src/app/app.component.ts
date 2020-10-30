@@ -65,9 +65,7 @@ export class AppComponent  implements OnInit{
     setTimeout(()=>{
       this.initializing = false;
     }, 2000);
-
     if(userLoggedIn){
-
     }
   }
 

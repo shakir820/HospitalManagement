@@ -617,5 +617,59 @@ namespace HospitalManagement.Controllers
                 }
             }
         }
+
+
+
+
+
+        public async Task<IActionResult> GetSpecialityTags()
+        {
+            try
+            {
+                var all_speciality_tags = await _context.Specialities.AsNoTracking().ToListAsync();
+                return new JsonResult(new
+                {
+                    success = true,
+                    error = false,
+                    specialities = all_speciality_tags
+                });
+            }
+            catch(Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = ex.Message
+                });
+            }
+            
+        }
+
+
+
+        public async Task<IActionResult> GetLanguages()
+        {
+            try
+            {
+                var all_languages = await _context.Languages.AsNoTracking().ToListAsync();
+                return new JsonResult(new
+                {
+                    success = true,
+                    error = false,
+                    languages = all_languages
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = ex.Message
+                });
+            }
+
+        }
     }
 }

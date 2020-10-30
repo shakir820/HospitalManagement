@@ -18,9 +18,33 @@ namespace HospitalManagement.Models
         public string state_name { get; set; }
         public string city_name { get; set; }
         public string BloodGroup { get; set; }
+        public byte[] ProfilePic { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public bool IsActive { get; set; }
+
+
+
+
+        //doctor's profile info
+        public string DoctorTitle { get; set; }
+        public string DegreeTittle { get; set; }
+        public string Biography { get; set; }
         public string BMDC_certifcate { get; set; }
         public bool Approved { get; set; } = false;
-        public byte[] ProfilePic { get; set; }
+        public List<SelectedSpecialityTag> Specialities { get; set; }
+        public DateTime Experience { get; set; }
+        public string TypesOf { get; set; }
+        public List<SelectedLanguage> Languages { get; set; }
+        public List<Schedule> Schedules { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal NewPatientVisitingPrice { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        //gets old after 3 months
+        public decimal OldPatientVisitingPrice { get; set; }
+
+       
 
     }
 }

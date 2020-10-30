@@ -21,6 +21,8 @@ import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard
 import { AdminLoginComponent } from './admin/admin-login/admin-login.component';
 import { InitialLoadingComponent } from './loaders/initial-loading/initial-loading.component';
 import { AdminDoctorListComponent } from './admin/admin-doctor-list/admin-doctor-list.component';
+import { SpecialityTagComponent } from './custom_controls/speciality-tag/speciality-tag.component';
+import { LanguageTagComponent } from './custom_controls/language-tag/language-tag.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,9 @@ import { AdminDoctorListComponent } from './admin/admin-doctor-list/admin-doctor
     AdminDashboardComponent,
     AdminLoginComponent,
     InitialLoadingComponent,
-    AdminDoctorListComponent
+    AdminDoctorListComponent,
+    SpecialityTagComponent,
+    LanguageTagComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

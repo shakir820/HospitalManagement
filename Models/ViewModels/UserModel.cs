@@ -25,8 +25,29 @@ namespace HospitalManagement.Models
         public string state_name { get; set; }
         public string city_name { get; set; }
         public string bloodGroup { get; set; }
-        public string bmdc_certifcate { get; set; }
+      
         public IFormFile profilePic { get; set; }
+
+
+
+
+
+
+
+        // doctor's info
         public bool approved { get; set; } = false;
+        public string bmdc_certifcate { get; set; }
+        public string doctor_title { get; set; }
+        public string degree_tittle { get; set; }
+        public string biography { get; set; }
+        public List<SpecialityTagModel> specialities { get; set; }
+        public int experience { get; set; }
+        public string types_of { get; set; }
+        public List<LanguageTagModel> languages { get; set; }
+        public List<Schedule> schedules { get; set; }
+        public decimal new_patient_visiting_price { get; set; }
+        //gets old after 3 months
+        public decimal old_patient_visiting_price { get; set; }
+
     }
 }

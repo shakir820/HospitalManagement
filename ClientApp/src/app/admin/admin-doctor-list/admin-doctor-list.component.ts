@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { User } from 'src/app/models/user.model';
 
 @Component({
   selector: 'app-admin-doctor-list',
@@ -12,4 +13,7 @@ export class AdminDoctorListComponent implements OnInit {
   ngOnInit(): void {
   }
 
+
+
+  doctorList: User[]
 }

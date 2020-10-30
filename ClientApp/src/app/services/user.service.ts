@@ -9,6 +9,8 @@ import { stringify } from 'querystring';
 import { observable, Observable } from 'rxjs';
 import { URL } from 'url';
 import { User } from '../models/user.model';
+import { Speciality } from '../models/speciality.model';
+import { Language } from '../models/langauge.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,12 +19,16 @@ export class UserService {
 
   constructor(private httpClient: HttpClient, @Inject('BASE_URL') baseUrl: string, private cookieService: CookieService) {
     this._baseUrl = baseUrl;
+    this.getSpecialityTags();
+    this.getLanguages();
   }
 
   _baseUrl: string;
   user: User;
   isLoggedIn: boolean = false;
   loggingInProgress:boolean = false;
+  doctorSpecialityTags:Speciality[];
+  languageList: Language[] = [];
 
 
   approvedChanged = new EventEmitter<boolean>();
@@ -285,6 +291,56 @@ export class UserService {
 
     return promise;
   }
+
+
+
+  getSpecialityTags(){
+    this.httpClient.get<{ success: boolean, error:boolean, specialities:{id: number, specialityName: string}[], error_msg: string }>(
+      this._baseUrl + "api/usermanager/GetSpecialityTags").subscribe(result => {
+        console.log(result);
+        if (result.success === true && result.specialities !== undefined) {
+          this.doctorSpecialityTags = [];
+          result.specialities.forEach(val => {
+            var tag_speciality = new Speciality();
+            tag_speciality.id = val.id;
+            tag_speciality.specialityName = val.specialityName;
+            this.doctorSpecialityTags.push(tag_speciality);
+          });
+        }
+        else {
+
+        }
+
+      },
+      error => console.error(error)
+      );
+    }
+
+
+
+
+
+    getLanguages(){
+      this.httpClient.get<{ success: boolean, error:boolean, languages:{id: number, languageName: string}[], error_msg: string }>(
+        this._baseUrl + "api/usermanager/GetLanguages").subscribe(result => {
+          console.log(result);
+          if (result.success === true && result.languages !== undefined) {
+            this.languageList = [];
+            result.languages.forEach(val => {
+              var lang = new Language();
+              lang.id = val.id;
+              lang.languageName = val.languageName;
+              this.languageList.push(lang);
+            });
+          }
+          else {
+
+          }
+
+        },
+        error => console.error(error)
+        );
+      }
 
 
 
