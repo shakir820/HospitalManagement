@@ -35,6 +35,7 @@
                "src/themeResource/vendor/fontawesome-free/css/light.min.css",
                "src/themeResource/vendor/fontawesome-free/css/regular.min.css",
                "src/themeResource/vendor/fontawesome-free/css/solid.min.css"
+
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
@@ -45,6 +46,7 @@
               "src/themeResource/js/demo/chart-area-demo.js",
               "src/themeResource/js/demo/chart-pie-demo.js",
               "src/scripts/javascripts.js"
+
             ]
           },
           "configurations": {

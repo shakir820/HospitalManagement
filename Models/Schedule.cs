@@ -15,4 +15,16 @@ namespace HospitalManagement.Models
        
         public DateTime EndTime { get; set; }
     }
+
+
+
+    public class ScheduleModel
+    {
+        public long id { get; set; }
+        public DayOfWeek day_name { get; set; }
+
+        public DateTime start_time { get; set; }
+
+        public DateTime end_time { get; set; }
+    }
 }

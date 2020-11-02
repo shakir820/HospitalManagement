@@ -11,6 +11,7 @@ import { URL } from 'url';
 import { User } from '../models/user.model';
 import { Speciality } from '../models/speciality.model';
 import { Language } from '../models/langauge.model';
+import { Schedule } from '../models/schedule.model';
 
 @Injectable({
   providedIn: 'root'
@@ -46,9 +47,34 @@ export class UserService {
           error_msg: string,
           error: boolean,
           success: boolean,
-          user: { age: number, id: number, name: string, username: string, role: string, roles: string[], gender: string, email: string,
-            password: string, bloodGroup: string, bmdc_certifcate: string, city_name: string, country_name: string, country_phone_code: number,
-            country_short_name: string, state_name: string, phoneNumber: string, approved:boolean },
+          user: {  age: number,
+            id: number,
+            name: string,
+            username: string,
+            role: string,
+            roles: string[],
+            gender: string,
+            email: string,
+            password: string,
+            bloodGroup: string,
+            bmdc_certifcate: string,
+            city_name: string,
+            country_name: string,
+            country_phone_code: number,
+            country_short_name: string,
+            state_name: string,
+            phoneNumber: string,
+            approved: boolean,
+            biography: string,
+            degree_tittle: string,
+            doctor_title: string,
+            experience: number,
+            languages: Language[],
+            new_patient_visiting_price: number,
+            old_patient_visiting_price: number,
+            schedules: Schedule[],
+            specialities: Speciality[],
+            types_of: string },
           msg: string
         }>(this._baseUrl + 'api/UserManager/getUserById', { params: { id: user_id_str } }).subscribe(result => {
           if (result.success) {
@@ -63,6 +89,11 @@ export class UserService {
             this.user.name = result.user.name;
             this.user.username = result.user.username;
             this.user.phoneNumber = result.user.phoneNumber;
+            this.user.city_name = result.user.city_name;
+            this.user.country_name = result.user.country_name;
+            this.user.country_phone_code = result.user.country_phone_code;
+            this.user.country_short_name = result.user.country_short_name;
+            this.user.state_name = result.user.state_name;
             //console.log(result.user.roles);
             this.user.roles = [];
             result.user.roles.forEach(val => {
@@ -70,16 +101,32 @@ export class UserService {
             });
 
             this.roleChanged.emit(this.user.roles);
-
-
             this.user.bloodGroup = result.user.bloodGroup;
+
+            //docto info
             this.user.bmdc_certifcate = result.user.bmdc_certifcate;
             this.user.approved = result.user.approved;
-            this.user.city_name = result.user.city_name;
-            this.user.country_name = result.user.country_name;
-            this.user.country_phone_code = result.user.country_phone_code;
-            this.user.country_short_name = result.user.country_short_name;
-            this.user.state_name = result.user.state_name;
+            this.user.biography = result.user.biography;
+            this.user.degree_tittle = result.user.degree_tittle;
+            this.user.experience = result.user.experience;
+            this.user.languages = result.user.languages;
+            this.user.new_patient_visiting_price = result.user.new_patient_visiting_price;
+            this.user.old_patient_visiting_price = result.user.old_patient_visiting_price;
+            // this.user.schedules = result.user.schedules;
+            this.user.schedules = [];
+            result.user.schedules.forEach(val => {
+              var schedule = new Schedule();
+              schedule.day_name = val.day_name;
+              schedule.start_time = new Date( val.start_time.toISOString());
+              schedule.end_time = new Date(val.end_time.toISOString());
+              schedule.id = val.id;
+              this.user.schedules.push(schedule);
+            });
+
+            this.user.specialities = result.user.specialities;
+            this.user.types_of = result.user.types_of;
+            console.log(this.user);
+
             this.fireUserApprovedChangedEvent();
             this.fetchProfilePic(this.user.id);
             this.isLoggedIn = true;
@@ -191,9 +238,34 @@ export class UserService {
         error_msg: string,
         error: boolean,
         success: boolean,
-        user: { age: number, id: number, name: string, username: string, role: string, roles: string[], gender: string, email: string,
-          password: string, bloodGroup: string, bmdc_certifcate: string, city_name: string, country_name: string, country_phone_code: number,
-          country_short_name: string, state_name: string, phoneNumber: string, approved:boolean }
+        user: { age: number,
+          id: number,
+          name: string,
+          username: string,
+          role: string,
+          roles: string[],
+          gender: string,
+          email: string,
+          password: string,
+          bloodGroup: string,
+          bmdc_certifcate: string,
+          city_name: string,
+          country_name: string,
+          country_phone_code: number,
+          country_short_name: string,
+          state_name: string,
+          phoneNumber: string,
+          approved: boolean,
+          biography: string,
+          degree_tittle: string,
+          doctor_title: string,
+          experience: number,
+          languages: Language[],
+          new_patient_visiting_price: number,
+          old_patient_visiting_price: number,
+          schedules: Schedule[],
+          specialities: Speciality[],
+          types_of: string }
         msg: string,
         emailExist: boolean,
         wrong_password: boolean
@@ -208,6 +280,12 @@ export class UserService {
           this.user.name = result.user.name;
           this.user.username = result.user.username;
           this.user.phoneNumber = result.user.phoneNumber;
+          this.user.city_name = result.user.city_name;
+          this.user.country_name = result.user.country_name;
+          this.user.country_phone_code = result.user.country_phone_code;
+          this.user.country_short_name = result.user.country_short_name;
+          this.user.state_name = result.user.state_name;
+          this.user.bloodGroup = result.user.bloodGroup;
           this.user.roles = [];
           result.user.roles.forEach(val => {
             this.user.roles.push(val);
@@ -215,14 +293,27 @@ export class UserService {
 
           this.roleChanged.emit(this.user.roles);
           this.user.bloodGroup = result.user.bloodGroup;
+
+
+          //doctor info
           this.user.bmdc_certifcate = result.user.bmdc_certifcate;
           this.user.approved = result.user.approved;
-          this.user.city_name = result.user.city_name;
-          this.user.country_name = result.user.country_name;
-          this.user.country_phone_code = result.user.country_phone_code;
-          this.user.country_short_name = result.user.country_short_name;
-          this.user.state_name = result.user.state_name;
-         // console.log(this.user.roles);
+         this.user.bmdc_certifcate = result.user.bmdc_certifcate;
+         this.user.approved = result.user.approved;
+         this.user.city_name = result.user.city_name;
+
+         this.user.biography = result.user.biography;
+         this.user.degree_tittle = result.user.degree_tittle;
+         this.user.experience = result.user.experience;
+
+         this.user.languages = result.user.languages;
+         this.user.new_patient_visiting_price = result.user.new_patient_visiting_price;
+         this.user.old_patient_visiting_price = result.user.old_patient_visiting_price;
+         this.user.schedules = result.user.schedules;
+         this.user.specialities = result.user.specialities;
+         this.user.types_of = result.user.types_of;
+
+
           this.fireUserApprovedChangedEvent();
           this.fetchProfilePic(result.user.id);
           this.clearUserData('/');

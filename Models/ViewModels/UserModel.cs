@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,11 +41,24 @@ namespace HospitalManagement.Models
         public string doctor_title { get; set; }
         public string degree_tittle { get; set; }
         public string biography { get; set; }
+        
+        
         public List<SpecialityTagModel> specialities { get; set; }
+        public string specialities_json { get; set; }
+        
+        
         public int experience { get; set; }
         public string types_of { get; set; }
+        
+        
         public List<LanguageTagModel> languages { get; set; }
-        public List<Schedule> schedules { get; set; }
+        public string languages_json { get; set; }
+        
+
+        public List<ScheduleModel> schedules { get; set; }
+        public string schedules_json { get; set; }
+
+
         public decimal new_patient_visiting_price { get; set; }
         //gets old after 3 months
         public decimal old_patient_visiting_price { get; set; }

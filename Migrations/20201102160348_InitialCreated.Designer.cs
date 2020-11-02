@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HospitalManagement.Migrations
 {
     [DbContext(typeof(HospitalManagementDbContext))]
-    [Migration("20201029222729_InitialCreated")]
+    [Migration("20201102160348_InitialCreated")]
     partial class InitialCreated
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -168,9 +168,6 @@ namespace HospitalManagement.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("Experience")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
@@ -239,6 +236,9 @@ namespace HospitalManagement.Migrations
 
                     b.Property<string>("state_name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("year_of_Experience")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

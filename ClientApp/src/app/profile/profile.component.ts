@@ -1,8 +1,10 @@
 import { state, style, trigger } from '@angular/animations';
+import { WeekDay } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Language } from '../models/langauge.model';
+import { Schedule } from '../models/schedule.model';
 import { Speciality } from '../models/speciality.model';
 import { LocationService } from '../services/location.service';
 import { ProfileService } from '../services/profile.service';
@@ -28,17 +30,31 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     this.proposedUsername = this.userService.user.username;
     this.selectedGender = this.userService.user.gender;
     this.selectedRole = this.userService.user.roles[0];
+
+    if(this.selectedRole == 'Doctor'){
+      this.showDoctorInfoForm = true;
+    }
+
     this.user_name = this.userService.user.name;
     this.selectedAge = this.userService.user.age;
     this.phoneNumber = this.userService.user.phoneNumber;
     this.selectedBlood = this.userService.user.bloodGroup;
     this.bmdc_certificate = this.userService.user.bmdc_certifcate;
     this.doctorApproved = this.userService.user.approved;
+    this.biography = this.userService.user.biography;
+    this.degree_title = this.userService.user.degree_tittle;
+    this.doctor_title = this.userService.user.doctor_title;
+    this.year_of_experience = this.userService.user.experience;
+    this.new_patient_visiting_price = this.userService.user.new_patient_visiting_price;
+    this.old_patient_visiting_price = this.userService.user.old_patient_visiting_price;
 
+
+    this.resolveSchedules();
     this.ShowProfileImage();
     this.resolveCountryStateCity();
     this.resolveSpecialityTag();
     this.resolveLanguages();
+
   }
 
 
@@ -86,6 +102,13 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
 
   //doctor's info
+  doctor_title: string;
+  degree_title: string;
+  year_of_experience: number;
+  types_of: string;
+  biography: string;
+  new_patient_visiting_price: number;
+  old_patient_visiting_price: number;
   showDoctorInfoForm: boolean = false;
   specialityTagIsRequired: boolean = false;
   selectedSpeciality: number;
@@ -96,6 +119,72 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   selectedLanguage: number;
   suggestedLanguages: Language[] = [];
   selectedLanguages: Language[] = [];
+
+
+
+
+
+
+  //schedule info
+
+  //checkboxes
+  friday_checkbox: boolean = false;
+  saturday_checkbox: boolean = false;
+  sunday_checkbox: boolean = false;
+  monday_checkbox: boolean = false;
+  tuesday_checkbox: boolean = false;
+  wednesday_checkbox: boolean = false;
+  thursday_checkbox: boolean = false;
+
+
+  //start-end time
+  friday_start_time: string;
+  saturday_start_time: string;
+  sunday_start_time: string;
+  monday_start_time: string;
+  tuesday_start_time: string;
+  wednesday_start_time: string;
+  thursday_start_time: string;
+
+  friday_end_time: string;
+  saturday_end_time: string;
+  sunday_end_time: string;
+  monday_end_time: string;
+  tuesday_end_time: string;
+  wednesday_end_time: string;
+  thursday_end_time: string;
+
+
+
+  //error handlers
+  //start_time
+  friday_start_time_required: boolean = false;
+  saturday_start_time_required: boolean = false;
+  sunday_start_time_required: boolean = false;
+  monday_start_time_required: boolean = false;
+  tuesday_start_time_required: boolean = false;
+  wednesday_start_time_required: boolean = false;
+  thursday_start_time_required: boolean = false;
+
+  //end_time
+  friday_end_time_required: boolean = false;
+  saturday_end_time_required: boolean = false;
+  sunday_end_time_required: boolean = false;
+  monday_end_time_required: boolean = false;
+  tuesday_end_time_required: boolean = false;
+  wednesday_end_time_required: boolean = false;
+  thursday_end_time_required: boolean = false;
+
+
+  //schedule error
+  friday_schedule_error: boolean = false;
+  saturday_schedule_error: boolean = false;
+  sunday_schedule_error: boolean = false;
+  monday_schedule_error: boolean = false;
+  tuesday_schedule_error: boolean = false;
+  wednesday_schedule_error: boolean = false;
+  thursday_schedule_error: boolean = false;
+
 
   //#endregion
 
@@ -117,12 +206,64 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
 
 
-  selectedRoleChanged(evet_data){
-    if(this.selectedRole == 'Doctor'){
+  selectedRoleChanged(evet_data) {
+    if (this.selectedRole == 'Doctor') {
       this.showDoctorInfoForm = true;
     }
-    else{
+    else {
       this.showDoctorInfoForm = false;
+    }
+  }
+
+
+
+
+  resolveSchedules(){
+    if( this.userService.user.schedules.length > 0){
+      this.userService.user.schedules.forEach(schedule => {
+        if(schedule.day_name == WeekDay.Friday){
+          this.friday_checkbox = true;
+          console.log(schedule.start_time);
+          this.friday_start_time = schedule.start_time.getHours() + ':' + schedule.start_time.getMinutes();
+          this.friday_end_time = schedule.end_time.getHours() + ':' + schedule.end_time.getMinutes();
+        }
+
+        if(schedule.day_name == WeekDay.Saturday){
+          this.saturday_checkbox = true;
+          this.saturday_start_time = schedule.start_time.getHours() + ':' + schedule.start_time.getMinutes();
+          this.saturday_end_time = schedule.end_time.getHours() + ':' + schedule.end_time.getMinutes();
+        }
+
+        if(schedule.day_name == WeekDay.Sunday){
+          this.sunday_checkbox = true;
+          this.sunday_start_time = schedule.start_time.getHours() + ':' + schedule.start_time.getMinutes();
+          this.sunday_end_time = schedule.end_time.getHours() + ':' + schedule.end_time.getMinutes();
+        }
+
+        if(schedule.day_name == WeekDay.Monday){
+          this.monday_checkbox = true;
+          this.monday_start_time = schedule.start_time.getHours() + ':' + schedule.start_time.getMinutes();
+          this.monday_end_time = schedule.end_time.getHours() + ':' + schedule.end_time.getMinutes();
+        }
+
+        if(schedule.day_name == WeekDay.Tuesday){
+          this.tuesday_checkbox = true;
+          this.tuesday_start_time = schedule.start_time.getHours() + ':' + schedule.start_time.getMinutes();
+          this.tuesday_end_time = schedule.end_time.getHours() + ':' + schedule.end_time.getMinutes();
+        }
+
+        if(schedule.day_name == WeekDay.Wednesday){
+          this.wednesday_checkbox = true;
+          this.wednesday_start_time = schedule.start_time.getHours() + ':' + schedule.start_time.getMinutes();
+          this.wednesday_end_time = schedule.end_time.getHours() + ':' + schedule.end_time.getMinutes();
+        }
+
+        if(schedule.day_name == WeekDay.Thursday){
+          this.thursday_checkbox = true;
+          this.thursday_start_time = schedule.start_time.getHours() + ':' + schedule.start_time.getMinutes();
+          this.thursday_end_time = schedule.end_time.getHours() + ':' + schedule.end_time.getMinutes();
+        }
+      });
     }
   }
 
@@ -288,34 +429,253 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
 
 
-  checkIfSpecialityTagsAreRequired():boolean{
-    if(this.selectedRole == 'Doctor'){
-      if(this.selectedSpecialities.length > 0){
+  checkIfSpecialityTagsAreRequired(): boolean {
+    if (this.selectedRole == 'Doctor') {
+      if (this.selectedSpecialities.length > 0) {
         return false;
       }
-      else{
+      else {
         return true;
       }
     }
-    else{
+    else {
       return false;
     }
   }
 
 
-  checkIfLanguageTagsAreRequired():boolean{
-    if(this.selectedRole == 'Doctor'){
-      if(this.selectedLanguages.length > 0){
+  checkIfLanguageTagsAreRequired(): boolean {
+    if (this.selectedRole == 'Doctor') {
+      if (this.selectedLanguages.length > 0) {
         return false;
       }
-      else{
+      else {
         return true;
       }
     }
-    else{
+    else {
       return false;
     }
   }
+
+
+
+
+  convertDateFromString(time:string): Date{
+    try{
+      var today = new Date(Date.now());
+      var time_array = time.split(':');
+      var date = new Date(today.getUTCFullYear(), today.getUTCMonth(), today.getDate(), Number.parseInt(time_array[0]), Number.parseInt(time_array[1]));
+      return date;
+    }
+    catch(ex){
+      console.log(ex);
+      return undefined;
+    }
+  }
+
+
+
+
+  validateScheduleInfo(): boolean {
+
+    // reset default value
+    this.friday_end_time_required = false;
+    this.friday_start_time_required = false;
+    this.friday_schedule_error = false;
+
+    this.saturday_end_time_required = false;
+    this.saturday_start_time_required = false;
+    this.saturday_schedule_error = false;
+
+    this.sunday_end_time_required = false;
+    this.sunday_start_time_required = false;
+    this.sunday_schedule_error = false;
+
+    this.monday_end_time_required = false;
+    this.monday_start_time_required = false;
+    this.monday_schedule_error = false;
+
+    this.tuesday_end_time_required = false;
+    this.tuesday_start_time_required = false;
+    this.tuesday_schedule_error = false;
+
+    this.wednesday_end_time_required = false;
+    this.wednesday_schedule_error = false;
+    this.wednesday_start_time_required = false;
+
+    this.thursday_end_time_required = false;
+    this.thursday_schedule_error = false;
+    this.thursday_start_time_required = false;
+
+
+    var schedule_error_found = false;
+
+
+    if (this.selectedRole == 'Doctor') {
+
+      if (this.friday_checkbox) {
+        if (this.friday_start_time == undefined) {
+          this.friday_start_time_required = true;
+          schedule_error_found = true;
+        }
+        if (this.friday_end_time == undefined) {
+          this.friday_end_time_required = true;
+          schedule_error_found = true;
+        }
+
+        if (this.friday_end_time != undefined && this.friday_start_time != undefined) {
+          var start_time = this.convertDateFromString(this.friday_start_time);
+          var end_time = this.convertDateFromString(this.friday_end_time);
+          if ((end_time.getTime() - start_time.getTime()) <= 0) {
+            this.friday_schedule_error = true;
+            schedule_error_found = true;
+          }
+        }
+      }
+
+
+      //saturday
+      if (this.saturday_checkbox) {
+        if (this.saturday_start_time == undefined) {
+          this.saturday_start_time_required = true;
+          schedule_error_found = true;
+        }
+        if (this.friday_end_time == undefined) {
+          this.saturday_end_time_required = true;
+          schedule_error_found = true;
+        }
+
+        if (this.saturday_start_time != undefined && this.saturday_end_time != undefined) {
+          var start_time = this.convertDateFromString(this.saturday_start_time);
+          var end_time = this.convertDateFromString(this.saturday_end_time);
+          if ((end_time.getTime() - start_time.getTime()) <= 0) {
+            this.saturday_schedule_error = true;
+            schedule_error_found = true;
+          }
+        }
+      }
+
+
+      //sunday
+      if (this.sunday_checkbox) {
+        if (this.sunday_start_time == undefined) {
+          this.sunday_start_time_required = true;
+          schedule_error_found = true;
+        }
+        if (this.sunday_end_time == undefined) {
+          this.sunday_end_time_required = true;
+          schedule_error_found = true;
+        }
+
+        if (this.sunday_end_time != undefined && this.sunday_start_time != undefined) {
+          var start_time = this.convertDateFromString(this.sunday_start_time);
+
+          var end_time = this.convertDateFromString(this.sunday_end_time);
+          if ((end_time.getTime() - start_time.getTime()) <= 0) {
+            this.sunday_schedule_error = true;
+            schedule_error_found = true;
+          }
+        }
+      }
+
+
+      //monday
+      if (this.monday_checkbox) {
+        if (this.monday_start_time == undefined) {
+          this.monday_start_time_required = true;
+          schedule_error_found = true;
+        }
+        if (this.monday_end_time == undefined) {
+          this.monday_end_time_required = true;
+          schedule_error_found = true;
+        }
+
+        if (this.monday_end_time != undefined && this.monday_start_time != undefined) {
+          var start_time = this.convertDateFromString(this.monday_start_time);
+          var end_time = this.convertDateFromString(this.monday_end_time);
+          if ((end_time.getTime() - start_time.getTime()) <= 0) {
+            this.monday_schedule_error = true;
+            schedule_error_found = true;
+          }
+        }
+      }
+
+      //tuesday
+      if (this.tuesday_checkbox) {
+        if (this.tuesday_start_time == undefined) {
+          this.tuesday_start_time_required = true;
+          schedule_error_found = true;
+        }
+        if (this.tuesday_end_time == undefined) {
+          this.tuesday_end_time_required = true;
+          schedule_error_found = true;
+        }
+
+        if (this.tuesday_end_time != undefined && this.tuesday_start_time != undefined) {
+          var start_time = this.convertDateFromString(this.tuesday_start_time);
+          var end_time = this.convertDateFromString(this.tuesday_end_time);
+          if ((end_time.getTime() - start_time.getTime()) <= 0) {
+            this.tuesday_schedule_error = true;
+            schedule_error_found = true;
+          }
+        }
+      }
+
+      //wednesday
+      if (this.wednesday_checkbox) {
+        if (this.wednesday_start_time == undefined) {
+          this.wednesday_start_time_required = true;
+          schedule_error_found = true;
+        }
+        if (this.wednesday_end_time == undefined) {
+          this.wednesday_end_time_required = true;
+          schedule_error_found = true;
+        }
+
+        if (this.wednesday_end_time != undefined && this.wednesday_start_time != undefined) {
+          var start_time = this.convertDateFromString(this.wednesday_start_time);
+          var end_time = this.convertDateFromString(this.wednesday_end_time);
+          if ((end_time.getTime() - start_time.getTime()) <= 0) {
+            this.wednesday_schedule_error = true;
+            schedule_error_found = true;
+          }
+        }
+      }
+
+
+      //thursday
+      if (this.thursday_checkbox) {
+        if (this.thursday_start_time == undefined) {
+          this.thursday_start_time_required = true;
+          schedule_error_found = true;
+        }
+        if (this.thursday_end_time == undefined) {
+          this.thursday_end_time_required = true;
+          schedule_error_found = true;
+        }
+
+        if (this.thursday_start_time != undefined && this.thursday_end_time != undefined) {
+          var start_time = this.convertDateFromString(this.thursday_start_time);
+          var end_time = this.convertDateFromString(this.thursday_end_time);
+          console.log('start_time: ' + start_time.getTime());
+          console.log('end_time: ' + end_time.getTime());
+          if ((end_time.getTime() - start_time.getTime()) <= 0) {
+            this.thursday_schedule_error = true;
+            schedule_error_found = true;
+          }
+        }
+      }
+    }
+    else {
+      schedule_error_found = false;
+    }
+
+    return schedule_error_found;
+  }
+
+
+
 
 
 
@@ -327,12 +687,18 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     this.specialityTagIsRequired = this.checkIfSpecialityTagsAreRequired();
     this.languageTagIsRequired = this.checkIfLanguageTagsAreRequired();
 
+
+    var scheduleError = this.validateScheduleInfo();
+    console.log('schedule error: ' + scheduleError);
+    console.log(this.profileForm);
+    //return;
+
     if (this.profileForm.valid && this.isUniqueEmailAddress && !this.invalidAge && !this.invalidMobileNumber && this.uniqueUsername
-      && !this.specialityTagIsRequired && !this.languageTagIsRequired) {
+      && !this.specialityTagIsRequired && !this.languageTagIsRequired && !scheduleError) {
 
       try {
 
-        this.savingProfileData = true;
+        //this.savingProfileData = true;
         this.submitted = false;
 
         var formData = new FormData();
@@ -368,6 +734,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
         formData.append('bloodGroup', this.selectedBlood);
 
         var selectedFiles = (<HTMLInputElement>this.imageInputRef.nativeElement).files;
+
         if (selectedFiles.length > 0) {
           var profile_pic_fie = selectedFiles[0];
           formData.append('profilePic', profile_pic_fie, profile_pic_fie.name);
@@ -376,14 +743,92 @@ export class ProfileComponent implements OnInit, AfterViewInit {
         if (this.selectedRole == 'Doctor') {
           var bmdc_cert_no = this.profileForm.controls['bmdc'].value;
           formData.append('bmdc_certifcate', bmdc_cert_no);
-          // formData.append('bmdc_certifcate', bmdc_cert_no);
-          // formData.append('bmdc_certifcate', bmdc_cert_no);
-          // formData.append('bmdc_certifcate', bmdc_cert_no);
+
+          formData.append('doctor_title', this.doctor_title);
+          formData.append('degree_title', this.degree_title);
+          var selected_specialities_json = JSON.stringify(this.selectedSpecialities);
+          formData.append('specialities_json', selected_specialities_json);
+          formData.append('experience', this.year_of_experience.toString());
+          var selected_languages_json = JSON.stringify(this.selectedLanguages);
+          formData.append('languages_json', selected_languages_json);
+          formData.append('types_of', this.profileForm.controls['types_of'].value);
+          formData.append('biography', this.profileForm.controls['biography'].value);
 
 
+
+          //schedule info
+          var schedule_list = [];
+
+          if(this.friday_checkbox == true){
+            var friday_schedule = {
+              day_name: WeekDay.Friday,
+              start_time: this.convertDateFromString(this.friday_start_time).toISOString(),
+              end_time: this.convertDateFromString(this.friday_end_time).toISOString()
+            }
+            schedule_list.push(friday_schedule);
+          }
+
+          if(this.saturday_checkbox == true){
+            var saturday_schedule = {
+              day_name: WeekDay.Saturday,
+              start_time: this.convertDateFromString(this.saturday_start_time).toISOString(),
+              end_time: this.convertDateFromString(this.saturday_end_time).toISOString()
+            }
+            schedule_list.push(saturday_schedule);
+          }
+
+          if(this.sunday_checkbox == true){
+            var sunday_schedule = {
+              day_name: WeekDay.Sunday,
+              start_time: this.convertDateFromString(this.sunday_start_time).toISOString(),
+              end_time: this.convertDateFromString(this.sunday_end_time).toISOString()
+            }
+            schedule_list.push(sunday_schedule);
+          }
+
+          if(this.monday_checkbox == true){
+            var monday_schedule = {
+              day_name: WeekDay.Monday,
+              start_time: this.convertDateFromString(this.monday_start_time).toISOString(),
+              end_time: this.convertDateFromString(this.monday_end_time).toISOString()
+            }
+            schedule_list.push(monday_schedule);
+          }
+
+          if(this.tuesday_checkbox == true){
+            var tuesday_schedule = {
+              day_name: WeekDay.Tuesday,
+              start_time: this.convertDateFromString(this.tuesday_start_time).toISOString(),
+              end_time: this.convertDateFromString(this.tuesday_end_time).toISOString()
+            }
+            schedule_list.push(tuesday_schedule);
+          }
+
+          if(this.wednesday_checkbox == true){
+            var wednesday_schedule = {
+              day_name: WeekDay.Wednesday,
+              start_time: this.convertDateFromString(this.wednesday_start_time).toISOString(),
+              end_time: this.convertDateFromString(this.wednesday_end_time).toISOString()
+            }
+            schedule_list.push(wednesday_schedule);
+          }
+
+          if(this.thursday_checkbox == true){
+            var thursday_schedule = {
+              day_name: WeekDay.Thursday,
+              start_time: this.convertDateFromString(this.thursday_start_time).toISOString(),
+              end_time: this.convertDateFromString(this.thursday_end_time).toISOString()
+            }
+            schedule_list.push(thursday_schedule);
+          }
+
+          var schedule_list_json = JSON.stringify(schedule_list);
+          formData.append('schedules_json',  schedule_list_json);
+
+          //visiting price
+          formData.append('new_patient_visiting_price', this.profileForm.controls['new_patient_visiting_price'].value);
+          formData.append('old_patient_visiting_price', this.profileForm.controls['old_patient_visiting_price'].value);
         }
-
-
 
         this.httpClient.post<{
           error_msg: string,
@@ -391,11 +836,36 @@ export class ProfileComponent implements OnInit, AfterViewInit {
           success: boolean,
           role_added: boolean,
           user: {
-            age: number, id: number, name: string, username: string, role: string, roles: string[], gender: string, email: string,
-            password: string, bloodGroup: string, bmdc_certifcate: string, city_name: string, country_name: string, country_phone_code: number,
-            country_short_name: string, state_name: string, phoneNumber: string, approved: boolean
+            age: number,
+            id: number,
+            name: string,
+            username: string,
+            role: string,
+            roles: string[],
+            gender: string,
+            email: string,
+            password: string,
+            bloodGroup: string,
+            bmdc_certifcate: string,
+            city_name: string,
+            country_name: string,
+            country_phone_code: number,
+            country_short_name: string,
+            state_name: string,
+            phoneNumber: string,
+            approved: boolean,
+            biography: string,
+            degree_tittle: string,
+            doctor_title: string,
+            experience: number,
+            languages: Language[],
+            new_patient_visiting_price: number,
+            old_patient_visiting_price: number,
+            schedules: Schedule[],
+            specialities: Speciality[],
+            types_of: string
           }
-        }>(this._baseUrl + 'api/UserManager/UpdateProfileData', formData, { headers: { 'enctype': 'multipart/form-data' } }).subscribe(result => {
+        }>(this._baseUrl + 'api/UserManager/UpdateProfileData',  formData,  { headers: { 'enctype': 'multipart/form-data'  } }).subscribe(result => {
           this.savingProfileData = false;
           console.log(result);
           if (result.success == true) {
@@ -424,6 +894,26 @@ export class ProfileComponent implements OnInit, AfterViewInit {
             this.userService.user.country_short_name = result.user.country_short_name;
             this.userService.user.state_name = result.user.state_name;
             // console.log(this.user.roles);
+            this.userService.user.biography = result.user.biography;
+            this.userService.user.degree_tittle = result.user.degree_tittle;
+            this.userService.user.experience = result.user.experience;
+            // result.user.languages.forEach(val => {
+            //   var lang = new Language();
+            //   lang.id = val.id;
+            //   lang.languageName = val.languageName;
+            //   this.userService.user.languages.push(lang);
+            // });
+
+            this.userService.user.languages = result.user.languages;
+            this.userService.user.new_patient_visiting_price = result.user.new_patient_visiting_price;
+            this.userService.user.old_patient_visiting_price = result.user.old_patient_visiting_price;
+            this.userService.user.schedules = result.user.schedules;
+            this.userService.user.specialities = result.user.specialities;
+            this.userService.user.types_of = result.user.types_of;
+
+
+            console.log(this.userService.user);
+
             this.userService.fireUserApprovedChangedEvent();
             this.userService.fetchProfilePic(result.user.id);
             this.userService.clearUserData('/');
@@ -460,12 +950,11 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   //#region speciality tag
 
   deleting_tags = false;
-  resolveSpecialityTag(){
-    if(this.userService.doctorSpecialityTags !== undefined && this.userService.doctorSpecialityTags.length > 0){
-
+  resolveSpecialityTag() {
+    if (this.userService.doctorSpecialityTags !== undefined && this.userService.doctorSpecialityTags.length > 0) {
       this.allSpecialities = this.userService.doctorSpecialityTags;
       this.suggestedSpecialities = this.allSpecialities.slice();
-
+      this.selectedSpecialities = this.userService.user.specialities;
     }
   }
 
@@ -478,6 +967,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       var selected_tag = this.suggestedSpecialities.find(a => a.id == this.selectedSpeciality);
       if (selected_tag != null) {
         this.selectedSpecialities.push(selected_tag);
+        this.specialityTagIsRequired = false;
       }
     }
   }
@@ -497,16 +987,18 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
 
   //#region  languages
-  resolveLanguages(){
+  resolveLanguages() {
     this.suggestedLanguages = this.userService.languageList;
+    this.selectedLanguages = this.userService.user.languages;
   }
 
 
-  onLanguageChanged(event_data){
-    if(this.selectedLanguage != undefined && this.selectedLanguage != -1, this.selectedLanguage != null){
+  onLanguageChanged(event_data) {
+    if (this.selectedLanguage != undefined && this.selectedLanguage != -1, this.selectedLanguage != null) {
       var selected_lang = this.suggestedLanguages.find(a => a.id == this.selectedLanguage);
       if (selected_lang != null) {
         this.selectedLanguages.push(selected_lang);
+        this.languageTagIsRequired = false;
         this.selectedLanguage = -1;
       }
     }

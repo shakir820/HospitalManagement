@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Identity.UI.V3.Pages.Internal.Account;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace HospitalManagement.Controllers
 {
@@ -221,6 +222,30 @@ namespace HospitalManagement.Controllers
                         {
                             var roleCollection = await _userManager.GetRolesAsync(user);
 
+                            user = await _context.Users.Include(a => a.Languages).Include(a => a.Specialities).Include(a => a.Schedules).
+                                AsNoTracking().FirstOrDefaultAsync(a => a.Id == user.Id);
+
+                            var language_List = new List<LanguageTagModel>();
+                            foreach (var item in user.Languages)
+                            {
+                                var language = new LanguageTagModel { id = item.LanguageId, languageName = item.LanguageName };
+                                language_List.Add(language);
+                            }
+
+                            var speciality_List = new List<SpecialityTagModel>();
+                            foreach (var item in user.Specialities)
+                            {
+                                var speciality = new SpecialityTagModel { id = item.SpecialityTagId, specialityName = item.SpecialityName };
+                                speciality_List.Add(speciality);
+                            }
+
+                            var schedule_list = new List<ScheduleModel>();
+                            foreach (var item in user.Schedules)
+                            {
+                                var schedule = new ScheduleModel { day_name = item.DayName, end_time = item.EndTime, start_time = item.StartTime, id = item.Id };
+                                schedule_list.Add(schedule);
+                            }
+
                             return new JsonResult(new ViewModels.SignInResult
                             {
                                 success = true,
@@ -241,8 +266,19 @@ namespace HospitalManagement.Controllers
                                     country_short_name = user.country_short_name,
                                     state_name = user.state_name,
                                     phoneNumber = user.PhoneNumber,
-                                    approved = user.Approved
-                                    
+                                    approved = user.Approved,
+
+                                    biography = user.Biography,
+                                    degree_tittle = user.DegreeTittle,
+                                    doctor_title = user.DoctorTitle,
+                                    experience = user.year_of_Experience,
+                                    languages = language_List,
+                                    new_patient_visiting_price = user.NewPatientVisitingPrice,
+                                    old_patient_visiting_price = user.OldPatientVisitingPrice,
+                                    schedules = schedule_list,
+                                    specialities = speciality_List,
+                                    types_of = user.TypesOf
+
                                 }
 
                             });
@@ -313,7 +349,7 @@ namespace HospitalManagement.Controllers
         {
             try
             {
-                var user = await _context.Users.FirstOrDefaultAsync(a => a.Id == id);
+                var user = await _context.Users.Include(a => a.Languages).Include(a => a.Specialities).Include(a =>a.Schedules).AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
                 if (user != null)
                 {
                     var userRoleIds = await _context.UserRoles.Where(a => a.UserId == user.Id).ToListAsync();
@@ -325,6 +361,27 @@ namespace HospitalManagement.Controllers
                         {
                             roleCollection.Add(user_role.Name);
                         }
+                    }
+
+                    var language_List = new List<LanguageTagModel>();
+                    foreach(var item in user.Languages)
+                    {
+                        var language = new LanguageTagModel { id = item.LanguageId, languageName = item.LanguageName };
+                        language_List.Add(language);
+                    }
+
+                    var speciality_List = new List<SpecialityTagModel>();
+                    foreach (var item in user.Specialities)
+                    {
+                        var speciality = new SpecialityTagModel { id = item.SpecialityTagId, specialityName = item.SpecialityName };
+                        speciality_List.Add(speciality);
+                    }
+
+                    var schedule_list = new List<ScheduleModel>();
+                    foreach(var item in user.Schedules)
+                    {
+                        var schedule = new ScheduleModel { day_name = item.DayName, end_time = item.EndTime, start_time = item.StartTime, id = item.Id };
+                        schedule_list.Add(schedule);
                     }
 
                     return new JsonResult(new ViewModels.SignInResult
@@ -347,8 +404,18 @@ namespace HospitalManagement.Controllers
                             country_short_name = user.country_short_name,
                             state_name = user.state_name,
                             phoneNumber = user.PhoneNumber,
-                            approved = user.Approved
-                            //profilePic = user.ProfilePic
+                            
+                            approved = user.Approved,
+                            biography = user.Biography,
+                            degree_tittle = user.DegreeTittle,
+                            doctor_title = user.DoctorTitle,
+                            experience = user.year_of_Experience,
+                            languages = language_List,
+                            new_patient_visiting_price = user.NewPatientVisitingPrice,
+                            old_patient_visiting_price = user.OldPatientVisitingPrice,
+                            schedules = schedule_list,
+                            specialities = speciality_List,
+                            types_of = user.TypesOf
                         }
 
                     });
@@ -423,12 +490,12 @@ namespace HospitalManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateProfileData([FromForm] UserModel userModel)
         {
-
+           
             using (var transaction = await _context.Database.BeginTransactionAsync())
             {
                 try
                 {
-                    var user = await _context.Users.FirstOrDefaultAsync(a => a.Id == userModel.id);
+                    var user = await _context.Users.Include(a=>a.Schedules).Include(a=>a.Languages).Include(a=>a.Specialities).FirstOrDefaultAsync(a => a.Id == userModel.id);
                     if (user != null)
                     {
 
@@ -438,8 +505,6 @@ namespace HospitalManagement.Controllers
                             if (user.Email != userModel.email)
                             {
                                 await _userManager.ChangeEmailAsync(user, userModel.email, null);
-                                //user.Email = userModel.email;
-                                //user.NormalizedEmail = userModel.email.Normalize();
                             }
                         }
 
@@ -485,16 +550,76 @@ namespace HospitalManagement.Controllers
 
 
                         user.state_name = userModel.state_name;
+                        user.city_name = userModel.city_name;
+
                         if(userModel.username != null)
                         {
                             if (user.UserName != userModel.username)
                             {
                                 await _userManager.SetUserNameAsync(user, userModel.username);
-                                //user.UserName = userModel.username;
-                                //user.NormalizedUserName = userModel.username.Normalize();
+                               
                             }
                         }
-                        
+
+                        if(userModel.role == "Doctor")
+                        {
+                            user.Biography = userModel.biography;
+                            user.DegreeTittle = userModel.degree_tittle;
+                            user.DoctorTitle = userModel.doctor_title;
+
+                            if (!string.IsNullOrEmpty(userModel.languages_json))
+                            {
+                                user.Languages.Clear();
+                                await _context.SaveChangesAsync();
+
+                                userModel.languages = JsonConvert.DeserializeObject<List<LanguageTagModel>>(userModel.languages_json);
+                                foreach (var item in userModel.languages)
+                                {
+                                    var lang = new SelectedLanguage { LanguageId = item.id, LanguageName = item.languageName };
+                                    user.Languages.Add(lang);
+                                    await _context.SaveChangesAsync();
+                                }
+                            }
+                            user.NewPatientVisitingPrice = userModel.new_patient_visiting_price;
+                            user.OldPatientVisitingPrice = userModel.old_patient_visiting_price;
+
+                            if (!string.IsNullOrEmpty(userModel.schedules_json))
+                            {
+                                userModel.schedules = JsonConvert.DeserializeObject<List<ScheduleModel>>(userModel.schedules_json);
+                                user.Schedules.Clear();
+                                await _context.SaveChangesAsync();
+                                foreach(var item in userModel.schedules)
+                                {
+                                    var schedule = new Schedule { DayName = item.day_name, EndTime = item.end_time, StartTime = item.start_time };
+                                    user.Schedules.Add(schedule);
+                                    await _context.SaveChangesAsync();
+                                }
+                            }
+
+                            if (!string.IsNullOrEmpty(userModel.specialities_json))
+                            {
+                                user.Specialities.Clear();
+                                await _context.SaveChangesAsync();
+                                userModel.specialities = JsonConvert.DeserializeObject<List<SpecialityTagModel>>(userModel.specialities_json);
+
+                                foreach(var item in userModel.specialities)
+                                {
+                                    var speciality = new SelectedSpecialityTag { SpecialityTagId = item.id, SpecialityName = item.specialityName };
+                                    user.Specialities.Add(speciality);
+                                    await _context.SaveChangesAsync();
+                                }
+                            }
+
+
+                            user.TypesOf = userModel.types_of;
+                            user.year_of_Experience = userModel.experience;
+
+                        }
+
+
+
+
+
                         await _context.SaveChangesAsync();
 
 
@@ -563,6 +688,13 @@ namespace HospitalManagement.Controllers
                         await transaction.CommitAsync();
 
                         var userRoles = await _userManager.GetRolesAsync(user);
+                        //user = await _context.Users.Include(a => a.Schedules).FirstOrDefaultAsync(a => a.Id == userModel.id);
+                        var schedule_list = new List<ScheduleModel>();
+                        foreach(var item in user.Schedules)
+                        {
+                            var shcedule = new ScheduleModel { id = item.Id, day_name = item.DayName, end_time = item.EndTime, start_time = item.StartTime };
+                            schedule_list.Add(shcedule);
+                        }
 
                         var userResult = new UserModel
                         {
@@ -581,7 +713,19 @@ namespace HospitalManagement.Controllers
                             phoneNumber = user.PhoneNumber,
                             roles = userRoles,
                             state_name = user.state_name,
-                            username = user.UserName
+                            username = user.UserName,
+
+
+                            biography = user.Biography,
+                            degree_tittle = user.DegreeTittle,
+                            doctor_title = user.DegreeTittle,
+                            experience = user.year_of_Experience,
+                            languages = userModel.languages,
+                            new_patient_visiting_price = user.NewPatientVisitingPrice,
+                            old_patient_visiting_price = user.OldPatientVisitingPrice,
+                            schedules = schedule_list,
+                            specialities = userModel.specialities,
+                            types_of = user.TypesOf
                         };
 
                         return new JsonResult(new

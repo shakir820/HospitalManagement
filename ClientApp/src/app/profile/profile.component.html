@@ -317,7 +317,7 @@
                           <div class="col-sm-12 col-md-6">
                             <div class=" form-group">
                               <label for="doctor_title">Title</label>
-                              <input name="doctor_title" ngModel type="text"
+                              <input name="doctor_title" [(ngModel)]="doctor_title" type="text"
                               (change)="ProgressProfileComplete($event)"
                               required
                               id="doctor_title" class="form-control"/>
@@ -328,7 +328,7 @@
                           <div class="col-sm-12 col-md-6">
                             <div class=" form-group">
                               <label for="degree_title">Degree title</label>
-                              <input name="degree_title" ngModel type="text"
+                              <input name="degree_title" [(ngModel)]="degree_title" type="text"
                               required
                               (change)="ProgressProfileComplete($event)"
                               id="degree_title" class="form-control"/>
@@ -364,7 +364,8 @@
                                 <input type="number" class="form-control"
                                 name="year_of_experience"
                                 required
-                                ngModel
+                                [(ngModel)]="year_of_experience"
+                                onkeyup="if(this.value<0){this.value= this.value * -1}"
                                 id="year_of_experience"
                                 >
                                 <div class="input-group-append">
@@ -405,7 +406,7 @@
                               <div class="input-group">
                                 <input type="text" class="form-control"
                                 name="types_of"
-                                ngModel
+                                [(ngModel)]="types_of"
                                 id="types_of"
                                 >
                               </div>
@@ -420,11 +421,439 @@
                               <label for="biography">Bio</label>
                               <textarea type="text" id="biography" name="biography"
                               class="form-control" rows="3"
-                              ngModel></textarea>>
+                              [(ngModel)]="biography"></textarea>
                             </div>
                           </div>
                         </div>
                       </div>
+
+
+
+
+                      <!-- schedule info -->
+                      <div *ngIf="showDoctorInfoForm">
+                        <div class="my-3 p-3 bg-gray-100">
+                          <h5 class="text-muted font-weight-bold">Schedule Info</h5>
+                        </div>
+
+
+                        <!-- friday -->
+                        <div class="row">
+                          <div class="col-sm-6 d-flex align-items-center">
+                            <div class="form-check">
+                              <input class="form-check-input"
+                              [(ngModel)]="friday_checkbox"
+                              type="checkbox"
+                              name="friday_checkbox"
+                              id="friday_checkbox">
+                              <label class="form-check-label" for="friday_checkbox">
+                                Friday
+                              </label>
+                            </div>
+                          </div>
+                          <div class="col-sm-8 col-md-6">
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label for="friday_start_time">Start Time</label>
+                                  <input type="time" [(ngModel)]="friday_start_time"
+                                  name="friday_start_time"
+                                  id="friday_start_time"
+                                  [ngClass]="{'border-danger': friday_schedule_error == true}"
+                                  class="form-control">
+                                  <small class="text-danger" *ngIf="friday_start_time_required">Required</small>
+                                </div>
+                              </div>
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label for="friday_end_time">End Time</label>
+                                  <input type="time" [(ngModel)]="friday_end_time"
+                                  name="friday_end_time"
+                                  id="friday_end_time"
+                                  [ngClass]="{'border-danger': friday_schedule_error == true}"
+                                  class="form-control">
+                                  <small class="text-danger" *ngIf="friday_end_time_required">Required</small>
+                                </div>
+                              </div>
+                            </div>
+                            <div *ngIf="friday_schedule_error">
+                              <small class="text-danger" >Invalid Schedule</small>
+                            </div>
+
+
+                          </div>
+                        </div>
+
+
+                        <!-- Saturday -->
+                        <div class="row">
+                          <div class="col-sm-6 d-flex align-items-center">
+                            <div class="form-check">
+                              <input class="form-check-input"
+                              [(ngModel)]="saturday_checkbox"
+                              name="saturday_checkbox"
+                              type="checkbox"
+                              id="saturday_checkbox">
+                              <label class="form-check-label" for="saturday_checkbox">
+                                Saturday
+                              </label>
+                            </div>
+                          </div>
+                          <div class="col-sm-8 col-md-6">
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label for="saturday_start_time">Start Time</label>
+                                  <input type="time" [(ngModel)]="saturday_start_time"
+                                  name="saturday_start_time"
+                                  id="saturday_start_time"
+                                  [ngClass]="{'border-danger': saturday_schedule_error == true}"
+                                  class="form-control">
+                                  <small class="text-danger" *ngIf="saturday_start_time_required">Required</small>
+                                </div>
+                              </div>
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label for="saturday_end_time">End Time</label>
+                                  <input type="time" [(ngModel)]="saturday_end_time"
+                                  name="saturday_end_time"
+                                  [ngClass]="{'border-danger': saturday_schedule_error == true}"
+                                  id="saturday_end_time"
+                                  class="form-control">
+                                  <small class="text-danger" *ngIf="saturday_end_time_required">Required</small>
+                                </div>
+                              </div>
+                            </div>
+                            <div *ngIf="saturday_schedule_error">
+                              <small class="text-danger" >Invalid Schedule</small>
+                            </div>
+
+
+                          </div>
+                        </div>
+
+
+
+
+
+
+                         <!-- Sunday -->
+                         <div class="row">
+                          <div class="col-sm-6 d-flex align-items-center">
+                            <div class="form-check">
+                              <input class="form-check-input"
+                              [(ngModel)]="sunday_checkbox"
+                              name="sunday_checkbox"
+                              type="checkbox"
+                              id="sunday_checkbox">
+                              <label class="form-check-label" for="sunday_checkbox">
+                                Sunday
+                              </label>
+                            </div>
+                          </div>
+                          <div class="col-sm-8 col-md-6">
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label for="sunday_start_time">Start Time</label>
+                                  <input type="time" [(ngModel)]="sunday_start_time"
+                                  name="sunday_start_time"
+                                  id="sunday_start_time"
+                                  [ngClass]="{'border-danger': sunday_schedule_error == true}"
+                                  class="form-control">
+                                  <small class="text-danger" *ngIf="sunday_start_time_required">Required</small>
+                                </div>
+                              </div>
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label for="sunday_end_time">End Time</label>
+                                  <input type="time" [(ngModel)]="sunday_end_time"
+                                  name="sunday_end_time"
+                                  id="sunday_end_time"
+                                  [ngClass]="{'border-danger': sunday_schedule_error == true}"
+                                  class="form-control">
+                                  <small class="text-danger" *ngIf="sunday_end_time_required">Required</small>
+                                </div>
+                              </div>
+                            </div>
+                            <div *ngIf="sunday_schedule_error">
+                              <small class="text-danger" >Invalid Schedule</small>
+                            </div>
+
+                          </div>
+                        </div>
+
+
+
+
+
+
+
+                         <!-- Monday -->
+                         <div class="row">
+                          <div class="col-sm-6 d-flex align-items-center">
+                            <div class="form-check">
+                              <input class="form-check-input"
+                              [(ngModel)]="monday_checkbox"
+                              name="monday_checkbox"
+                              type="checkbox"
+                              id="monday_checkbox">
+                              <label class="form-check-label" for="monday_checkbox">
+                                Monday
+                              </label>
+                            </div>
+                          </div>
+                          <div class="col-sm-8 col-md-6">
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label for="monday_start_time">Start Time</label>
+                                  <input type="time" [(ngModel)]="monday_start_time"
+                                  name="monday_start_time"
+                                  [ngClass]="{'border-danger': monday_schedule_error == true}"
+                                  id="monday_start_time"
+                                  class="form-control">
+                                  <small class="text-danger" *ngIf="monday_start_time_required">Required</small>
+                                </div>
+                              </div>
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label for="monday_end_time">End Time</label>
+                                  <input type="time" [(ngModel)]="monday_end_time"
+                                  name="monday_end_time"
+                                  id="monday_end_time"
+                                  [ngClass]="{'border-danger': monday_schedule_error == true}"
+                                  class="form-control">
+                                  <small class="text-danger" *ngIf="monday_end_time_required">Required</small>
+                                </div>
+                              </div>
+                            </div>
+                            <div *ngIf="monday_schedule_error">
+                              <small class="text-danger" >Invalid Schedule</small>
+                            </div>
+                          </div>
+                        </div>
+
+
+
+
+
+
+
+                        <!-- Tuesday -->
+                        <div class="row">
+                          <div class="col-sm-6 d-flex align-items-center">
+                            <div class="form-check">
+                              <input class="form-check-input"
+                              [(ngModel)]="tuesday_checkbox"
+                              name="tuesday_checkbox"
+                              type="checkbox"
+                              id="tuesday_checkbox">
+                              <label class="form-check-label" for="tuesday_checkbox">
+                                Tuesday
+                              </label>
+                            </div>
+                          </div>
+                          <div class="col-sm-8 col-md-6">
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label for="tuesday_start_time">Start Time</label>
+                                  <input type="time" [(ngModel)]="tuesday_start_time"
+                                  name="tuesday_start_time"
+                                  id="tuesday_start_time"
+                                  [ngClass]="{'border-danger': tuesday_schedule_error == true}"
+                                  class="form-control">
+                                  <small class="text-danger" *ngIf="tuesday_start_time_required">Required</small>
+                                </div>
+                              </div>
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label for="tuesday_end_time">End Time</label>
+                                  <input type="time" [(ngModel)]="tuesday_end_time"
+                                  name="tuesday_end_time"
+                                  id="tuesday_end_time"
+                                  [ngClass]="{'border-danger': tuesday_schedule_error == true}"
+                                  class="form-control border-danger">
+                                  <small class="text-danger" *ngIf="tuesday_end_time_required">Required</small>
+                                </div>
+                              </div>
+                            </div>
+                            <div *ngIf="tuesday_schedule_error">
+                              <small class="text-danger" >Invalid Schedule</small>
+                            </div>
+                          </div>
+                        </div>
+
+
+
+
+
+
+
+
+                            <!-- Wednesday -->
+                            <div class="row">
+                              <div class="col-sm-6 d-flex align-items-center">
+                                <div class="form-check">
+                                  <input class="form-check-input"
+                                  [(ngModel)]="wednesday_checkbox"
+                                  name="wednesday_checkbox"
+                                  type="checkbox"
+                                  id="wednesday_checkbox">
+                                  <label class="form-check-label" for="wednesday_checkbox">
+                                    Wednesday
+                                  </label>
+                                </div>
+                              </div>
+                              <div class="col-sm-8 col-md-6">
+                                <div class="row">
+                                  <div class="col-sm-6">
+                                    <div class="form-group">
+                                      <label for="wednesday_start_time">Start Time</label>
+                                      <input type="time" [(ngModel)]="wednesday_start_time"
+                                      name="wednesday_start_time"
+                                      id="wednesday_start_time"
+                                      [ngClass]="{'border-danger': wednesday_schedule_error == true}"
+                                      class="form-control">
+                                      <small class="text-danger" *ngIf="wednesday_start_time_required">Required</small>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-6">
+                                    <div class="form-group">
+                                      <label for="wednesday_end_time">End Time</label>
+                                      <input type="time" [(ngModel)]="wednesday_end_time"
+                                      name="wednesday_end_time"
+                                      id="wednesday_end_time"
+                                      [ngClass]="{'border-danger': wednesday_schedule_error == true}"
+                                      class="form-control">
+                                      <small class="text-danger" *ngIf="wednesday_end_time_required">Required</small>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div *ngIf="wednesday_schedule_error">
+                                  <small class="text-danger" >Invalid Schedule</small>
+                                </div>
+                              </div>
+                            </div>
+
+
+
+
+
+
+                                <!-- Thursday -->
+                            <div class="row">
+                              <div class="col-sm-6 d-flex align-items-center">
+                                <div class="form-check">
+                                  <input class="form-check-input"
+                                  [(ngModel)]="thursday_checkbox"
+                                  name="thursday_checkbox"
+                                  type="checkbox"
+                                  id="thursday_checkbox">
+                                  <label class="form-check-label" for="thursday_checkbox">
+                                    Thursday
+                                  </label>
+                                </div>
+                              </div>
+                              <div class="col-sm-8 col-md-6">
+                                <div class="row">
+                                  <div class="col-sm-6">
+                                    <div class="form-group">
+                                      <label for="thursday_start_time">Start Time</label>
+                                      <input type="time" [(ngModel)]="thursday_start_time"
+                                      name="thursday_start_time"
+                                      id="thursday_start_time"
+                                      [ngClass]="{'border-danger': thursday_schedule_error == true}"
+                                      class="form-control">
+                                      <small class="text-danger" *ngIf="thursday_start_time_required">Required</small>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-6">
+                                    <div class="form-group">
+                                      <label for="thursday_end_time">End Time</label>
+                                      <input type="time" [(ngModel)]="thursday_end_time"
+                                      name="thursday_end_time"
+                                      id="thursday_end_time"
+                                      [ngClass]="{'border-danger': thursday_schedule_error == true}"
+                                      class="form-control">
+                                      <small class="text-danger" *ngIf="thursday_end_time_required">Required</small>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div *ngIf="thursday_schedule_error">
+                                  <small class="text-danger" >Invalid Schedule</small>
+                                </div>
+                              </div>
+                            </div>
+
+
+
+
+
+                      </div>
+
+
+
+                      <div *ngIf="showDoctorInfoForm">
+                        <div class="my-3 p-3 bg-gray-100">
+                          <h5 class="text-muted font-weight-bold">Visiting Price Info</h5>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                              <label for="new_patient_visiting_price">New Patient Visiting Price</label>
+                              <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text">TK</span>
+                                </div>
+                                <input type="number" required onkeyup="if(this.value<0){this.value= this.value * -1}"
+                                id="new_patient_visiting_price" name="new_patient_visiting_price"
+                                [(ngModel)]="new_patient_visiting_price"
+                                class="form-control">
+                                <div class="input-group-append">
+                                  <span class="input-group-text">.00</span>
+                                </div>
+                              </div>
+
+                              <div *ngIf="f.form.controls['new_patient_visiting_price'].errors">
+                                <small class="text-danger" *ngIf="(submitted && f.form.controls['new_patient_visiting_price'].errors['required']) ||
+                                (f.form.controls['new_patient_visiting_price'].errors['required'] && f.form.controls['new_patient_visiting_price'].touched)">Price is required</small>
+                              </div>
+
+                            </div>
+                          </div>
+                          <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                              <label for="old_patient_visiting_price">Old Patient Visiting Price</label>
+                              <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text">TK</span>
+                                </div>
+                                <input type="number" onkeyup="if(this.value<0){this.value= this.value * -1}"
+                                required
+                                id="old_patient_visiting_price"
+                                name="old_patient_visiting_price"
+                                [(ngModel)]="old_patient_visiting_price"
+                                class="form-control">
+                                <div class="input-group-append">
+                                  <span class="input-group-text">.00</span>
+                                </div>
+                              </div>
+                              <div *ngIf="f.form.controls['old_patient_visiting_price'].errors">
+                                <small class="text-danger" *ngIf="(submitted && f.form.controls['old_patient_visiting_price'].errors['required']) ||
+                                (f.form.controls['old_patient_visiting_price'].errors['required'] && f.form.controls['old_patient_visiting_price'].touched)">Price is required</small>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+
+
+                      </div>
+
+
                     </div>
                   </div>
               </div>

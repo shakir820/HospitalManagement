@@ -59,7 +59,7 @@ namespace HospitalManagement.Migrations
                     Biography = table.Column<string>(nullable: true),
                     BMDC_certifcate = table.Column<string>(nullable: true),
                     Approved = table.Column<bool>(nullable: false),
-                    Experience = table.Column<DateTime>(nullable: false),
+                    year_of_Experience = table.Column<int>(nullable: false),
                     TypesOf = table.Column<string>(nullable: true),
                     NewPatientVisitingPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     OldPatientVisitingPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false)

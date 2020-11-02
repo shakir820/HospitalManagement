@@ -32,7 +32,7 @@ namespace HospitalManagement.Models
         public string BMDC_certifcate { get; set; }
         public bool Approved { get; set; } = false;
         public List<SelectedSpecialityTag> Specialities { get; set; }
-        public DateTime Experience { get; set; }
+        public int year_of_Experience { get; set; }
         public string TypesOf { get; set; }
         public List<SelectedLanguage> Languages { get; set; }
         public List<Schedule> Schedules { get; set; }
