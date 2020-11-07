@@ -1,8 +1,13 @@
+
+import { Inject } from "@angular/core";
 import { Language } from "./langauge.model";
 import { Schedule } from "./schedule.model";
 import { Speciality } from "./speciality.model";
 
 export class User{
+
+  public baseUrl:string;
+
 
   public id:number;
   public name:string;
@@ -15,7 +20,7 @@ export class User{
   public role:string;
   public profile_pic: string | ArrayBuffer;
   public phoneNumber: string;
-  public isActice: boolean;
+  public isActive: boolean;
   public city_name: string;
   public country_name: string;
   public country_phone_code: number;
@@ -28,7 +33,7 @@ export class User{
   public bmdc_certifcate: string;
   public approved: boolean = false;
   public doctor_title: string;
-  public degree_tittle: string;
+  public degree_title: string;
   public biography: string;
   public specialities: Speciality[] = [];
   public experience: number;
@@ -38,4 +43,10 @@ export class User{
   public new_patient_visiting_price: number;
   public old_patient_visiting_price: number
 
+  get profielPicById(){
+
+     var image_url = this.baseUrl + 'api/usermanager/GetProfilePic?id=' + this.id.toString();
+     return  `background-image: url(${image_url});`;
+
+    }
 }

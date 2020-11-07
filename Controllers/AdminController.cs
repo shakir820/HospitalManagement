@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 
 namespace HospitalManagement.Controllers
@@ -238,5 +240,330 @@ namespace HospitalManagement.Controllers
             }
             
         }
+
+
+
+
+        public async Task<IActionResult> GetAllDoctorList()
+        {
+            try
+            {
+
+                var doctors = await _userManager.GetUsersInRoleAsync("Doctor");
+     
+                var listOfDoctors = new List<UserModel>();
+
+                foreach (var item in doctors)
+                {
+                    var doctor = new UserModel();
+                    doctor.age = item.Age;
+                    doctor.approved = item.Approved;
+                    doctor.bloodGroup = item.BloodGroup;
+                    doctor.bmdc_certifcate = item.BMDC_certifcate;
+                    doctor.city_name = item.city_name;
+                    doctor.country_name = item.country_name;
+                    doctor.country_phone_code = item.country_phone_code;
+                    doctor.country_short_name = item.country_short_name;
+                    doctor.email = item.Email;
+                    doctor.gender = item.Gender;
+                    doctor.isActive = item.IsActive;
+                    doctor.id = item.Id;
+                    doctor.name = item.Name;
+                    doctor.phoneNumber = item.PhoneNumber;
+                    doctor.roles = new List<string> { "Doctor" };
+                    doctor.state_name = item.state_name;
+                    doctor.username = item.UserName;
+                    doctor.biography = item.Biography;
+                    doctor.degree_title = item.DegreeTittle;
+                    doctor.doctor_title = item.DoctorTitle;
+                    doctor.experience = item.year_of_Experience;
+                    doctor.new_patient_visiting_price = item.NewPatientVisitingPrice;
+                    doctor.old_patient_visiting_price = item.OldPatientVisitingPrice;
+                    doctor.types_of = item.TypesOf;
+                    
+                    listOfDoctors.Add(doctor);
+                }
+
+                return new JsonResult(new
+                {
+                    success = true,
+                    error = false,
+                    doctor_list = listOfDoctors
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = ex.Message
+                });
+            }
+
+        }
+
+
+
+
+       
+        public async Task<IActionResult> ApproveDoctor(long  id)
+        {
+            try
+            {
+                var doctor = await _context.Users.FirstOrDefaultAsync(a => a.Id == id);
+                if (doctor != null)
+                {
+                    doctor.Approved = true;
+                    await _context.SaveChangesAsync();
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        error = false
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        error = true,
+                        error_msg = "Doctor not found"
+                    });
+                }
+            }
+            catch(Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = "Something went wrong"
+                });
+            }
+
+        }
+
+
+
+      
+        public async Task<IActionResult> UnapproveDoctor(long id)
+        {
+            try
+            {
+                var doctor = await _context.Users.FirstOrDefaultAsync(a => a.Id == id);
+                if (doctor != null)
+                {
+                    doctor.Approved = false;
+                    await _context.SaveChangesAsync();
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        error = false
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        error = true,
+                        error_msg = "Doctor not found"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = "Something went wrong"
+                });
+            }
+
+        }
+
+
+
+
+       
+        public async Task<IActionResult> ActivateUser(long id)
+        {
+            try
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(a => a.Id == id);
+                if (user != null)
+                {
+                    user.IsActive = true;
+                    await _context.SaveChangesAsync();
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        error = false
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        error = true,
+                        error_msg = "User not found"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = "Something went wrong"
+                });
+            }
+
+        }
+
+
+       
+        public async Task<IActionResult> DeactivateUser(long id)
+        {
+            try
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(a => a.Id == id);
+                if (user != null)
+                {
+                    user.IsActive = false;
+                    await _context.SaveChangesAsync();
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        error = false
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        error = true,
+                        error_msg = "User not found"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = "Something went wrong"
+                });
+            }
+
+        }
+
+
+
+
+
+        public async Task<IActionResult> GetDoctor(long id)
+        {
+            try
+            {
+                var user = await _context.Users.Include(a => a.Specialities).Include(a => a.Languages).Include(a=>a.Schedules).AsNoTracking().
+                    FirstOrDefaultAsync(a => a.Id == id);
+                if(user != null)
+                {
+                    var _doctor = new UserModel();
+                    _doctor.age = user.Age;
+                    _doctor.approved = user.Approved;
+                    _doctor.biography = user.Biography;
+                    _doctor.bloodGroup = user.BloodGroup;
+                    _doctor.bmdc_certifcate = user.BMDC_certifcate;
+                    _doctor.city_name = user.city_name;
+                    _doctor.country_name = user.country_name;
+                    _doctor.country_phone_code = user.country_phone_code;
+                    _doctor.country_short_name = user.country_short_name;
+                    _doctor.degree_title = user.DegreeTittle;
+                    _doctor.doctor_title = user.DoctorTitle;
+                    _doctor.email = user.Email;
+                    _doctor.experience = user.year_of_Experience;
+                    _doctor.gender = user.Gender;
+                    _doctor.id = user.Id;
+                    _doctor.isActive = user.IsActive;
+                    _doctor.languages = new List<LanguageTagModel>();
+                    foreach (var item in user.Languages)
+                    {
+                        var lang = new LanguageTagModel
+                        {
+                            id = item.LanguageId,
+                            languageName = item.LanguageName
+                        };
+                        _doctor.languages.Add(lang);
+                    }
+
+                    _doctor.name = user.Name;
+                    _doctor.new_patient_visiting_price = user.NewPatientVisitingPrice;
+                    _doctor.old_patient_visiting_price = user.OldPatientVisitingPrice;
+                    _doctor.phoneNumber = user.PhoneNumber;
+                    _doctor.roles = new List<string> { "Doctor" };
+                    _doctor.schedules = new List<ScheduleModel>();
+                    foreach(var item in user.Schedules)
+                    {
+                        var schedule = new ScheduleModel();
+                        schedule.day_name = item.DayName;
+                        schedule.end_time = item.EndTime;
+                        schedule.id = item.Id;
+                        schedule.start_time = item.StartTime;
+                        _doctor.schedules.Add(schedule);
+                    }
+                    _doctor.specialities = new List<SpecialityTagModel>();
+                    foreach(var item in user.Specialities)
+                    {
+                        var speciality = new SpecialityTagModel
+                        {
+                            id = item.SpecialityTagId,
+                            specialityName = item.SpecialityName
+                        };
+                        _doctor.specialities.Add(speciality);
+                    }
+                    _doctor.state_name = user.state_name;
+                    _doctor.types_of = user.TypesOf;
+                    _doctor.username = user.UserName;
+
+
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        error = false,
+                        doctor = _doctor
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        error = true,
+                        error_msg = "Doctor not found"
+                    });
+                }
+            }
+            catch(Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = ex.Message
+                });
+            }
+        }
+
+
+
+
     }
 }

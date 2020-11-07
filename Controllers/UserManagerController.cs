@@ -269,7 +269,7 @@ namespace HospitalManagement.Controllers
                                     approved = user.Approved,
 
                                     biography = user.Biography,
-                                    degree_tittle = user.DegreeTittle,
+                                    degree_title = user.DegreeTittle,
                                     doctor_title = user.DoctorTitle,
                                     experience = user.year_of_Experience,
                                     languages = language_List,
@@ -407,7 +407,7 @@ namespace HospitalManagement.Controllers
                             
                             approved = user.Approved,
                             biography = user.Biography,
-                            degree_tittle = user.DegreeTittle,
+                            degree_title = user.DegreeTittle,
                             doctor_title = user.DoctorTitle,
                             experience = user.year_of_Experience,
                             languages = language_List,
@@ -564,7 +564,7 @@ namespace HospitalManagement.Controllers
                         if(userModel.role == "Doctor")
                         {
                             user.Biography = userModel.biography;
-                            user.DegreeTittle = userModel.degree_tittle;
+                            user.DegreeTittle = userModel.degree_title;
                             user.DoctorTitle = userModel.doctor_title;
 
                             if (!string.IsNullOrEmpty(userModel.languages_json))
@@ -717,8 +717,8 @@ namespace HospitalManagement.Controllers
 
 
                             biography = user.Biography,
-                            degree_tittle = user.DegreeTittle,
-                            doctor_title = user.DegreeTittle,
+                            degree_title = user.DegreeTittle,
+                            doctor_title = user.DoctorTitle,
                             experience = user.year_of_Experience,
                             languages = userModel.languages,
                             new_patient_visiting_price = user.NewPatientVisitingPrice,

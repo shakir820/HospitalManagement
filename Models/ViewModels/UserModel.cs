@@ -26,9 +26,8 @@ namespace HospitalManagement.Models
         public string state_name { get; set; }
         public string city_name { get; set; }
         public string bloodGroup { get; set; }
-      
         public IFormFile profilePic { get; set; }
-
+        public bool isActive { get; set; }
 
 
 
@@ -39,7 +38,7 @@ namespace HospitalManagement.Models
         public bool approved { get; set; } = false;
         public string bmdc_certifcate { get; set; }
         public string doctor_title { get; set; }
-        public string degree_tittle { get; set; }
+        public string degree_title { get; set; }
         public string biography { get; set; }
         
         

@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -23,6 +22,10 @@ import { InitialLoadingComponent } from './loaders/initial-loading/initial-loadi
 import { AdminDoctorListComponent } from './admin/admin-doctor-list/admin-doctor-list.component';
 import { SpecialityTagComponent } from './custom_controls/speciality-tag/speciality-tag.component';
 import { LanguageTagComponent } from './custom_controls/language-tag/language-tag.component';
+import { ProfilePicPreviewComponent } from './custom_controls/profile-pic-preview/profile-pic-preview.component';
+import { AdminDoctorDetailsComponent } from './admin/admin-doctor-details/admin-doctor-details.component';
+import { WeekDayPipe } from './pipes/week-day.pipe';
+import { DoctorAppointmentComponent } from './patient_pages/doctor-appointment/doctor-appointment.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +43,11 @@ import { LanguageTagComponent } from './custom_controls/language-tag/language-ta
     InitialLoadingComponent,
     AdminDoctorListComponent,
     SpecialityTagComponent,
-    LanguageTagComponent
+    LanguageTagComponent,
+    ProfilePicPreviewComponent,
+    AdminDoctorDetailsComponent,
+    WeekDayPipe,
+    DoctorAppointmentComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -48,6 +55,7 @@ import { LanguageTagComponent } from './custom_controls/language-tag/language-ta
     FormsModule,
     AppRoutingModule,
     BrowserAnimationsModule
+
   ],
   providers: [CookieService],
   bootstrap: [AppComponent]

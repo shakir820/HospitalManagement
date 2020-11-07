@@ -3,6 +3,7 @@ import { WeekDay } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Helper } from '../helper-methods/helper.model';
 import { Language } from '../models/langauge.model';
 import { Schedule } from '../models/schedule.model';
 import { Speciality } from '../models/speciality.model';
@@ -31,7 +32,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     this.selectedGender = this.userService.user.gender;
     this.selectedRole = this.userService.user.roles[0];
 
-    if(this.selectedRole == 'Doctor'){
+    if (this.selectedRole == 'Doctor') {
       this.showDoctorInfoForm = true;
     }
 
@@ -42,12 +43,12 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     this.bmdc_certificate = this.userService.user.bmdc_certifcate;
     this.doctorApproved = this.userService.user.approved;
     this.biography = this.userService.user.biography;
-    this.degree_title = this.userService.user.degree_tittle;
+    this.degree_title = this.userService.user.degree_title;
     this.doctor_title = this.userService.user.doctor_title;
     this.year_of_experience = this.userService.user.experience;
     this.new_patient_visiting_price = this.userService.user.new_patient_visiting_price;
     this.old_patient_visiting_price = this.userService.user.old_patient_visiting_price;
-
+    this.types_of = this.userService.user.types_of;
 
     this.resolveSchedules();
     this.ShowProfileImage();
@@ -218,50 +219,52 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
 
 
-  resolveSchedules(){
-    if( this.userService.user.schedules.length > 0){
+
+
+
+  resolveSchedules() {
+    if (this.userService.user.schedules.length > 0) {
       this.userService.user.schedules.forEach(schedule => {
-        if(schedule.day_name == WeekDay.Friday){
+        if (schedule.day_name == WeekDay.Friday) {
           this.friday_checkbox = true;
-          console.log(schedule.start_time);
-          this.friday_start_time = schedule.start_time.getHours() + ':' + schedule.start_time.getMinutes();
-          this.friday_end_time = schedule.end_time.getHours() + ':' + schedule.end_time.getMinutes();
+          this.friday_start_time = Helper.converDateToTimeString(schedule.start_time);
+          this.friday_end_time = Helper.converDateToTimeString(schedule.end_time);
         }
 
-        if(schedule.day_name == WeekDay.Saturday){
+        if (schedule.day_name == WeekDay.Saturday) {
           this.saturday_checkbox = true;
-          this.saturday_start_time = schedule.start_time.getHours() + ':' + schedule.start_time.getMinutes();
-          this.saturday_end_time = schedule.end_time.getHours() + ':' + schedule.end_time.getMinutes();
+          this.saturday_start_time = Helper.converDateToTimeString(schedule.start_time);
+          this.saturday_end_time = Helper.converDateToTimeString(schedule.end_time);
         }
 
-        if(schedule.day_name == WeekDay.Sunday){
+        if (schedule.day_name == WeekDay.Sunday) {
           this.sunday_checkbox = true;
-          this.sunday_start_time = schedule.start_time.getHours() + ':' + schedule.start_time.getMinutes();
-          this.sunday_end_time = schedule.end_time.getHours() + ':' + schedule.end_time.getMinutes();
+          this.sunday_start_time = Helper.converDateToTimeString(schedule.start_time);
+          this.sunday_end_time = Helper.converDateToTimeString(schedule.end_time);
         }
 
-        if(schedule.day_name == WeekDay.Monday){
+        if (schedule.day_name == WeekDay.Monday) {
           this.monday_checkbox = true;
-          this.monday_start_time = schedule.start_time.getHours() + ':' + schedule.start_time.getMinutes();
-          this.monday_end_time = schedule.end_time.getHours() + ':' + schedule.end_time.getMinutes();
+          this.monday_start_time = Helper.converDateToTimeString(schedule.start_time);
+          this.monday_end_time = Helper.converDateToTimeString(schedule.end_time);
         }
 
-        if(schedule.day_name == WeekDay.Tuesday){
+        if (schedule.day_name == WeekDay.Tuesday) {
           this.tuesday_checkbox = true;
-          this.tuesday_start_time = schedule.start_time.getHours() + ':' + schedule.start_time.getMinutes();
-          this.tuesday_end_time = schedule.end_time.getHours() + ':' + schedule.end_time.getMinutes();
+          this.tuesday_start_time = Helper.converDateToTimeString(schedule.start_time);
+          this.tuesday_end_time = Helper.converDateToTimeString(schedule.end_time);
         }
 
-        if(schedule.day_name == WeekDay.Wednesday){
+        if (schedule.day_name == WeekDay.Wednesday) {
           this.wednesday_checkbox = true;
-          this.wednesday_start_time = schedule.start_time.getHours() + ':' + schedule.start_time.getMinutes();
-          this.wednesday_end_time = schedule.end_time.getHours() + ':' + schedule.end_time.getMinutes();
+          this.wednesday_start_time = Helper.converDateToTimeString(schedule.start_time);
+          this.wednesday_end_time = Helper.converDateToTimeString(schedule.end_time);
         }
 
-        if(schedule.day_name == WeekDay.Thursday){
+        if (schedule.day_name == WeekDay.Thursday) {
           this.thursday_checkbox = true;
-          this.thursday_start_time = schedule.start_time.getHours() + ':' + schedule.start_time.getMinutes();
-          this.thursday_end_time = schedule.end_time.getHours() + ':' + schedule.end_time.getMinutes();
+          this.thursday_start_time = Helper.converDateToTimeString(schedule.start_time);
+          this.thursday_end_time = Helper.converDateToTimeString(schedule.end_time);
         }
       });
     }
@@ -461,14 +464,14 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
 
 
-  convertDateFromString(time:string): Date{
-    try{
+  convertDateFromString(time: string): Date {
+    try {
       var today = new Date(Date.now());
       var time_array = time.split(':');
       var date = new Date(today.getUTCFullYear(), today.getUTCMonth(), today.getDate(), Number.parseInt(time_array[0]), Number.parseInt(time_array[1]));
       return date;
     }
-    catch(ex){
+    catch (ex) {
       console.log(ex);
       return undefined;
     }
@@ -698,8 +701,11 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
       try {
 
-        //this.savingProfileData = true;
+
         this.submitted = false;
+        this.savingProfileData = true;
+
+
 
         var formData = new FormData();
 
@@ -759,71 +765,71 @@ export class ProfileComponent implements OnInit, AfterViewInit {
           //schedule info
           var schedule_list = [];
 
-          if(this.friday_checkbox == true){
+          if (this.friday_checkbox == true) {
             var friday_schedule = {
               day_name: WeekDay.Friday,
-              start_time: this.convertDateFromString(this.friday_start_time).toISOString(),
-              end_time: this.convertDateFromString(this.friday_end_time).toISOString()
+              start_time: this.convertDateFromString(this.friday_start_time).toLocaleTimeString(),
+              end_time: this.convertDateFromString(this.friday_end_time).toLocaleTimeString()
             }
             schedule_list.push(friday_schedule);
           }
 
-          if(this.saturday_checkbox == true){
+          if (this.saturday_checkbox == true) {
             var saturday_schedule = {
               day_name: WeekDay.Saturday,
-              start_time: this.convertDateFromString(this.saturday_start_time).toISOString(),
-              end_time: this.convertDateFromString(this.saturday_end_time).toISOString()
+              start_time: this.convertDateFromString(this.saturday_start_time).toLocaleTimeString(),
+              end_time: this.convertDateFromString(this.saturday_end_time).toLocaleTimeString()
             }
             schedule_list.push(saturday_schedule);
           }
 
-          if(this.sunday_checkbox == true){
+          if (this.sunday_checkbox == true) {
             var sunday_schedule = {
               day_name: WeekDay.Sunday,
-              start_time: this.convertDateFromString(this.sunday_start_time).toISOString(),
-              end_time: this.convertDateFromString(this.sunday_end_time).toISOString()
+              start_time: this.convertDateFromString(this.sunday_start_time).toLocaleTimeString(),
+              end_time: this.convertDateFromString(this.sunday_end_time).toLocaleTimeString()
             }
             schedule_list.push(sunday_schedule);
           }
 
-          if(this.monday_checkbox == true){
+          if (this.monday_checkbox == true) {
             var monday_schedule = {
               day_name: WeekDay.Monday,
-              start_time: this.convertDateFromString(this.monday_start_time).toISOString(),
-              end_time: this.convertDateFromString(this.monday_end_time).toISOString()
+              start_time: this.convertDateFromString(this.monday_start_time).toLocaleTimeString(),
+              end_time: this.convertDateFromString(this.monday_end_time).toLocaleTimeString()
             }
             schedule_list.push(monday_schedule);
           }
 
-          if(this.tuesday_checkbox == true){
+          if (this.tuesday_checkbox == true) {
             var tuesday_schedule = {
               day_name: WeekDay.Tuesday,
-              start_time: this.convertDateFromString(this.tuesday_start_time).toISOString(),
-              end_time: this.convertDateFromString(this.tuesday_end_time).toISOString()
+              start_time: this.convertDateFromString(this.tuesday_start_time).toLocaleTimeString(),
+              end_time: this.convertDateFromString(this.tuesday_end_time).toLocaleTimeString()
             }
             schedule_list.push(tuesday_schedule);
           }
 
-          if(this.wednesday_checkbox == true){
+          if (this.wednesday_checkbox == true) {
             var wednesday_schedule = {
               day_name: WeekDay.Wednesday,
-              start_time: this.convertDateFromString(this.wednesday_start_time).toISOString(),
-              end_time: this.convertDateFromString(this.wednesday_end_time).toISOString()
+              start_time: this.convertDateFromString(this.wednesday_start_time).toLocaleTimeString(),
+              end_time: this.convertDateFromString(this.wednesday_end_time).toLocaleTimeString()
             }
             schedule_list.push(wednesday_schedule);
           }
 
-          if(this.thursday_checkbox == true){
+          if (this.thursday_checkbox == true) {
             var thursday_schedule = {
               day_name: WeekDay.Thursday,
-              start_time: this.convertDateFromString(this.thursday_start_time).toISOString(),
-              end_time: this.convertDateFromString(this.thursday_end_time).toISOString()
+              start_time: this.convertDateFromString(this.thursday_start_time).toLocaleTimeString(),
+              end_time: this.convertDateFromString(this.thursday_end_time).toLocaleTimeString()
             }
             schedule_list.push(thursday_schedule);
           }
 
           var schedule_list_json = JSON.stringify(schedule_list);
-          formData.append('schedules_json',  schedule_list_json);
+          formData.append('schedules_json', schedule_list_json);
 
           //visiting price
           formData.append('new_patient_visiting_price', this.profileForm.controls['new_patient_visiting_price'].value);
@@ -865,7 +871,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
             specialities: Speciality[],
             types_of: string
           }
-        }>(this._baseUrl + 'api/UserManager/UpdateProfileData',  formData,  { headers: { 'enctype': 'multipart/form-data'  } }).subscribe(result => {
+        }>(this._baseUrl + 'api/UserManager/UpdateProfileData', formData, { headers: { 'enctype': 'multipart/form-data' } }).subscribe(result => {
           this.savingProfileData = false;
           console.log(result);
           if (result.success == true) {
@@ -895,23 +901,28 @@ export class ProfileComponent implements OnInit, AfterViewInit {
             this.userService.user.state_name = result.user.state_name;
             // console.log(this.user.roles);
             this.userService.user.biography = result.user.biography;
-            this.userService.user.degree_tittle = result.user.degree_tittle;
+            this.userService.user.degree_title = result.user.degree_tittle;
+            this.userService.user.doctor_title = result.user.doctor_title;
             this.userService.user.experience = result.user.experience;
-            // result.user.languages.forEach(val => {
-            //   var lang = new Language();
-            //   lang.id = val.id;
-            //   lang.languageName = val.languageName;
-            //   this.userService.user.languages.push(lang);
-            // });
 
-            this.userService.user.languages = result.user.languages;
+
+            if (result.user.languages != undefined) {
+              this.userService.user.languages = result.user.languages;
+            }
+
             this.userService.user.new_patient_visiting_price = result.user.new_patient_visiting_price;
             this.userService.user.old_patient_visiting_price = result.user.old_patient_visiting_price;
-            this.userService.user.schedules = result.user.schedules;
-            this.userService.user.specialities = result.user.specialities;
+
+            if (result.user.schedules != undefined && result.user.schedules != null) {
+              this.userService.user.schedules = [];
+              Helper.resolveScheduleResult(result.user.schedules, this.userService.user.schedules);
+            }
+
+            if (result.user.specialities != undefined) {
+              this.userService.user.specialities = result.user.specialities;
+            }
+
             this.userService.user.types_of = result.user.types_of;
-
-
             console.log(this.userService.user);
 
             this.userService.fireUserApprovedChangedEvent();

@@ -22,6 +22,7 @@
     "@angular/platform-server": "10.1.5",
     "@angular/router": "10.1.5",
     "@nguniversal/module-map-ngfactory-loader": "8.1.1",
+    "@swimlane/ngx-datatable": "^18.0.0",
     "aspnet-prerendering": "^3.0.1",
     "bootstrap": "^4.5.3",
     "core-js": "^3.3.3",
@@ -30,11 +31,12 @@
     "oidc-client": "^1.9.1",
     "popper.js": "^1.16.0",
     "rxjs": "^6.5.3",
+    "sort-by-typescript": "^1.1.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.1001.6",
+    "@angular-devkit/build-angular": "^0.1002.0",
     "@angular/cli": "^10.1.6",
     "@angular/compiler-cli": "^10.1.5",
     "@angular/language-service": "^10.1.5",

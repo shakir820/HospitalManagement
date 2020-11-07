@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 import { AdminDashboardComponent } from "./admin/admin-dashboard/admin-dashboard.component";
+import { AdminDoctorDetailsComponent } from "./admin/admin-doctor-details/admin-doctor-details.component";
 import { AdminDoctorListComponent } from "./admin/admin-doctor-list/admin-doctor-list.component";
 import { AdminLoginComponent } from "./admin/admin-login/admin-login.component";
 import { CounterComponent } from "./counter/counter.component";
@@ -26,7 +27,7 @@ export const appRoutes: Routes = [
   { path: 'admin', component: AdminLoginComponent, canActivate:[AdminLoginCanActivateService] },
   { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [AdminPagesCanActivateService] },
   { path: 'admin/doctorList', component: AdminDoctorListComponent, canActivate: [AdminPagesCanActivateService] },
-
+  { path: 'admin/doctorList/DoctorDetails', component: AdminDoctorDetailsComponent, canActivate: [AdminPagesCanActivateService] },
   { path: '**', redirectTo: "" },
 ]
 

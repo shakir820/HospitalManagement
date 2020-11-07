@@ -12,6 +12,7 @@ import { User } from '../models/user.model';
 import { Speciality } from '../models/speciality.model';
 import { Language } from '../models/langauge.model';
 import { Schedule } from '../models/schedule.model';
+import { Helper } from '../helper-methods/helper.model';
 
 @Injectable({
   providedIn: 'root'
@@ -27,8 +28,8 @@ export class UserService {
   _baseUrl: string;
   user: User;
   isLoggedIn: boolean = false;
-  loggingInProgress:boolean = false;
-  doctorSpecialityTags:Speciality[];
+  loggingInProgress: boolean = false;
+  doctorSpecialityTags: Speciality[];
   languageList: Language[] = [];
 
 
@@ -39,7 +40,7 @@ export class UserService {
 
   tryLoginUser(): Promise<boolean> {
     this.loggingInProgress = true;
-    var promise = new Promise<boolean>((resolve, rejects) =>{
+    var promise = new Promise<boolean>((resolve, rejects) => {
       let user_id_str = this.cookieService.get('skt_hospital_user_id');
       if (user_id_str !== null && user_id_str !== '' && user_id_str != undefined) {
 
@@ -47,7 +48,8 @@ export class UserService {
           error_msg: string,
           error: boolean,
           success: boolean,
-          user: {  age: number,
+          user: {
+            age: number,
             id: number,
             name: string,
             username: string,
@@ -66,7 +68,7 @@ export class UserService {
             phoneNumber: string,
             approved: boolean,
             biography: string,
-            degree_tittle: string,
+            degree_title: string,
             doctor_title: string,
             experience: number,
             languages: Language[],
@@ -74,11 +76,12 @@ export class UserService {
             old_patient_visiting_price: number,
             schedules: Schedule[],
             specialities: Speciality[],
-            types_of: string },
+            types_of: string
+          },
           msg: string
         }>(this._baseUrl + 'api/UserManager/getUserById', { params: { id: user_id_str } }).subscribe(result => {
           if (result.success) {
-            if(this.user === null || this.user === undefined){
+            if (this.user === null || this.user === undefined) {
               this.user = new User();
             }
 
@@ -107,21 +110,15 @@ export class UserService {
             this.user.bmdc_certifcate = result.user.bmdc_certifcate;
             this.user.approved = result.user.approved;
             this.user.biography = result.user.biography;
-            this.user.degree_tittle = result.user.degree_tittle;
+            this.user.degree_title = result.user.degree_title;
+            this.user.doctor_title = result.user.doctor_title;
             this.user.experience = result.user.experience;
             this.user.languages = result.user.languages;
             this.user.new_patient_visiting_price = result.user.new_patient_visiting_price;
             this.user.old_patient_visiting_price = result.user.old_patient_visiting_price;
             // this.user.schedules = result.user.schedules;
             this.user.schedules = [];
-            result.user.schedules.forEach(val => {
-              var schedule = new Schedule();
-              schedule.day_name = val.day_name;
-              schedule.start_time = new Date( val.start_time.toISOString());
-              schedule.end_time = new Date(val.end_time.toISOString());
-              schedule.id = val.id;
-              this.user.schedules.push(schedule);
-            });
+            Helper.resolveScheduleResult(result.user.schedules, this.user.schedules);
 
             this.user.specialities = result.user.specialities;
             this.user.types_of = result.user.types_of;
@@ -141,7 +138,7 @@ export class UserService {
           }
         });
       }
-      else{
+      else {
         this.loggingInProgress = false;
         this.isLoggedIn = false;
         resolve(false);
@@ -156,16 +153,16 @@ export class UserService {
 
 
 
-  fetchProfilePic(user_id: number){
-    if(user_id == null || user_id == undefined){
+  fetchProfilePic(user_id: number) {
+    if (user_id == null || user_id == undefined) {
       return;
     }
-    this.httpClient.get(this._baseUrl + 'api/usermanager/GetProfilePic', {params: {id: user_id.toString()}, responseType: 'blob'}).subscribe(result=>{
-      if(result != null && result != undefined){
+    this.httpClient.get(this._baseUrl + 'api/usermanager/GetProfilePic', { params: { id: user_id.toString() }, responseType: 'blob' }).subscribe(result => {
+      if (result != null && result != undefined) {
         var reader = new FileReader();
-        reader.onload = (e)=>{
-          var base64 =   e.target.result;
-          if(this.user != null){
+        reader.onload = (e) => {
+          var base64 = e.target.result;
+          if (this.user != null) {
             this.user.profile_pic = base64;
           }
 
@@ -179,7 +176,7 @@ export class UserService {
 
 
 
-  checkForUniqueUsername(username: string):Promise<boolean>{
+  checkForUniqueUsername(username: string): Promise<boolean> {
     let promise = new Promise<boolean>((resolve, reject) => {
       this.httpClient.get<{ unique_username: boolean }>(this._baseUrl + 'api/usermanager/CheckForUniqueUsername', { params: { username: username } }).subscribe(result => {
         console.log(result);
@@ -208,7 +205,7 @@ export class UserService {
 
 
 
-  clearUserData(path:string){
+  clearUserData(path: string) {
     this.cookieService.deleteAll(path, 'localhost');
   }
 
@@ -238,7 +235,8 @@ export class UserService {
         error_msg: string,
         error: boolean,
         success: boolean,
-        user: { age: number,
+        user: {
+          age: number,
           id: number,
           name: string,
           username: string,
@@ -257,7 +255,7 @@ export class UserService {
           phoneNumber: string,
           approved: boolean,
           biography: string,
-          degree_tittle: string,
+          degree_title: string,
           doctor_title: string,
           experience: number,
           languages: Language[],
@@ -265,7 +263,8 @@ export class UserService {
           old_patient_visiting_price: number,
           schedules: Schedule[],
           specialities: Speciality[],
-          types_of: string }
+          types_of: string
+        }
         msg: string,
         emailExist: boolean,
         wrong_password: boolean
@@ -298,20 +297,25 @@ export class UserService {
           //doctor info
           this.user.bmdc_certifcate = result.user.bmdc_certifcate;
           this.user.approved = result.user.approved;
-         this.user.bmdc_certifcate = result.user.bmdc_certifcate;
-         this.user.approved = result.user.approved;
-         this.user.city_name = result.user.city_name;
+          this.user.bmdc_certifcate = result.user.bmdc_certifcate;
+          this.user.approved = result.user.approved;
+          this.user.city_name = result.user.city_name;
 
-         this.user.biography = result.user.biography;
-         this.user.degree_tittle = result.user.degree_tittle;
-         this.user.experience = result.user.experience;
+          this.user.biography = result.user.biography;
+          this.user.degree_title = result.user.degree_title;
+          this.user.doctor_title = result.user.doctor_title;
+          this.user.experience = result.user.experience;
 
-         this.user.languages = result.user.languages;
-         this.user.new_patient_visiting_price = result.user.new_patient_visiting_price;
-         this.user.old_patient_visiting_price = result.user.old_patient_visiting_price;
-         this.user.schedules = result.user.schedules;
-         this.user.specialities = result.user.specialities;
-         this.user.types_of = result.user.types_of;
+          this.user.languages = result.user.languages;
+          this.user.new_patient_visiting_price = result.user.new_patient_visiting_price;
+          this.user.old_patient_visiting_price = result.user.old_patient_visiting_price;
+          this.user.schedules = [];
+          Helper.resolveScheduleResult(result.user.schedules, this.user.schedules);
+
+
+
+          this.user.specialities = result.user.specialities;
+          this.user.types_of = result.user.types_of;
 
 
           this.fireUserApprovedChangedEvent();
@@ -345,10 +349,10 @@ export class UserService {
 
 
   CreateNewUser(name: string, password: string, email: string, role: string, age: number, gender: string):
-  Promise<{ error: boolean, error_msg: string, success: boolean, msg: string }> {
+    Promise<{ error: boolean, error_msg: string, success: boolean, msg: string }> {
 
     let promise = new Promise<{ error: boolean, error_msg: string, success: boolean, msg: string }>((resolve, reject) => {
-      this.httpClient.post<{ success: boolean, user_id: number, username:string, approved: boolean, user_name: string, user_gender: string, user_age: number, error: boolean, error_msg: string, error_list: string[], role_list: string[] }>(
+      this.httpClient.post<{ success: boolean, user_id: number, username: string, approved: boolean, user_name: string, user_gender: string, user_age: number, error: boolean, error_msg: string, error_list: string[], role_list: string[] }>(
         this._baseUrl + "api/usermanager/CreateNewUser", { name: name, password: password, email: email, role: role, gender: gender, age: age }).subscribe(result => {
           if (result.success == true && result.user_id != null) {
 
@@ -385,8 +389,8 @@ export class UserService {
 
 
 
-  getSpecialityTags(){
-    this.httpClient.get<{ success: boolean, error:boolean, specialities:{id: number, specialityName: string}[], error_msg: string }>(
+  getSpecialityTags() {
+    this.httpClient.get<{ success: boolean, error: boolean, specialities: { id: number, specialityName: string }[], error_msg: string }>(
       this._baseUrl + "api/usermanager/GetSpecialityTags").subscribe(result => {
         console.log(result);
         if (result.success === true && result.specialities !== undefined) {
@@ -403,40 +407,40 @@ export class UserService {
         }
 
       },
-      error => console.error(error)
-      );
-    }
-
-
-
-
-
-    getLanguages(){
-      this.httpClient.get<{ success: boolean, error:boolean, languages:{id: number, languageName: string}[], error_msg: string }>(
-        this._baseUrl + "api/usermanager/GetLanguages").subscribe(result => {
-          console.log(result);
-          if (result.success === true && result.languages !== undefined) {
-            this.languageList = [];
-            result.languages.forEach(val => {
-              var lang = new Language();
-              lang.id = val.id;
-              lang.languageName = val.languageName;
-              this.languageList.push(lang);
-            });
-          }
-          else {
-
-          }
-
-        },
         error => console.error(error)
-        );
-      }
+      );
+  }
 
 
 
 
-  fireUserApprovedChangedEvent(){
+
+  getLanguages() {
+    this.httpClient.get<{ success: boolean, error: boolean, languages: { id: number, languageName: string }[], error_msg: string }>(
+      this._baseUrl + "api/usermanager/GetLanguages").subscribe(result => {
+        console.log(result);
+        if (result.success === true && result.languages !== undefined) {
+          this.languageList = [];
+          result.languages.forEach(val => {
+            var lang = new Language();
+            lang.id = val.id;
+            lang.languageName = val.languageName;
+            this.languageList.push(lang);
+          });
+        }
+        else {
+
+        }
+
+      },
+        error => console.error(error)
+      );
+  }
+
+
+
+
+  fireUserApprovedChangedEvent() {
     this.approvedChanged.emit(this.user.approved);
   }
 }

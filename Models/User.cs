@@ -20,7 +20,7 @@ namespace HospitalManagement.Models
         public string BloodGroup { get; set; }
         public byte[] ProfilePic { get; set; }
         public DateTime CreatedDate { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
 
 
 
