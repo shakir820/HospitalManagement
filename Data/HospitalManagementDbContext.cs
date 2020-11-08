@@ -23,6 +23,7 @@ namespace HospitalManagement.Data
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<Speciality> Specialities { get; set; }
         public DbSet<SelectedSpecialityTag> SelectedSpecialityTags { get; set; }
+        public DbSet<DoctorAppointment> DoctorAppointments { get; set; }
 
     }
 }

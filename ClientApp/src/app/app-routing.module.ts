@@ -9,6 +9,7 @@ import { DashboardComponent } from "./dashboard/dashboard.component";
 import { FetchDataComponent } from "./fetch-data/fetch-data.component";
 import { HomeComponent } from "./home/home.component";
 import { LoginComponent } from "./login/login.component";
+import { DoctorListComponent } from "./patient_pages/doctor-list/doctor-list.component";
 import { ProfileComponent } from "./profile/profile.component";
 import { RegistrationComponent } from "./registration/registration.component";
 import { AdminLoginCanActivateService } from "./services/authGuard/admin-login-can-activate.service";
@@ -27,6 +28,7 @@ export const appRoutes: Routes = [
   { path: 'admin', component: AdminLoginComponent, canActivate:[AdminLoginCanActivateService] },
   { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [AdminPagesCanActivateService] },
   { path: 'admin/doctorList', component: AdminDoctorListComponent, canActivate: [AdminPagesCanActivateService] },
+  { path: 'DoctorList', component: DoctorListComponent, canActivate: [UserPagesCanActivateService] },
   { path: 'admin/doctorList/DoctorDetails', component: AdminDoctorDetailsComponent, canActivate: [AdminPagesCanActivateService] },
   { path: '**', redirectTo: "" },
 ]

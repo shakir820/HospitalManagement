@@ -41,9 +41,16 @@
 
     <!-- Nav Item - Charts -->
     <li class="nav-item" *ngIf="isPatient">
-      <a class="nav-link">
+      <a class="nav-link" [routerLink]="['/Doctor']" routerLinkActive="router-link-active"  style="cursor: pointer;">
         <i class="fas fa-fw fa-calendar-check"></i>
         <span>Appointment</span>
+      </a>
+    </li>
+
+    <li class="nav-item" routerLinkActive="active" *ngIf="isPatient">
+      <a class="nav-link" [routerLink]="['/DoctorList']"  >
+        <i class="fas fa-fw fa-calendar-check"></i>
+        <span>Doctor List</span>
       </a>
     </li>
 

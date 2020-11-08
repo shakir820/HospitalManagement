@@ -2,15 +2,28 @@
 
   <!-- Page Heading -->
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Doctor Appointment</h1>
+    <h1 class="h3 mb-0 text-gray-800">Doctor List</h1>
   </div>
 
 
 
   <div class="card mb-4">
     <!-- Card Header - Dropdown -->
-    <div class="card-header py-3 d-flex flex-row align-items-center">
+    <div class="card-header py-3 d-flex flex-row flex-wrap align-items-center">
       <h6 class="mr-4 my-auto font-weight-bold">Doctor List</h6>
+      <form #f="ngForm" (ngSubmit)="onSearchSubmit()"
+      class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100"
+     >
+       <div class="input-group">
+         <input type="text" id="search_string" name="search_string" ngModel
+          class="form-control small" placeholder="Search doctor" aria-label="Search">
+         <div class="input-group-append">
+           <button class="btn btn-primary" type="submit">
+             <i class="fas fa-search fa-sm"></i>
+           </button>
+         </div>
+       </div>
+     </form>
       <select class="form-control" style="max-width: 300px;">
         <option class="p-2">Default select</option>
         <option class="p-2">Default select</option>

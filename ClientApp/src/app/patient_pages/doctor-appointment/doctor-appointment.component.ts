@@ -12,4 +12,8 @@ export class DoctorAppointmentComponent implements OnInit {
   ngOnInit(): void {
   }
 
+
+  toggleDoctorListSort(event_data){
+
+  }
 }

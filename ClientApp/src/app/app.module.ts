@@ -26,6 +26,7 @@ import { ProfilePicPreviewComponent } from './custom_controls/profile-pic-previe
 import { AdminDoctorDetailsComponent } from './admin/admin-doctor-details/admin-doctor-details.component';
 import { WeekDayPipe } from './pipes/week-day.pipe';
 import { DoctorAppointmentComponent } from './patient_pages/doctor-appointment/doctor-appointment.component';
+import { DoctorListComponent } from './patient_pages/doctor-list/doctor-list.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { DoctorAppointmentComponent } from './patient_pages/doctor-appointment/d
     ProfilePicPreviewComponent,
     AdminDoctorDetailsComponent,
     WeekDayPipe,
-    DoctorAppointmentComponent
+    DoctorAppointmentComponent,
+    DoctorListComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
