@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { sortBy } from 'sort-by-typescript';
 import { Helper } from 'src/app/helper-methods/helper.model';
 import { Language } from 'src/app/models/langauge.model';
+import { Speciality } from 'src/app/models/speciality.model';
 import { User } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user.service';
 
@@ -25,20 +27,87 @@ export class DoctorListComponent implements OnInit {
     _baseUrl: string;
     fetchingDoctorList: boolean = false;
     doctorList: User[] = [];
-
+    allDoctorList: User[] = [];
+    allSpecialities: Speciality[] = [];
+    search_string:string;
+    selectedTag: number;
+    ascending_sort: boolean = true;
   ngOnInit(): void {
     this.getDoctorList();
+    this.resolveSpecialityTag();
   }
 
 
 
 
   toggleDoctorListSort(event_data){
-
+    this.ascending_sort = !this.ascending_sort;
+    this.doctorList = this.sortDoctorList(this.doctorList);
   }
+
+
+
+
+  specialityTagChanged(event_data){
+    console.log('Tag select changed');
+    this.search_string = null
+    if(this.selectedTag == 0){
+      var doctor_List = this.allDoctorList.slice();
+      this.doctorList = this.sortDoctorList(doctor_List);
+    }
+    else{
+      var doc_List = [];
+      this.allDoctorList.forEach(doctor => {
+        var specialities = doctor.specialities.filter(val => {
+          if(val.id == this.selectedTag) return val;
+        });
+        if(specialities.length > 0){
+          doc_List.push(doctor);
+        }
+      });
+      this.doctorList = this.sortDoctorList(doc_List);
+    }
+  }
+
+
+
+
   onSearchSubmit(){
 
+    var filtered_doc_list = [];
+
+    if(this.selectedTag == 0){
+      filtered_doc_list = this.allDoctorList.slice();
+    }
+    else{
+
+      this.allDoctorList.forEach(doctor => {
+        var specialities = doctor.specialities.filter(val => {
+          if(val.id == this.selectedTag) return val;
+        });
+        if(specialities.length > 0){
+          filtered_doc_list.push(doctor);
+        }
+      });
+    }
+
+
+
+
+    filtered_doc_list = filtered_doc_list.filter((val:User) => {
+      var search_param = this.search_string.toUpperCase();
+      if (val.name.toUpperCase().includes(search_param)) {
+        return val;
+      }
+    });
+
+    this.doctorList = this.sortDoctorList(filtered_doc_list);
+    //this.doctorList = filtered_doc_list;
   }
+
+
+
+
 
   getDoctorList(){
     this.fetchingDoctorList = true;
@@ -51,50 +120,43 @@ export class DoctorListComponent implements OnInit {
       console.log(result);
       this.fetchingDoctorList = false;
       if (result.success) {
-
-
-
-       this.doctor.username = result.doctor.username;
-       this.doctor.email = result.doctor.email;
-       this.doctor.id = result.doctor.id;
-       this.doctor.age = result.doctor.age;
-       this.doctor.approved = result.doctor.approved;
-       this.doctor.biography = result.doctor.biography;
-       this.doctor.bloodGroup = result.doctor.bloodGroup;
-       this.doctor.bmdc_certifcate = result.doctor.bmdc_certifcate;
-       this.doctor.city_name = result.doctor.city_name;
-       this.doctor.country_name = result.doctor.country_name;
-       this.doctor.country_phone_code = result.doctor.country_phone_code;
-       this.doctor.country_short_name = result.doctor.country_short_name;
-       this.doctor.degree_title = result.doctor.degree_title;
-       this.doctor.doctor_title= result.doctor.doctor_title;
-       this.doctor.experience = result.doctor.experience;
-       this.doctor.gender = result.doctor.gender;
-       this.doctor.isActive = result.doctor.isActive;
-       this.doctor.languages =[];
-        result.doctor.languages.forEach(val => {
-          var lang = new Language();
-          lang.id = val.id;
-          lang.languageName = val.languageName;
-          this.doctor.languages.push(lang);
-        });
-        this.doctor.name = result.doctor.name;
-        this.doctor.new_patient_visiting_price = result.doctor.new_patient_visiting_price;
-        this.doctor.old_patient_visiting_price = result.doctor.old_patient_visiting_price;
-        this.doctor.phoneNumber = result.doctor.phoneNumber;
-        this.doctor.roles = [];
-        result.doctor.roles.forEach(val => {
-          this.doctor.roles.push(val);
-        });
-       this.doctor.schedules = [];
-       Helper.resolveScheduleResult(result.doctor.schedules, this.doctor.schedules);
-       this.doctor.specialities = [];
-       Helper.resolveSpecialitiesResult(result.doctor.specialities, this.doctor.specialities);
-       this.doctor.state_name = result.doctor.state_name;
-       this.doctor.types_of = result.doctor.types_of;
-       this.resolveDoctorStatus();
-       this.ShowProfileImage();
+        Helper.resolveDoctorListResult(result.doctor_list, this.allDoctorList);
+        var doc_list = this.allDoctorList.slice();
+        this.doctorList = this.sortDoctorList(doc_list);
       }
     });
+  }
+
+
+
+
+
+
+  resolveSpecialityTag() {
+    if (this.userService.doctorSpecialityTags != undefined && this.userService.doctorSpecialityTags.length > 0) {
+      var all_speciality = new Speciality();
+      all_speciality.id = 0;
+      all_speciality.specialityName = 'All';
+      this.allSpecialities.push(all_speciality);
+      var sorted_speciality_tags = this.userService.doctorSpecialityTags.sort(sortBy('specialityName'));
+      this.allSpecialities.push(...sorted_speciality_tags);
+      this.selectedTag = 0;
+    }
+  }
+
+
+
+
+
+
+  sortDoctorList(list:User[]){
+    var sorted_list = [];
+    if(this.ascending_sort == true){
+      sorted_list = list.sort(sortBy('name'));
+    }
+    else{
+      sorted_list = list.sort(sortBy('-name'));
+    }
+    return sorted_list;
   }
 }

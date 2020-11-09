@@ -71,7 +71,7 @@
           *ngFor="let doctorItem of doctorList; even as evenItem; odd as oddItem">
             <div class="card-body">
               <div class="d-flex">
-                 <app-profile-pic-preview [user_id]="doctorItem.id"></app-profile-pic-preview>
+                 <app-profile-pic-preview [user_id]="doctorItem.id" style="width: 50px; height: 50px;"></app-profile-pic-preview>
                 <div class="flex-fill flex-column">
                    <a style="cursor: pointer;" (click)="viewDoctorDetails($event, doctorItem.id)"><h6 class=" font-weight-bold">{{doctorItem.name}}</h6></a>
                   <div class="mr-2">

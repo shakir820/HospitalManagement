@@ -80,21 +80,31 @@ export class Helper {
         });
       }
 
-       this.doctor.name = result.doctor.name;
-       this.doctor.new_patient_visiting_price = result.doctor.new_patient_visiting_price;
-       this.doctor.old_patient_visiting_price = result.doctor.old_patient_visiting_price;
-       this.doctor.phoneNumber = result.doctor.phoneNumber;
-       this.doctor.roles = [];
-       result.doctor.roles.forEach(val => {
-         this.doctor.roles.push(val);
-       });
-      this.doctor.schedules = [];
-      Helper.resolveScheduleResult(result.doctor.schedules, this.doctor.schedules);
-      this.doctor.specialities = [];
-      Helper.resolveSpecialitiesResult(result.doctor.specialities, this.doctor.specialities);
-      this.doctor.state_name = result.doctor.state_name;
-      this.doctor.types_of = result.doctor.types_of;
-    })
+       doctor.name = doctor_result.name;
+       doctor.new_patient_visiting_price = doctor_result.new_patient_visiting_price;
+       doctor.old_patient_visiting_price = doctor_result.old_patient_visiting_price;
+       doctor.phoneNumber = doctor_result.phoneNumber;
+       doctor.roles = [];
+       if(doctor_result.roles != undefined && doctor_result.roles != null){
+        doctor_result.roles.forEach(val => {
+          doctor.roles.push(val);
+        });
+       }
+
+      doctor.schedules = [];
+      if(doctor_result.schedules != undefined && doctor_result.schedules != null){
+        Helper.resolveScheduleResult(doctor_result.schedules, doctor.schedules);
+      }
+
+      doctor.specialities = [];
+      if(doctor_result.specialities != undefined && doctor_result.specialities != null){
+        Helper.resolveSpecialitiesResult(doctor_result.specialities, doctor.specialities);
+      }
+      doctor.state_name = doctor_result.state_name;
+      doctor.types_of =  doctor_result.types_of;
+
+      doctor_list.push(doctor);
+    });
   }
 
 }
