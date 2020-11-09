@@ -1,0 +1,104 @@
+<div class="container-fluid">
+
+
+  <div class="d-sm-flex align-items-center mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Doctor List</h1>
+  </div>
+
+  <div class="row">
+
+    <div class="col-sm-12">
+      <div class="card shadow mb-4">
+
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+
+          <div class="btn-group">
+            <button id="filter_btn" type="button"
+            [ngClass]="{'btn-primary': filerBy == 'All',
+            'btn-warning': filerBy == 'Pending',
+            'btn-danger': filerBy == 'Inactive',
+            'btn-success': filerBy == 'Active'}"
+            class="btn">{{filerBy}}</button>
+            <button type="button" id="dropDownToggleFilterBtn"
+            [ngClass]="{'btn-primary': filerBy == 'All',
+            'btn-warning': filerBy == 'Pending',
+            'btn-danger': filerBy == 'Inactive',
+            'btn-success': filerBy == 'Active'}"
+            class="btn dropdown-toggle dropdown-toggle-split"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <div class="dropdown-menu shadow">
+              <div class="dropdown-header">Filter by:</div>
+              <a class="dropdown-item text-primary" (click)="showAllDoctorList($event)">All</a>
+              <a class="dropdown-item text-success" (click)="showActiveDoctorList($event)" >Active</a>
+              <a class="dropdown-item text-warning" (click)="showPendingDoctorList($event)">Pending</a>
+              <a class="dropdown-item text-danger" (click)="showInactiveDoctorList($event)">Inactive</a>
+            </div>
+          </div>
+          <div class="d-flex">
+            <form #f="ngForm" (ngSubmit)="onSearchSubmit()"
+             class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100"
+            >
+              <div class="input-group">
+                <input type="text" id="search_string" name="search_string" ngModel
+                 class="form-control bg-light border-0 small" placeholder="Search doctor" aria-label="Search">
+                <div class="input-group-append">
+                  <button class="btn btn-primary" type="submit">
+                    <i class="fas fa-search fa-sm"></i>
+                  </button>
+                </div>
+              </div>
+            </form>
+            <button type="button" (click)="toggleDoctorListSort($event)" class="btn ml-4"><i class="fad fa-sort"></i></button>
+          </div>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body" style="max-height: 100%; overflow-y:auto;">
+
+
+
+          <!-- <ngx-datatable [rows]="doctorList"> </ngx-datatable> -->
+
+
+
+
+          <div class="mb-2 border-left-success"
+          [ngClass]="{'bg-gray-100': evenItem == true,
+          'border-left-success': (doctorItem.approved && doctorItem.isActive),
+          'border-left-warning': (doctorItem.approved == false) && (doctorItem.isActive == true),
+          'border-left-danger': doctorItem.isActive == false}"
+          *ngFor="let doctorItem of doctorList; even as evenItem; odd as oddItem">
+            <div class="card-body">
+              <div class="d-flex">
+                 <app-profile-pic-preview [user_id]="doctorItem.id" style="width: 50px; height: 50px;"></app-profile-pic-preview>
+                <div class="flex-fill flex-column">
+                   <a style="cursor: pointer;" (click)="viewDoctorDetails($event, doctorItem.id)"><h6 class=" font-weight-bold">{{doctorItem.name}}</h6></a>
+                  <div class="mr-2">
+                    <small class="text-muted font-weight-bold"> {{doctorItem.doctor_title}}</small>
+                  </div>
+                </div>
+                <div>
+                  <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                      <div class="dropdown-header">Action:</div>
+                      <a class="dropdown-item text-primary" (click)="activeDoctor($event, doctorItem.id)">Active</a>
+                      <a class="dropdown-item text-danger" (click)="inActiveDoctor($event, doctorItem.id)">Inactive</a>
+                      <a class="dropdown-item text-success" (click)="approveDoctor($event, doctorItem.id)">Approve</a>
+                      <a class="dropdown-item text-warning" (click)="unApproveDoctor($event, doctorItem.id)">Unapprove</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</div>

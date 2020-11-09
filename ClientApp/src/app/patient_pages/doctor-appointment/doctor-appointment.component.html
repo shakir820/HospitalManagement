@@ -1,0 +1,150 @@
+<div class="container-fluid">
+
+  <!-- Page Heading -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Doctor Appointment</h1>
+  </div>
+
+
+
+  <div class="card mb-4">
+    <!-- Card Header - Dropdown -->
+    <div class="card-header py-3 d-flex flex-row align-items-center">
+      <h6 class="mr-4 my-auto font-weight-bold">Doctor List</h6>
+      <select class="form-control" style="max-width: 300px;">
+        <option class="p-2">Default select</option>
+        <option class="p-2">Default select</option>
+        <option class="p-2">Default select</option>
+      </select>
+      <button type="button" (click)="toggleDoctorListSort($event)" class="btn ml-4"><i class="fa fa-sort"></i></button>
+
+
+    </div>
+    <!-- Card Body -->
+    <div class="card-body">
+      <div class="d-flex flex-wrap">
+
+        <div class="card shadow pt-3 mx-2 mb-2">
+          <div class=" d-flex">
+            <div class="avatar-preview mx-5">
+              <div id="imagePreview"
+              class="avatar-preview-inner-div" style="background-image: url('https://i.pinimg.com/originals/3d/32/cf/3d32cfca57376f51a0ef7f14c9f6c230.jpg');" #imagePreview>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center flex-column my-3">
+            <h6 style="font-weight: 600;">Shakir Ahmed</h6>
+            <p class="small">MBBS FCPS</p>
+            <div class="d-flex flex-wrap">
+              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
+              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
+              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
+            </div>
+            <button class="appointment-btn btn btn-primary btn-sm rounded mt-2">Appointment</button>
+          </div>
+        </div>
+
+
+
+
+
+        <div class="card shadow pt-3 mx-2 mb-2">
+          <div class=" d-flex">
+            <div class="avatar-preview mx-5">
+              <div id="imagePreview"
+              class="avatar-preview-inner-div" style="background-image: url('https://i.pinimg.com/originals/3d/32/cf/3d32cfca57376f51a0ef7f14c9f6c230.jpg');" #imagePreview>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center flex-column my-3">
+            <h6 style="font-weight: 600;">Shakir Ahmed</h6>
+            <p class="small">MBBS FCPS</p>
+            <div class="d-flex flex-wrap">
+              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
+              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
+              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
+            </div>
+            <button class="appointment-btn btn btn-primary btn-sm rounded mt-2">Appointment</button>
+          </div>
+        </div>
+
+
+
+
+
+
+        <div class="card shadow pt-3 mx-2 mb-2">
+          <div class=" d-flex">
+            <div class="avatar-preview mx-5">
+              <div id="imagePreview"
+              class="avatar-preview-inner-div" style="background-image: url('https://i.pinimg.com/originals/3d/32/cf/3d32cfca57376f51a0ef7f14c9f6c230.jpg');" #imagePreview>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center flex-column my-3">
+            <h6 style="font-weight: 600;">Shakir Ahmed</h6>
+            <p class="small">MBBS FCPS</p>
+            <div class="d-flex flex-wrap">
+              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
+              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
+              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
+            </div>
+            <button class="appointment-btn btn btn-primary btn-sm rounded mt-2">Appointment</button>
+          </div>
+        </div>
+
+
+
+
+
+        <div class="card shadow pt-3 mx-2 mb-2">
+          <div class=" d-flex">
+            <div class="avatar-preview mx-5">
+              <div id="imagePreview"
+              class="avatar-preview-inner-div" style="background-image: url('https://i.pinimg.com/originals/3d/32/cf/3d32cfca57376f51a0ef7f14c9f6c230.jpg');" #imagePreview>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center flex-column my-3">
+            <h6 style="font-weight: 600;">Shakir Ahmed</h6>
+            <p class="small">MBBS FCPS</p>
+            <div class="d-flex flex-wrap">
+              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
+              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
+              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
+            </div>
+            <button class="appointment-btn btn btn-primary btn-sm rounded mt-2">Appointment</button>
+          </div>
+        </div>
+
+
+
+
+
+
+        <div class="card shadow pt-3 mx-2 mb-2">
+          <div class=" d-flex">
+            <div class="avatar-preview mx-5">
+              <div id="imagePreview"
+              class="avatar-preview-inner-div" style="background-image: url('https://i.pinimg.com/originals/3d/32/cf/3d32cfca57376f51a0ef7f14c9f6c230.jpg');" #imagePreview>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center flex-column my-3">
+            <h6 style="font-weight: 600;">Shakir Ahmed</h6>
+            <p class="small">MBBS FCPS</p>
+            <div class="d-flex flex-wrap">
+              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
+              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
+              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
+            </div>
+            <button class="btn appointment-btn btn-primary btn-sm rounded mt-2">Appointment</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+</div>

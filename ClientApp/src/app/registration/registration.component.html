@@ -1,0 +1,110 @@
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="d-flex justify-content-center">
+      <div style="width: 500px;" class=" card p-5 shadow">
+        <form (ngSubmit)="onSubmit()" #f="ngForm">
+          <div class=" form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" ngModel
+                   required
+                   placeholder="Enter name"
+                   name="user_name"
+                   id="name">
+            <small id="nameError" class="text-danger" *ngIf="((f.form.controls['user_name'].valid === false && f.form.controls['user_name'].touched === true) ||
+           (f.form.controls['user_name'].valid === false && submitted === true ))">Name is required</small>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email"
+                   name="email"
+                   required
+                   ngModel
+                   class="form-control"
+                   id="email"
+                   email
+                   aria-describedby="emailHelp"
+                   placeholder="Enter email">
+            <div *ngIf="(f.form.controls['email'].valid == false && f.form.controls['email'].touched) || (f.form.controls['email'].valid == false && submitted == true)">
+              <small id="emailError1" *ngIf="!f.form.controls['email'].valid || f.form.controls['email'].errors['required']" class="text-danger">A valid email address is required</small>
+            </div>
+            <div *ngIf="!isUniqueEmailAddress">
+              <small id="emailError" class="text-danger">Email address is already taken</small>
+            </div>
+          </div>
+
+
+          <div class="d-flex">
+            <div class="form-group flex-fill" style="width: 100px;">
+              <label for="age">Age</label>
+              <input type="number"
+                     class="form-control"
+                     ngModel
+                     name="age"
+                     placeholder="25"
+                     id="age"
+                     required>
+              <small id="ageError" class="text-danger" *ngIf="(!f.form.controls['age'].valid && f.form.controls['age'].touched) || (!f.form.controls['age'].valid && submitted)">Age is required</small>
+            </div>
+
+            <div class="form-group flex-fill ml-2">
+              <label for="gender">Gender</label>
+              <select class="form-control" id="gender"
+                      [(ngModel)]="selectedGender"
+                      name="gender"
+                      required>
+                <option *ngFor="let item of genders" [value]="item">{{item}}</option>
+              </select>
+              <small id="genderError" class="text-danger" *ngIf="!f.form.controls['gender'].valid && f.form.controls['gender'].touched">Gender is required</small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div>
+              <label for="role">Who am I ?</label>
+              <select name="role" id="role" [(ngModel)]="selectedRole" class="form-control">
+                <option *ngFor="let item of roles" [value]="item">{{item}}</option>
+              </select>
+            </div>
+
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Password"
+                   name="password"
+                   required
+                   ngModel>
+            <small id="passwordError" *ngIf="(!f.form.controls['password'].valid && f.form.controls['password'].touched) || (!f.form.controls['password'].valid && submitted)" class="text-danger">Password is required</small>
+          </div>
+
+          <div *ngIf="error_msg">
+            <small class="text-danger">{{ error_msg }}</small>
+          </div>
+
+          <div class=" d-flex mt-3">
+            <button type="submit" class="btn btn-primary flex-fill">
+              <div class=" d-flex">
+                <div class="flex-grow-1">
+                  {{registering? 'Registering': 'Register'}}
+                </div>
+                <div class="spinner-border text-light mr-3" *ngIf="registering" role="status">
+                </div>
+              </div>
+            </button>
+          </div>
+
+          <div class=" mt-2">
+            <small class=" text-muted">Already have account?</small>
+            <a class="btn-link ml-2" [routerLink]="['/login']">Login</a>
+          </div>
+        </form>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+

@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 /* Provide sufficient contrast against white background */
-a {
+/* a {
   color: #0366d6;
 }
 
@@ -13,4 +13,87 @@ code {
   color: #fff;
   background-color: #1b6ec2;
   border-color: #1861ac;
+} */
+
+
+
+
+
+#sidebarToggleBtn {
+  width: 2.5rem;
+  height: 2.5rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  cursor: pointer;
 }
+
+#sidebarToggleBtn::after {
+  font-weight: 900;
+  margin-right: 0.1rem;
+}
+
+#sidebarToggleBtn:hover {
+  text-decoration: none;
+}
+
+#sidebarToggleBtn:focus {
+  outline: none;
+}
+
+
+#sidebarToggleBtn::after {
+  margin-left: 0.25rem;
+}
+
+
+.sidebar-light #sidebarToggleBtn {
+  background-color: #eaecf4;
+}
+
+.sidebar-light #sidebarToggleBtn::after {
+  color: #b7b9cc;
+}
+
+.sidebar-light #sidebarToggleBtn:hover {
+  background-color: #dddfeb;
+}
+
+
+
+
+.sidebar-dark #sidebarToggleBtn {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-dark #sidebarToggleBtn::after {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.sidebar-dark #sidebarToggleBtn:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.sidebar-dark.toggled #sidebarToggleBtn::after {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+
+
+html {
+  height: 100%;
+}
+body {
+  min-height: 100%;
+}
+
+
+.customFullHeight{
+  height: 100%;
+  min-height: 100%;
+}
+
+
+
+
+
+

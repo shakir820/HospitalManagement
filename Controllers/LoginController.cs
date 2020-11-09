@@ -29,78 +29,78 @@ namespace HospitalManagement.Controllers
 
 
 
-        [HttpGet]
-        public IActionResult Login(string username, string pass)
-        {
-            var login = new UserModel();
-            login.Username = username;
-            login.Password = pass;
+        //[HttpGet]
+        //public IActionResult Login(string username, string pass)
+        //{
+        //    var login = new UserModel();
+        //    login.Username = username;
+        //    login.Password = pass;
 
-            IActionResult response = Unauthorized();
-            var user = AuthenticateUser(login);
+        //    IActionResult response = Unauthorized();
+        //    var user = AuthenticateUser(login);
 
-            if(user != null)
-            {
-                var tokenStr = GenerateJsonWebToken(user);
-                response = Ok(new { token = tokenStr });
-            }
+        //    if(user != null)
+        //    {
+        //        var tokenStr = GenerateJsonWebToken(user);
+        //        response = Ok(new { token = tokenStr });
+        //    }
 
-            return response;
-        }
-
-
-        private UserModel AuthenticateUser(UserModel login)
-        {
-            UserModel user = null;
-            if(login.Username == "shakir" && login.Password == "123")
-            {
-                user = new UserModel 
-                { 
-                    Username = login.Username, 
-                    Password = login.Password, 
-                    EmailAddress = "shakir.sha95@gmail.com", 
-                    Name = "Shakir Ahmed" 
-                };
-            }
-            return user;
-        }
+        //    return response;
+        //}
 
 
+        //private UserModel AuthenticateUser(UserModel login)
+        //{
+        //    UserModel user = null;
+        //    if(login.Username == "shakir" && login.Password == "123")
+        //    {
+        //        user = new UserModel 
+        //        { 
+        //            Username = login.Username, 
+        //            Password = login.Password, 
+        //            EmailAddress = "shakir.sha95@gmail.com", 
+        //            Name = "Shakir Ahmed" 
+        //        };
+        //    }
+        //    return user;
+        //}
 
 
-        private string GenerateJsonWebToken(UserModel userInfo)
-        {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, userInfo.Name)
-            };
-
-            var token = new JwtSecurityToken(
-                issuer: _config["JWT:Issuer"],
-                audience: _config["JWT:Issuer"],
-                claims,
-                expires: DateTime.Now.AddMinutes(10),
-                signingCredentials: credentials);
 
 
-            var encodeToken = new JwtSecurityTokenHandler().WriteToken(token);
-            return encodeToken;
-        }
+        //private string GenerateJsonWebToken(UserModel userInfo)
+        //{
+        //    var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Key"]));
+        //    var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+        //    var claims = new[]
+        //    {
+        //        new Claim(JwtRegisteredClaimNames.Sub, userInfo.Name)
+        //    };
+
+        //    var token = new JwtSecurityToken(
+        //        issuer: _config["JWT:Issuer"],
+        //        audience: _config["JWT:Issuer"],
+        //        claims,
+        //        expires: DateTime.Now.AddMinutes(10),
+        //        signingCredentials: credentials);
 
 
-        [Authorize]
-        [HttpPost]
-        public string Post()
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            IList<Claim> claims = identity.Claims.ToList();
-            var userName = claims[0].Value;
+        //    var encodeToken = new JwtSecurityTokenHandler().WriteToken(token);
+        //    return encodeToken;
+        //}
 
-            return "Welcome to " + userName;
 
-        }
+        //[Authorize]
+        //[HttpPost]
+        //public string Post()
+        //{
+        //    var identity = HttpContext.User.Identity as ClaimsIdentity;
+        //    IList<Claim> claims = identity.Claims.ToList();
+        //    var userName = claims[0].Value;
+
+        //    return "Welcome to " + userName;
+
+        //}
     }
 }
