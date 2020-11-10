@@ -51,7 +51,7 @@
               <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;"
               *ngFor="let speciality_item of doctor_item.specialities">{{ speciality_item.specialityName }}</div>
             </div>
-            <button class="appointment-btn btn btn-primary btn-sm rounded mt-2">Appointment</button>
+            <button class="appointment-btn btn btn-primary btn-sm rounded mt-2" (click)="getAppointment($event, doctor_item.id)" >Appointment</button>
           </div>
         </div>
 
