@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { sortBy } from 'sort-by-typescript';
 import { Helper } from 'src/app/helper-methods/helper.model';
 import { Language } from 'src/app/models/langauge.model';
@@ -18,7 +18,8 @@ export class DoctorListComponent implements OnInit {
   constructor(
     public userService: UserService,
     private httpClient: HttpClient,
-    @Inject('BASE_URL') baseUrl: string) {
+    @Inject('BASE_URL') baseUrl: string,
+    private router: Router) {
       this._baseUrl = baseUrl;
 
     }
@@ -158,5 +159,12 @@ export class DoctorListComponent implements OnInit {
       sorted_list = list.sort(sortBy('-name'));
     }
     return sorted_list;
+  }
+
+
+
+
+  getAppointment(event_data, doctor_id:number){
+    this.router.navigate(['Appointment/NewAppointment'], {queryParams: {id: doctor_id}});
   }
 }

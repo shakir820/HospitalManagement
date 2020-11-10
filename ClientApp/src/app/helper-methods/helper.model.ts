@@ -6,6 +6,8 @@ import { User } from "../models/user.model";
 export class Helper {
 
   static resolveLanguagesResult(result: Language[], model_lang: Language[]) {
+    if(result == undefined || result.length == 0) return model_lang;
+
     result.forEach(val => {
       var lang = new Language();
       lang.id = val.id;
@@ -17,6 +19,8 @@ export class Helper {
 
 
   static resolveSpecialitiesResult(result: Speciality[], model_specialities: Speciality[]) {
+    if(result == undefined || result.length == 0) return model_specialities;
+
     result.forEach(val => {
       var speciality = new Speciality();
       speciality.id = val.id;
@@ -28,6 +32,8 @@ export class Helper {
 
 
   static resolveScheduleResult(result: Schedule[], model_list: Schedule[]) {
+    if(result == undefined || result.length == 0) return model_list;
+
     result.forEach(val => {
       var schedule = new Schedule();
       schedule.day_name = val.day_name;

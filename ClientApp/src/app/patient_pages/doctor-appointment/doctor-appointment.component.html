@@ -1,149 +1,142 @@
 <div class="container-fluid">
 
   <!-- Page Heading -->
-  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+  <div class="mt-2 d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Doctor Appointment</h1>
   </div>
 
 
 
-  <div class="card mb-4">
-    <!-- Card Header - Dropdown -->
-    <div class="card-header py-3 d-flex flex-row align-items-center">
-      <h6 class="mr-4 my-auto font-weight-bold">Doctor List</h6>
-      <select class="form-control" style="max-width: 300px;">
-        <option class="p-2">Default select</option>
-        <option class="p-2">Default select</option>
-        <option class="p-2">Default select</option>
-      </select>
-      <button type="button" (click)="toggleDoctorListSort($event)" class="btn ml-4"><i class="fa fa-sort"></i></button>
+  <div class="d-flex flex-wrap">
+    <div class="card shadow m-2">
+      <div class=" card-body">
+        <!-- <div class="avatar-preview mr-3" style="width: 150px; height: 150px;">
+          <div id="imagePreview"
+          class="avatar-preview-inner-div" style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=700&q=80');" #imagePreview>
+          </div>
+      </div> -->
+      <div style="width: 150px; height: 150px;">
+        <app-profile-pic-preview  class="mr-3"
+        [user_id]="doctor_id"></app-profile-pic-preview>
+      </div>
 
+      <div class="mt-3">
+        <!-- <small class="text-muted">Name</small> -->
+        <h6 class=" text-gray-800 font-weight-bold">{{doctor.name}}</h6>
+      </div>
+      <div class="d-flex flex-wrap" *ngIf="doctor.specialities.length > 0">
+        <small class="mr-2 text-success font-weight-bold" *ngFor="let item of doctor.specialities">{{item.specialityName}}</small>
+      </div>
+      <div>
+        <small class="text-muted">{{doctor.degree_title}}</small>
+      </div>
 
+      <div class="mt-3" *ngIf="doctor.biography != undefined">
+        <div class=" border-left-secondary pl-2 rounded" style="max-width: 500px; font-size: smaller;">
+          <p>{{doctor.biography}}</p>
+        </div>
+      </div>
+      </div>
     </div>
-    <!-- Card Body -->
-    <div class="card-body">
-      <div class="d-flex flex-wrap">
 
-        <div class="card shadow pt-3 mx-2 mb-2">
-          <div class=" d-flex">
-            <div class="avatar-preview mx-5">
-              <div id="imagePreview"
-              class="avatar-preview-inner-div" style="background-image: url('https://i.pinimg.com/originals/3d/32/cf/3d32cfca57376f51a0ef7f14c9f6c230.jpg');" #imagePreview>
-              </div>
+    <div class="card shadow m-2">
+      <div class=" card-body">
+        <h5 class="font-weight-bold">I am available on</h5>
+
+        <div class="mt-3 flex-column d-flex">
+          <div class="border-left-success pl-2 mb-2" *ngFor="let schedule_item of doctor.schedules">
+            <h6 class="font-weight-bold mb-0 text-success">{{schedule_item.day_name | weekDay}}</h6>
+            <div>
+              <small class="text-muted">  {{schedule_item.start_time | date: 'shortTime' }} - {{schedule_item.end_time | date: 'shortTime' }}</small>
             </div>
-          </div>
-          <div class="d-flex align-items-center flex-column my-3">
-            <h6 style="font-weight: 600;">Shakir Ahmed</h6>
-            <p class="small">MBBS FCPS</p>
-            <div class="d-flex flex-wrap">
-              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
-              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
-              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
-            </div>
-            <button class="appointment-btn btn btn-primary btn-sm rounded mt-2">Appointment</button>
           </div>
         </div>
 
 
-
-
-
-        <div class="card shadow pt-3 mx-2 mb-2">
-          <div class=" d-flex">
-            <div class="avatar-preview mx-5">
-              <div id="imagePreview"
-              class="avatar-preview-inner-div" style="background-image: url('https://i.pinimg.com/originals/3d/32/cf/3d32cfca57376f51a0ef7f14c9f6c230.jpg');" #imagePreview>
-              </div>
-            </div>
-          </div>
-          <div class="d-flex align-items-center flex-column my-3">
-            <h6 style="font-weight: 600;">Shakir Ahmed</h6>
-            <p class="small">MBBS FCPS</p>
-            <div class="d-flex flex-wrap">
-              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
-              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
-              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
-            </div>
-            <button class="appointment-btn btn btn-primary btn-sm rounded mt-2">Appointment</button>
+        <div class="mt-3">
+          <div style="max-width: 400px;" class="form-group">
+            <label for="appointment_date">Pick appointment date</label>
+            <input type="date"  class="form-control border-danger" name="appointment_date" id="appointment_date">
+            <small class="text-danger">Sorry, you cannot make any appointment on that day. Because you already have an appointment on that day</small>
           </div>
         </div>
-
-
-
-
-
-
-        <div class="card shadow pt-3 mx-2 mb-2">
-          <div class=" d-flex">
-            <div class="avatar-preview mx-5">
-              <div id="imagePreview"
-              class="avatar-preview-inner-div" style="background-image: url('https://i.pinimg.com/originals/3d/32/cf/3d32cfca57376f51a0ef7f14c9f6c230.jpg');" #imagePreview>
+        <div class="d-flex justify-content-center align-items-center" *ngIf="true">
+          <div class="spinner-border text-success" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+          <span class="ml-3">Checking...</span>
+        </div>
+        <div *ngIf="true">
+          <p>Your appointment</p>
+          <div class="rounded mb-2 bg-gray-100 p-2">
+            <div class="d-flex align-items-start">
+              <div class="avatar-preview mr-3" style="width: 50px; height: 50px;">
+                <div id="imagePreview"
+                class="avatar-preview-inner-div"
+                style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=700&q=80');" #imagePreview>
+                </div>
+              </div>
+              <div>
+                <h6 class="mb-0 text-gray-800 font-weight-bold">Dr. Susan Witner</h6>
+                <p class="mb-0">5th January, 2021</p>
+                <p class="small mb-0">2:00 PM - 9:00 PM</p>
               </div>
             </div>
-          </div>
-          <div class="d-flex align-items-center flex-column my-3">
-            <h6 style="font-weight: 600;">Shakir Ahmed</h6>
-            <p class="small">MBBS FCPS</p>
-            <div class="d-flex flex-wrap">
-              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
-              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
-              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
-            </div>
-            <button class="appointment-btn btn btn-primary btn-sm rounded mt-2">Appointment</button>
           </div>
         </div>
+        <div class="mt-3" >
+          <h6 class="font-weight-bold text-warning">Appointments on this day</h6>
+          <div>
+            <div class="rounded mb-2 bg-gray-100 p-2">
+              <div class="d-flex align-items-start">
+                <div class="avatar-preview mr-3" style="width: 50px; height: 50px;">
+                  <div id="imagePreview"
+                  class="avatar-preview-inner-div"
+                  style="background-image: url('https://images.unsplash.com/photo-1582804905556-0605e6433015?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80');" #imagePreview>
+                  </div>
+                </div>
+                <div>
+                  <h6 class="mb-0 text-gray-800 font-weight-bold">Dr. Nayeem Jahangir</h6>
+                  <p class="mb-0">5th January, 2021</p>
+                  <p class="small mb-0">2:00 PM - 9:00 PM</p>
+                </div>
 
-
-
-
-
-        <div class="card shadow pt-3 mx-2 mb-2">
-          <div class=" d-flex">
-            <div class="avatar-preview mx-5">
-              <div id="imagePreview"
-              class="avatar-preview-inner-div" style="background-image: url('https://i.pinimg.com/originals/3d/32/cf/3d32cfca57376f51a0ef7f14c9f6c230.jpg');" #imagePreview>
               </div>
             </div>
-          </div>
-          <div class="d-flex align-items-center flex-column my-3">
-            <h6 style="font-weight: 600;">Shakir Ahmed</h6>
-            <p class="small">MBBS FCPS</p>
-            <div class="d-flex flex-wrap">
-              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
-              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
-              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
+
+            <div class="rounded bg-gray-100 p-2">
+              <div class="d-flex align-items-start">
+                <div class="avatar-preview mr-3" style="width: 50px; height: 50px;">
+                  <div id="imagePreview"
+                  class="avatar-preview-inner-div"
+                  style="background-image: url('https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80');" #imagePreview>
+                  </div>
+                </div>
+                <div>
+                  <h6 class="mb-0 text-gray-800 font-weight-bold">Dr. Sharika Jahan</h6>
+                  <p class="mb-0">5th January, 2021</p>
+                  <p class="small mb-0">9:00 AM - 2:00 PM</p>
+                </div>
+
+              </div>
             </div>
-            <button class="appointment-btn btn btn-primary btn-sm rounded mt-2">Appointment</button>
           </div>
         </div>
-
-
-
-
-
-
-        <div class="card shadow pt-3 mx-2 mb-2">
-          <div class=" d-flex">
-            <div class="avatar-preview mx-5">
-              <div id="imagePreview"
-              class="avatar-preview-inner-div" style="background-image: url('https://i.pinimg.com/originals/3d/32/cf/3d32cfca57376f51a0ef7f14c9f6c230.jpg');" #imagePreview>
-              </div>
+        <div>
+          <button class="btn btn-success shadow mt-3" style="width: 100%;">
+          <div class="d-flex flex-row justify-content-center align-items-center">
+            <div class=" font-weight-bold">Confirm</div>
+            <div class="spinner-border spinner-border-sm text-light ml-3" role="status">
+              <span class="sr-only">Loading...</span>
             </div>
           </div>
-          <div class="d-flex align-items-center flex-column my-3">
-            <h6 style="font-weight: 600;">Shakir Ahmed</h6>
-            <p class="small">MBBS FCPS</p>
-            <div class="d-flex flex-wrap">
-              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
-              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
-              <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;">Surgeon</div>
-            </div>
-            <button class="btn appointment-btn btn-primary btn-sm rounded mt-2">Appointment</button>
-          </div>
+          </button>
         </div>
       </div>
     </div>
   </div>
+
+
 
 
 
