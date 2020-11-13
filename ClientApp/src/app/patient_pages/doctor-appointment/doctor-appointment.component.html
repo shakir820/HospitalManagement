@@ -8,38 +8,38 @@
 
 
   <div class="d-flex flex-wrap">
-    <div class="card shadow m-2">
+    <div class="card shadow m-2" style="min-width: 300px;">
       <div class=" card-body">
         <!-- <div class="avatar-preview mr-3" style="width: 150px; height: 150px;">
-          <div id="imagePreview"
-          class="avatar-preview-inner-div" style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=700&q=80');" #imagePreview>
-          </div>
-      </div> -->
-      <div style="width: 150px; height: 150px;">
-        <app-profile-pic-preview  class="mr-3"
-        [user_id]="doctor_id"></app-profile-pic-preview>
-      </div>
-
-      <div class="mt-3">
-        <!-- <small class="text-muted">Name</small> -->
-        <h6 class=" text-gray-800 font-weight-bold">{{doctor.name}}</h6>
-      </div>
-      <div class="d-flex flex-wrap" *ngIf="doctor.specialities.length > 0">
-        <small class="mr-2 text-success font-weight-bold" *ngFor="let item of doctor.specialities">{{item.specialityName}}</small>
-      </div>
-      <div>
-        <small class="text-muted">{{doctor.degree_title}}</small>
-      </div>
-
-      <div class="mt-3" *ngIf="doctor.biography != undefined">
-        <div class=" border-left-secondary pl-2 rounded" style="max-width: 500px; font-size: smaller;">
-          <p>{{doctor.biography}}</p>
+            <div id="imagePreview"
+            class="avatar-preview-inner-div" style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=700&q=80');" #imagePreview>
+            </div>
+        </div> -->
+        <div style="width: 150px; height: 150px;">
+          <app-profile-pic-preview class="mr-3"
+                                   [user_id]="doctor_id"></app-profile-pic-preview>
         </div>
-      </div>
+
+        <div class="mt-3">
+          <!-- <small class="text-muted">Name</small> -->
+          <h6 class=" text-gray-800 font-weight-bold">{{doctor.name}}</h6>
+        </div>
+        <div class="d-flex flex-wrap" *ngIf="doctor.specialities.length > 0">
+          <small class="mr-2 text-success font-weight-bold" *ngFor="let item of doctor.specialities">{{item.specialityName}}</small>
+        </div>
+        <div>
+          <small class="text-muted">{{doctor.degree_title}}</small>
+        </div>
+
+        <div class="mt-3" *ngIf="doctor.biography != undefined">
+          <div class=" border-left-secondary pl-2 rounded" style="max-width: 500px; font-size: smaller;">
+            <p>{{doctor.biography}}</p>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="card shadow m-2">
+    <div class="card shadow m-2" style="min-width: 300px;">
       <div class=" card-body">
         <h5 class="font-weight-bold">I am available on</h5>
 
@@ -53,83 +53,73 @@
         </div>
 
 
-        <div class="mt-3">
-          <div style="max-width: 400px;" class="form-group">
+        <div class="mt-3" *ngIf="fetchingScheduleInfo == false">
+          <div style="max-width: 400px; min-width: 300px;" class="form-group">
             <label for="appointment_date">Pick appointment date</label>
-            <input type="date"  class="form-control border-danger" name="appointment_date" id="appointment_date">
-            <small class="text-danger">Sorry, you cannot make any appointment on that day. Because you already have an appointment on that day</small>
+            <select [(ngModel)]="selectedDate" class="form-control" id="appointment_date" [disabled]="!can_create_appointment" name="appointment_date"
+                    (change)="dateSelected($event)">
+              <option *ngFor="let item of availableDates" [value]="item">{{ item | date: 'mediumDate' }}</option>
+            </select>
+            <small *ngIf="!can_create_appointment" class="text-danger">You already have an appointment</small>
           </div>
         </div>
-        <div class="d-flex justify-content-center align-items-center" *ngIf="true">
+        <div *ngIf="fetchingScheduleInfo" class="d-flex my-5 justify-content-center align-items-center">
           <div class="spinner-border text-success" role="status">
             <span class="sr-only">Loading...</span>
           </div>
           <span class="ml-3">Checking...</span>
         </div>
-        <div *ngIf="true">
-          <p>Your appointment</p>
-          <div class="rounded mb-2 bg-gray-100 p-2">
+        <div *ngIf="!fetchingScheduleInfo && existedAppointments != undefined && existedAppointments.length > 0">
+          <p>{{existedAppointments.length > 1? 'Your appointments': 'Your appointment'}}</p>
+          <div class="rounded mb-2 bg-gray-100 p-2" *ngFor="let item of existedAppointments">
             <div class="d-flex align-items-start">
-              <div class="avatar-preview mr-3" style="width: 50px; height: 50px;">
-                <div id="imagePreview"
-                class="avatar-preview-inner-div"
-                style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=700&q=80');" #imagePreview>
-                </div>
+              <div class="mr-3" style="width: 50px; height: 50px;">
+                <app-profile-pic-preview class="mr-3"
+                                         [user_id]="item.doctor_id"></app-profile-pic-preview>
               </div>
               <div>
-                <h6 class="mb-0 text-gray-800 font-weight-bold">Dr. Susan Witner</h6>
-                <p class="mb-0">5th January, 2021</p>
-                <p class="small mb-0">2:00 PM - 9:00 PM</p>
+                <h6 class="mb-0 text-gray-800 font-weight-bold">{{item.doctor_name}} <span class="text-success">(#{{item.serial_no}})</span></h6>
+                <p class="mb-0">{{item.appointment_date | date: 'mediumDate'}}</p>
+                <p class="small mb-0">{{item.start_time | date: 'shortTime'}} - {{item.end_time | date: 'shortTime'}}</p>
               </div>
             </div>
           </div>
         </div>
-        <div class="mt-3" >
-          <h6 class="font-weight-bold text-warning">Appointments on this day</h6>
-          <div>
-            <div class="rounded mb-2 bg-gray-100 p-2">
-              <div class="d-flex align-items-start">
-                <div class="avatar-preview mr-3" style="width: 50px; height: 50px;">
-                  <div id="imagePreview"
-                  class="avatar-preview-inner-div"
-                  style="background-image: url('https://images.unsplash.com/photo-1582804905556-0605e6433015?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80');" #imagePreview>
-                  </div>
-                </div>
-                <div>
-                  <h6 class="mb-0 text-gray-800 font-weight-bold">Dr. Nayeem Jahangir</h6>
-                  <p class="mb-0">5th January, 2021</p>
-                  <p class="small mb-0">2:00 PM - 9:00 PM</p>
-                </div>
 
-              </div>
-            </div>
-
-            <div class="rounded bg-gray-100 p-2">
-              <div class="d-flex align-items-start">
-                <div class="avatar-preview mr-3" style="width: 50px; height: 50px;">
-                  <div id="imagePreview"
-                  class="avatar-preview-inner-div"
-                  style="background-image: url('https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80');" #imagePreview>
-                  </div>
-                </div>
-                <div>
-                  <h6 class="mb-0 text-gray-800 font-weight-bold">Dr. Sharika Jahan</h6>
-                  <p class="mb-0">5th January, 2021</p>
-                  <p class="small mb-0">9:00 AM - 2:00 PM</p>
-                </div>
-
-              </div>
-            </div>
-          </div>
-        </div>
         <div>
-          <button class="btn btn-success shadow mt-3" style="width: 100%;">
-          <div class="d-flex flex-row justify-content-center align-items-center">
-            <div class=" font-weight-bold">Confirm</div>
-            <div class="spinner-border spinner-border-sm text-light ml-3" role="status">
-              <span class="sr-only">Loading...</span>
+          <small class="text-danger">{{error_msg}}</small>
+        </div>
+
+        <div class="mt-3" *ngIf="userAppointments != undefined && userAppointments.length > 0">
+          <h6 class="font-weight-bold text-warning">Appointments on the selected day</h6>
+          <div>
+            <div class="rounded mb-2 bg-gray-100 p-2" *ngFor="let item of userAppointments">
+              <div class="d-flex align-items-start">
+                <div class="mr-3" style="width: 50px; height: 50px;">
+                  <app-profile-pic-preview class="mr-3"
+                                           [user_id]="item.doctor_id"></app-profile-pic-preview>
+                </div>
+                <div>
+                  <h6 class="mb-0 text-gray-800 font-weight-bold">{{item.doctor_name}} <span class="text-success">(#{{item.serial_no}})</span></h6>
+                  <p class="mb-0">{{item.appointment_date | date: 'mediumDate'}}</p>
+                  <p class="small mb-0">{{item.start_time | date: 'shortTime'}} - {{item.end_time | date: 'shortTime'}}</p>
+                </div>
+              </div>
             </div>
           </div>
+        </div>
+
+
+        <div>
+          <button [disabled]="!isEnableConfirmBtn"
+                  (click)="onConfirmBtnClicked()"
+                  class="btn btn-success shadow mt-3" style="width: 100%;">
+            <div class="d-flex flex-row justify-content-center align-items-center">
+              <div class=" font-weight-bold">{{isScheduleConfirmed == true? 'Confirmed': 'Confirm'}}</div>
+              <div *ngIf="confirmingSchedule" class="spinner-border spinner-border-sm text-light ml-3" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </div>
           </button>
         </div>
       </div>

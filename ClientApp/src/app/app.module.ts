@@ -27,6 +27,7 @@ import { AdminDoctorDetailsComponent } from './admin/admin-doctor-details/admin-
 import { WeekDayPipe } from './pipes/week-day.pipe';
 import { DoctorAppointmentComponent } from './patient_pages/doctor-appointment/doctor-appointment.component';
 import { DoctorListComponent } from './patient_pages/doctor-list/doctor-list.component';
+import { AppointmentListComponent } from './patient_pages/appointment-list/appointment-list.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { DoctorListComponent } from './patient_pages/doctor-list/doctor-list.com
     AdminDoctorDetailsComponent,
     WeekDayPipe,
     DoctorAppointmentComponent,
-    DoctorListComponent
+    DoctorListComponent,
+    AppointmentListComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

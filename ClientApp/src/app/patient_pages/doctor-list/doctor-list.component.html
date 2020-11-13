@@ -12,21 +12,20 @@
     <div class="card-header py-3 d-flex flex-row flex-wrap align-items-center">
       <h6 class="mr-4 my-auto font-weight-bold">Doctor List</h6>
       <form #f="ngForm" (ngSubmit)="onSearchSubmit()"
-      class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100"
-     >
-       <div class="input-group">
-         <input type="text" id="search_string" name="search_string" [(ngModel)]="search_string"
-          class="form-control small" placeholder="Search doctor" aria-label="Search">
-         <div class="input-group-append">
-           <button class="btn btn-primary" type="submit">
-             <i class="fas fa-search fa-sm"></i>
-           </button>
-         </div>
-       </div>
-     </form>
-     <select (change)="specialityTagChanged($event)" class="form-control" aria-placeholder="Select Category" style="max-width: 300px;" [(ngModel)]="selectedTag">
-       <option *ngFor="let item of allSpecialities" [value]="item.id">{{item.specialityName}}</option>
-     </select>
+            class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100">
+        <div class="input-group">
+          <input type="text" id="search_string" name="search_string" [(ngModel)]="search_string"
+                 class="form-control small" placeholder="Search doctor" aria-label="Search">
+          <div class="input-group-append">
+            <button class="btn btn-primary" type="submit">
+              <i class="fas fa-search fa-sm"></i>
+            </button>
+          </div>
+        </div>
+      </form>
+      <select (change)="specialityTagChanged($event)" class="form-control" aria-placeholder="Select Category" style="max-width: 300px;" [(ngModel)]="selectedTag">
+        <option *ngFor="let item of allSpecialities" [value]="item.id">{{item.specialityName}}</option>
+      </select>
       <button type="button" (click)="toggleDoctorListSort($event)" class="btn ml-4"><i class="fa fa-sort"></i></button>
 
 
@@ -49,9 +48,9 @@
             <p class="small">{{ doctor_item.degree_title }}</p>
             <div class="d-flex flex-wrap">
               <div class=" px-2 mb-1 mx-1 bg-gray-200" style="border-radius: 12px; font-weight: 600; font-size: smaller;"
-              *ngFor="let speciality_item of doctor_item.specialities">{{ speciality_item.specialityName }}</div>
+                   *ngFor="let speciality_item of doctor_item.specialities">{{ speciality_item.specialityName }}</div>
             </div>
-            <button class="appointment-btn btn btn-primary btn-sm rounded mt-2" (click)="getAppointment($event, doctor_item.id)" >Appointment</button>
+            <button class="appointment-btn btn btn-primary btn-sm rounded mt-2" (click)="getAppointment($event, doctor_item.id)">Appointment</button>
           </div>
         </div>
 

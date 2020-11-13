@@ -32,6 +32,7 @@
     "popper.js": "^1.16.0",
     "rxjs": "^6.5.3",
     "sort-by-typescript": "^1.1.0",
+    "sweetalert2": "^10.10.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
   },

@@ -20,19 +20,19 @@ export class DoctorListComponent implements OnInit {
     private httpClient: HttpClient,
     @Inject('BASE_URL') baseUrl: string,
     private router: Router) {
-      this._baseUrl = baseUrl;
+    this._baseUrl = baseUrl;
 
-    }
+  }
 
 
-    _baseUrl: string;
-    fetchingDoctorList: boolean = false;
-    doctorList: User[] = [];
-    allDoctorList: User[] = [];
-    allSpecialities: Speciality[] = [];
-    search_string:string;
-    selectedTag: number;
-    ascending_sort: boolean = true;
+  _baseUrl: string;
+  fetchingDoctorList: boolean = false;
+  doctorList: User[] = [];
+  allDoctorList: User[] = [];
+  allSpecialities: Speciality[] = [];
+  search_string: string;
+  selectedTag: number;
+  ascending_sort: boolean = true;
   ngOnInit(): void {
     this.getDoctorList();
     this.resolveSpecialityTag();
@@ -41,7 +41,7 @@ export class DoctorListComponent implements OnInit {
 
 
 
-  toggleDoctorListSort(event_data){
+  toggleDoctorListSort(event_data) {
     this.ascending_sort = !this.ascending_sort;
     this.doctorList = this.sortDoctorList(this.doctorList);
   }
@@ -49,20 +49,20 @@ export class DoctorListComponent implements OnInit {
 
 
 
-  specialityTagChanged(event_data){
+  specialityTagChanged(event_data) {
     console.log('Tag select changed');
     this.search_string = null
-    if(this.selectedTag == 0){
+    if (this.selectedTag == 0) {
       var doctor_List = this.allDoctorList.slice();
       this.doctorList = this.sortDoctorList(doctor_List);
     }
-    else{
+    else {
       var doc_List = [];
       this.allDoctorList.forEach(doctor => {
         var specialities = doctor.specialities.filter(val => {
-          if(val.id == this.selectedTag) return val;
+          if (val.id == this.selectedTag) return val;
         });
-        if(specialities.length > 0){
+        if (specialities.length > 0) {
           doc_List.push(doctor);
         }
       });
@@ -73,20 +73,20 @@ export class DoctorListComponent implements OnInit {
 
 
 
-  onSearchSubmit(){
+  onSearchSubmit() {
 
     var filtered_doc_list = [];
 
-    if(this.selectedTag == 0){
+    if (this.selectedTag == 0) {
       filtered_doc_list = this.allDoctorList.slice();
     }
-    else{
+    else {
 
       this.allDoctorList.forEach(doctor => {
         var specialities = doctor.specialities.filter(val => {
-          if(val.id == this.selectedTag) return val;
+          if (val.id == this.selectedTag) return val;
         });
-        if(specialities.length > 0){
+        if (specialities.length > 0) {
           filtered_doc_list.push(doctor);
         }
       });
@@ -95,7 +95,7 @@ export class DoctorListComponent implements OnInit {
 
 
 
-    filtered_doc_list = filtered_doc_list.filter((val:User) => {
+    filtered_doc_list = filtered_doc_list.filter((val: User) => {
       var search_param = this.search_string.toUpperCase();
       if (val.name.toUpperCase().includes(search_param)) {
         return val;
@@ -110,7 +110,7 @@ export class DoctorListComponent implements OnInit {
 
 
 
-  getDoctorList(){
+  getDoctorList() {
     this.fetchingDoctorList = true;
     this.httpClient.get<{
       success: boolean,
@@ -150,12 +150,12 @@ export class DoctorListComponent implements OnInit {
 
 
 
-  sortDoctorList(list:User[]){
+  sortDoctorList(list: User[]) {
     var sorted_list = [];
-    if(this.ascending_sort == true){
+    if (this.ascending_sort == true) {
       sorted_list = list.sort(sortBy('name'));
     }
-    else{
+    else {
       sorted_list = list.sort(sortBy('-name'));
     }
     return sorted_list;
@@ -164,7 +164,7 @@ export class DoctorListComponent implements OnInit {
 
 
 
-  getAppointment(event_data, doctor_id:number){
-    this.router.navigate(['Appointment/NewAppointment'], {queryParams: {id: doctor_id}});
+  getAppointment(event_data, doctor_id: number) {
+    this.router.navigate(['Appointment/NewAppointment'], { queryParams: { id: doctor_id } });
   }
 }

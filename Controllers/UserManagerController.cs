@@ -504,7 +504,8 @@ namespace HospitalManagement.Controllers
                         {
                             if (user.Email != userModel.email)
                             {
-                                await _userManager.ChangeEmailAsync(user, userModel.email, null);
+                                var emailChangeToken = await _userManager.GenerateChangeEmailTokenAsync(user, userModel.email);
+                                await _userManager.ChangeEmailAsync(user, userModel.email, emailChangeToken);
                             }
                         }
 

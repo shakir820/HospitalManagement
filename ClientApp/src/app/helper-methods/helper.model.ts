@@ -1,3 +1,4 @@
+import { DoctorAppointment } from "../models/doctor-appointment.model";
 import { Language } from "../models/langauge.model";
 import { Schedule } from "../models/schedule.model";
 import { Speciality } from "../models/speciality.model";
@@ -110,6 +111,34 @@ export class Helper {
       doctor.types_of =  doctor_result.types_of;
 
       doctor_list.push(doctor);
+    });
+  }
+
+
+  static resolveAppointments(result:DoctorAppointment[], model_List:DoctorAppointment[]){
+    result.forEach(val => {
+      var appointment = new DoctorAppointment();
+      if(val.appointment_date != undefined){
+        appointment.appointment_date = new Date(val.appointment_date);
+      }
+
+      if(val.created_date != undefined){
+        appointment.created_date = new Date(val.created_date);
+      }
+
+      if(val.modified_date != undefined){
+        appointment.modified_date = new Date(val.modified_date);
+      }
+
+      appointment.doctor_id = val.doctor_id;
+      appointment.doctor_name = val.doctor_name;
+      appointment.id = val.id;
+
+      appointment.patient_id = val.patient_id;
+      appointment.patient_name = val.patient_name;
+      appointment.serial_no = val.serial_no;
+
+      model_List.push(appointment);
     });
   }
 
