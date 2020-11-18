@@ -56,7 +56,7 @@ export class Helper {
 
 
 
-  static resolveDoctorListResult(result_doctor_list:User[], doctor_list:User[]){
+  static resolveUserListResult(result_doctor_list:User[], doctor_list:User[]){
     result_doctor_list.forEach(doctor_result => {
       var doctor = new User();
       doctor.username = doctor_result.username;

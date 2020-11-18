@@ -24,6 +24,10 @@ namespace HospitalManagement.Data
         public DbSet<Speciality> Specialities { get; set; }
         public DbSet<SelectedSpecialityTag> SelectedSpecialityTags { get; set; }
         public DbSet<DoctorAppointment> DoctorAppointments { get; set; }
+        public DbSet<ContactMessage> ContactMessages { get; set; }
+        public DbSet<InvestigationDoc> InvestigationDocs { get; set; }
+        public DbSet<InvestigationTag> InvestigationTags { get; set; }
+        public DbSet<Prescription> Prescriptions { get; set; }
 
     }
 }

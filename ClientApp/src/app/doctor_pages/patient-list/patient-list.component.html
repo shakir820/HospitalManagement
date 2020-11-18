@@ -1,0 +1,88 @@
+<div class="container-fluid">
+
+  <!-- Page Heading -->
+  <!-- <div class="mt-2 d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Patients</h1>
+  </div> -->
+
+
+  <div class="card mb-4 mt-2">
+    <div class="card-header d-flex flex-row align-items-center justify-content-between">
+      <h5 class="my-auto">Patients</h5>
+     <div>
+      <form #f="ngForm" (ngSubmit)="onSearchSubmit()"
+      class="d-none d-sm-inline-block form-inline">
+       <div class="input-group">
+         <input type="text" id="search_string" name="search_string" [(ngModel)]="search_string"
+          class="form-control bg-light small" placeholder="Search patient" aria-label="Search">
+         <div class="input-group-append">
+           <button class="btn btn-primary" type="submit">
+             <i class="fas fa-search fa-sm"></i>
+           </button>
+         </div>
+       </div>
+     </form>
+    <button type="button" (click)="toggleDoctorListSort($event)" class="btn ml-4"><i class="fad fa-sort"></i></button>
+     </div>
+    </div>
+    <!-- Card Body -->
+    <div class="card-body">
+     <div class="d-flex flex-wrap">
+
+
+      <div *ngFor="let item of filteredPatients" class="rounded  shadow mx-2 mb-2 bg-gray-100 p-2">
+        <div class="d-flex flex-column align-items-start">
+          <!-- <div class="avatar-preview mr-3 align-self-center" style="width: 150px; height: 150px;">
+            <div id="imagePreview"
+            class="avatar-preview-inner-div"
+            style="background-image: url('https://images.unsplash.com/photo-1582804905556-0605e6433015?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80');" #imagePreview>
+            </div>
+          </div> -->
+
+          <div class="align-self-center" style="width: 150px; height: 150px;">
+            <app-profile-pic-preview [user_id]="item.id"></app-profile-pic-preview>
+          </div>
+
+          <div class="mt-4">
+            <h6 class="mb-0 text-gray-800 font-weight-bold">{{ item.name }}</h6>
+            <div class="d-flex align-items-start mt-2">
+              <div class="text-gray-800">Id:</div>
+              <div class="ml-2">{{ item.id }}</div>
+            </div>
+            <div class="d-flex align-items-start">
+              <div class="text-gray-800">Email:</div>
+              <div class="ml-2">{{ item.email }}</div>
+            </div>
+            <div class="d-flex align-items-start">
+              <div class="text-gray-800">Mobile:</div>
+              <div class="ml-2"> {{ item.phoneNumber }} </div>
+            </div>
+          </div>
+          <div class="my-2 d-flex align-self-stretch">
+            <button class="btn rounded-pill flex-fill btn-primary btn-sm px-3">Details</button>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+      <div *ngIf="filteredPatients == undefined || filteredPatients.length == 0" class="m-auto align-items-center d-flex flex-column">
+        <i class="fas fa-4x fa-dolly-empty"></i>
+        <h2 class="font-weight-bold mt-4">Empty</h2>
+      </div>
+
+
+
+
+
+
+
+     </div>
+    </div>
+  </div>
+
+
+</div>

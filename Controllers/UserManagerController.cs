@@ -816,5 +816,13 @@ namespace HospitalManagement.Controllers
             }
 
         }
+
+
+
+
+
+
+
+
     }
 }

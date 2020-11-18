@@ -62,9 +62,7 @@ export class AppComponent  implements OnInit{
   async LoginUser(){
     this.initializing = true;
     var userLoggedIn:boolean = await this.userService.tryLoginUser();
-    setTimeout(()=>{
-      this.initializing = false;
-    }, 2000);
+    this.initializing = false;
     if(userLoggedIn){
     }
   }

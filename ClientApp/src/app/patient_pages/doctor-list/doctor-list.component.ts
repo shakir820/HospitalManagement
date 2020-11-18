@@ -121,7 +121,7 @@ export class DoctorListComponent implements OnInit {
       console.log(result);
       this.fetchingDoctorList = false;
       if (result.success) {
-        Helper.resolveDoctorListResult(result.doctor_list, this.allDoctorList);
+        Helper.resolveUserListResult(result.doctor_list, this.allDoctorList);
         var doc_list = this.allDoctorList.slice();
         this.doctorList = this.sortDoctorList(doc_list);
       }
