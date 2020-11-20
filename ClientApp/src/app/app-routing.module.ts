@@ -4,6 +4,7 @@ import { AdminDashboardComponent } from "./admin/admin-dashboard/admin-dashboard
 import { AdminDoctorDetailsComponent } from "./admin/admin-doctor-details/admin-doctor-details.component";
 import { AdminDoctorListComponent } from "./admin/admin-doctor-list/admin-doctor-list.component";
 import { AdminLoginComponent } from "./admin/admin-login/admin-login.component";
+import { PatientDetailsComponent } from "./common_pages/patient-details/patient-details.component";
 import { CounterComponent } from "./counter/counter.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
 import { PatientListComponent } from "./doctor_pages/patient-list/patient-list.component";
@@ -36,6 +37,8 @@ export const appRoutes: Routes = [
   { path: 'Appointment', component: AppointmentListComponent, canActivate: [UserPagesCanActivateService] },
   { path: 'Appointment/NewAppointment', component: DoctorAppointmentComponent, canActivate: [UserPagesCanActivateService] },
   { path: 'PatientList', component: PatientListComponent, canActivate: [UserPagesCanActivateService] },
+  { path: 'Patients/PatientDetails', component: PatientDetailsComponent, canActivate: [UserPagesCanActivateService] },
+
   { path: '**', redirectTo: "" },
 ]
 

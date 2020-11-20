@@ -12,4 +12,6 @@ export class DoctorAppointment{
   modified_date: Date;
   start_time:Date;
   end_time:Date;
+  consulted: boolean;
+  visiting_price: number;
 }

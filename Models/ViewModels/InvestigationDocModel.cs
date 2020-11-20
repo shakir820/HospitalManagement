@@ -15,7 +15,6 @@ namespace HospitalManagement.Models.ViewModels
         public long investigator_id { get; set; }
         public string name { get; set; }
         public string abbreviation { get; set; }
-        public string prescribed_by { get; set; }
         public string file_location { get; set; }
         public string file_name { get; set; }
         public DateTime created_date { get; set; }

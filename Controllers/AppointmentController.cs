@@ -513,5 +513,80 @@ namespace HospitalManagement.Controllers
             }
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
+        public async Task<IActionResult> GetPatientAllAppointmentList(long patient_id)
+        {
+            try
+            {
+                var da_list = await _context.DoctorAppointments.Join(_context.Users.Include(a => a.Schedules),
+                    outter => outter.DoctorId, inner => inner.Id, (outter, inner) => new { da = outter, doc = inner }).
+                   Where(a => a.da.Consulted == true && a.da.PatientId == patient_id).ToListAsync();
+
+                var appointments = new List<DoctorAppointmentModel>();
+                foreach (var item in da_list)
+                {
+                    var da = item.da;
+                    var doctor_appointment = new DoctorAppointmentModel();
+                    doctor_appointment.appointment_date_str = da.AppointmentDate.ToShortDateString();
+                    doctor_appointment.appointment_date = da.AppointmentDate.Date;
+                    doctor_appointment.consulted = da.Consulted;
+                    doctor_appointment.created_date = da.CreatedDate;
+                    doctor_appointment.doctor_id = da.DoctorId;
+                    doctor_appointment.doctor_name = item.doc.Name;
+                    doctor_appointment.end_time = item.doc.Schedules.FirstOrDefault(a => a.DayName == da.AppointmentDate.DayOfWeek).EndTime;
+                    doctor_appointment.id = da.Id;
+                    doctor_appointment.patient_id = patient_id;
+                    doctor_appointment.patient_name = da.PatientName;
+                    doctor_appointment.serial_no = da.SerialNo;
+                    doctor_appointment.start_time = item.doc.Schedules.FirstOrDefault(a => a.DayName == da.AppointmentDate.DayOfWeek).StartTime;
+                    doctor_appointment.visiting_price = da.VisitingPrice;
+
+                    appointments.Add(doctor_appointment);
+
+                }
+
+
+                return new JsonResult(new
+                {
+                    success = true,
+                    error = false,
+                    appointments
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = ex.Message
+                });
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }

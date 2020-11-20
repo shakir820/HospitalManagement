@@ -18,7 +18,7 @@ namespace HospitalManagement.Models
         public string phoneNumber { get; set; }
         public string gender { get; set; }
         public string role { get; set; }
-        public IEnumerable<string> roles { get; set; }
+        public List<string> roles { get; set; }
         public int? age { get; set; }
         public string country_name { get; set; }
         public string country_short_name { get; set; }

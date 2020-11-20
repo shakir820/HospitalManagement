@@ -256,7 +256,7 @@ namespace HospitalManagement.Controllers
                                     email = user.Email,
                                     gender = user.Gender,
                                     name = user.Name,
-                                    roles = roleCollection,
+                                    roles = roleCollection.ToList(),
                                     username = user.UserName,
                                     bloodGroup = user.BloodGroup,
                                     bmdc_certifcate = user.BMDC_certifcate,
@@ -712,7 +712,7 @@ namespace HospitalManagement.Controllers
                             id = user.Id,
                             name = user.Name,
                             phoneNumber = user.PhoneNumber,
-                            roles = userRoles,
+                            roles = userRoles.ToList(),
                             state_name = user.state_name,
                             username = user.UserName,
 

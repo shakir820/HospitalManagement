@@ -13,6 +13,8 @@ namespace HospitalManagement.Models.ViewModels
         public long serial_no { get; set; }
         public string patient_name { get; set; }
         public string doctor_name { get; set; }
+        public bool consulted { get; set; }
+        public decimal visiting_price { get; set; }
         public DateTime appointment_date { get; set; }
         public string appointment_date_str { get; set; }
         public DateTime start_time { get; set; }

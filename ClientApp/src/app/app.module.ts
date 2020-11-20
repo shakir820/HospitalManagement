@@ -29,6 +29,7 @@ import { DoctorAppointmentComponent } from './patient_pages/doctor-appointment/d
 import { DoctorListComponent } from './patient_pages/doctor-list/doctor-list.component';
 import { AppointmentListComponent } from './patient_pages/appointment-list/appointment-list.component';
 import { PatientListComponent } from './doctor_pages/patient-list/patient-list.component';
+import { PatientDetailsComponent } from './common_pages/patient-details/patient-details.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { PatientListComponent } from './doctor_pages/patient-list/patient-list.c
     DoctorAppointmentComponent,
     DoctorListComponent,
     AppointmentListComponent,
-    PatientListComponent
+    PatientListComponent,
+    PatientDetailsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

@@ -66,6 +66,8 @@ namespace HospitalManagement
                 
             });
 
+           
+
 
             services.AddAuthorization();
 

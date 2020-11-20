@@ -17,6 +17,7 @@ export class PatientListComponent implements OnInit {
   constructor(
     public userService: UserService,
     private httpClient: HttpClient,
+    private router: Router,
     @Inject('BASE_URL') baseUrl: string) {
     this._baseUrl = baseUrl;
 
@@ -85,5 +86,11 @@ export class PatientListComponent implements OnInit {
         this.error_msg = result.error_msg;
       }
     });
+  }
+
+
+
+  onPatientDetailsBtnClicked(event_data, id:number){
+    this.router.navigate(['Patients/PatientDetails',], {queryParams: {patient_id: id}});
   }
 }

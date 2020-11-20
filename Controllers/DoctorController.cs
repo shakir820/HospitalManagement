@@ -1,5 +1,6 @@
 ﻿using HospitalManagement.Data;
 using HospitalManagement.Models;
+using HospitalManagement.Models.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -76,7 +77,7 @@ namespace HospitalManagement.Controllers
                 var parse_success = long.TryParse(search_key, out patient_id);
                 if (parse_success == true)
                 {
-                    patient_list = patient_list.Where(a => a.id == patient_id).ToList();
+                    patient_list = patient_list.Where(a => a.id == patient_id ).ToList();
                 }
                 else
                 {
@@ -104,5 +105,74 @@ namespace HospitalManagement.Controllers
 
         }
 
+
+
+
+        public async Task<IActionResult> GetPatientDetails(long patient_id)
+        {
+            try
+            {
+                var patient = await _context.Users.AsNoTracking().FirstOrDefaultAsync(a => a.Id == patient_id && a.IsActive == true);
+                if(patient != null)
+                {
+                    var p = new UserModel();
+                    p.age = patient.Age;
+                    p.bloodGroup = patient.BloodGroup;
+                    p.city_name = patient.city_name;
+                    p.country_name = patient.country_name;
+                    p.country_phone_code = patient.country_phone_code;
+                    p.country_short_name = patient.country_short_name;
+                    p.email = patient.Email;
+                    p.gender = patient.Gender;
+                    p.id = patient.Id;
+                    p.isActive = patient.IsActive;
+                    p.name = patient.Name;
+                    p.phoneNumber = patient.PhoneNumber;
+                    var u_roles = await _context.UserRoles.Join(_context.Roles, outter => outter.RoleId, inner => inner.Id, (outter, inner) => new 
+                    { ur = outter, role = inner }).AsNoTracking().Where(a => a.ur.UserId == patient.Id).ToListAsync();
+                    p.roles = new List<string>();
+                    foreach(var role in u_roles)
+                    {
+                        p.roles.Add(role.role.Name);
+                    }
+                    p.state_name = patient.state_name;
+                    p.username = patient.UserName;
+
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        error = false,
+                        patient = p
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        error = false
+                    });
+                }
+            }
+            catch(Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = ex.Message
+                });
+            }
+        }
+
+
+
+
+
+
+
+
+
+       
     }
 }
