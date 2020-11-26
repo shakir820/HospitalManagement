@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HospitalManagement.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -543,6 +544,70 @@ namespace HospitalManagement.Data
 
                         );
 
+                    context.SaveChanges();
+                }
+
+                if (!context.Medicines.Any())
+                {
+                    var medicines = new Medicine[] 
+                    { 
+                        new Medicine 
+                        { 
+                            Name = "Camlodin Plus 50gm",
+                            Description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. " +
+                            "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an " +
+                            "unknown printer took a galley of type and scrambled it to make a type specimen book",
+                            MedicineLink = @"https://medex.com.bd/brands/822/camlodin-plus-5mg"
+                        },
+
+                        new Medicine
+                        {
+                            Name = "Napa 500gm",
+                            Description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. " +
+                            "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an " +
+                            "unknown printer took a galley of type and scrambled it to make a type specimen book",
+                            MedicineLink = @"https://medex.com.bd/brands/10452/napa-500mg"
+                        },
+
+                        new Medicine
+                        {
+                            Name = "Histacin 4mg",
+                            Description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. " +
+                            "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an " +
+                            "unknown printer took a galley of type and scrambled it to make a type specimen book",
+                            MedicineLink = @"https://medex.com.bd/brands/11819/histacin-4mg"
+                        },
+
+                        new Medicine
+                        {
+                            Name = "Cosec 20mg",
+                            Description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. " +
+                            "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an " +
+                            "unknown printer took a galley of type and scrambled it to make a type specimen book",
+                            MedicineLink = @"https://medex.com.bd/brands/1807/cosec-20mg"
+                        },
+
+                        new Medicine
+                        {
+                            Name = "Zimax 250mg",
+                            Description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. " +
+                            "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an " +
+                            "unknown printer took a galley of type and scrambled it to make a type specimen book",
+                            MedicineLink = @"https://medex.com.bd/brands/8721/zimax-250mg"
+                        },
+
+                        new Medicine
+                        {
+                            Name = "Seasonix 5mg",
+                            Description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. " +
+                            "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an " +
+                            "unknown printer took a galley of type and scrambled it to make a type specimen book",
+                            MedicineLink = @"https://medex.com.bd/brands/12179/seasonix-5mg"
+                        }
+
+                      
+                    };
+                    context.Medicines.AddRange(medicines);
                     context.SaveChanges();
                 }
             }

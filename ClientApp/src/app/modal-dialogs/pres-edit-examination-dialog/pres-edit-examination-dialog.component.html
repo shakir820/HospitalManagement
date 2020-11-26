@@ -1,0 +1,55 @@
+
+<button role="button" id="toggleExaminationModalBtn" hidden data-toggle="modal" data-target="#PrescriptionExaminationModal"
+class="btn d-print-none shadow btn-primary ml-3 btn-circle"><i class="far fa-plus"></i></button>
+
+
+
+
+<div class="modal fade" id="PrescriptionExaminationModal" #examinationModal tabindex="-1" role="dialog"
+aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content ">
+      <form #examinationForm="ngForm" (ngSubmit)="onFormSubmit()">
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-12">
+            <h5 class=" font-weight-bold">Examination</h5>
+          </div>
+        </div>
+
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label for="examinationTitle">Title</label>
+                <input type="text" id="examinationTitle" name="examination_title" [(ngModel)]="patient_examination.title"
+                required
+                class="form-control">
+                <small id="titleError" class="text-danger"
+                *ngIf="((!examinationForm.form.controls['examination_title'].valid && examinationForm.form.controls['examination_title'].touched) ||
+                (!examinationForm.form.controls['examination_title'].valid && submitted == true ))">Title is required</small>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label for="examinationDescription">Description</label>
+                <input type="text" id="examinationDescription" name="examination_description"
+                [(ngModel)]="patient_examination.description"
+                class="form-control">
+              </div>
+            </div>
+          </div>
+      </div>
+
+
+      <div class="modal-footer">
+        <button type="button" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+
+
+    </form>
+    </div>
+  </div>
+</div>

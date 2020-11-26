@@ -49,7 +49,7 @@ namespace HospitalManagement.Controllers
             try
             {
                 var doctor = await _context.Users.Include(a => a.Schedules).AsNoTracking().FirstOrDefaultAsync(a => a.Id == doctor_id && a.Approved == true && a.IsActive == true);
-
+                Thread.Sleep(3000);
                 if (doctor != null)
                 {
                     var today = DateTime.Now; //today is Sunday
@@ -119,6 +119,8 @@ namespace HospitalManagement.Controllers
                             appointment.patient_name = item.PatientName;
                             appointment.serial_no = item.SerialNo;
                             appointment.doctor_name = doctor.Name;
+                            appointment.visiting_price = item.VisitingPrice;
+                            appointment.consulted = item.Consulted;
 
                             appointments.Add(appointment);
                         }
@@ -260,7 +262,9 @@ namespace HospitalManagement.Controllers
             //var patient = await _context.Users.AsNoTracking().FirstOrDefaultAsync(a => a.Id == user_id);
             try
             {
-                
+                Thread.Sleep(3000);
+                var doctor = await _context.Users.FirstOrDefaultAsync(a => a.Id == appointmentModel.doctor_id);
+                //serial no calculation
                 var appointments = await _context.DoctorAppointments.AsNoTracking().Where(a => a.DoctorId == appointmentModel.doctor_id && 
                 a.AppointmentDate.Date == appointmentModel.appointment_date.Date).ToListAsync();
                 int newSerialNo = 1;
@@ -270,6 +274,19 @@ namespace HospitalManagement.Controllers
                     newSerialNo = last_serialNo + 1;
                 }
 
+                //visiting price calculation
+                var threeMonthsAgo = appointmentModel.appointment_date.AddDays(-90);
+                var last_appointments_count = await _context.DoctorAppointments.Where(a => a.AppointmentDate.Date >= threeMonthsAgo.Date &&
+                a.DoctorId == appointmentModel.doctor_id && a.PatientId == appointmentModel.patient_id).CountAsync();
+
+                var visiting_price = doctor.NewPatientVisitingPrice;
+                if(last_appointments_count > 0)
+                {
+                    visiting_price = doctor.OldPatientVisitingPrice;
+                }
+
+
+                //patient appointments on that day
                 var patient_appointments = await _context.DoctorAppointments.Join(_context.Users.Include(a => a.Schedules), outter => outter.DoctorId, inner => inner.Id, (outter, inner) => new 
                 { appointment = outter, doctor = inner}).Join(_context.Users, outter => outter.appointment.PatientId, inner => inner.Id, (outter, inner) => new 
                 {app_doc = outter, patient = inner }).AsNoTracking().Where(a => 
@@ -290,7 +307,8 @@ namespace HospitalManagement.Controllers
                         id = item.app_doc.appointment.Id,
                         patient_id = appointmentModel.patient_id,
                         patient_name = item.patient.Name,
-                        serial_no = item.app_doc.appointment.SerialNo
+                        serial_no = item.app_doc.appointment.SerialNo,
+                        visiting_price = item.app_doc.appointment.VisitingPrice
                     };
 
                     var sch = item.app_doc.doctor.Schedules;
@@ -309,6 +327,7 @@ namespace HospitalManagement.Controllers
                     success = true,
                     error = false,
                     serial_no = newSerialNo,
+                    visiting_price,
                     appointments = pa
                 });
             }
@@ -338,6 +357,7 @@ namespace HospitalManagement.Controllers
             {
                 try
                 {
+                    //var doctor = await _context.Users.FirstOrDefaultAsync(a => a.Id == doctorAppointment.doctor_id);
                     //Thread.Sleep(3000);
                     var today = DateTime.Now;
                     var doctor_appointment = new DoctorAppointment();
@@ -346,6 +366,7 @@ namespace HospitalManagement.Controllers
                     doctor_appointment.DoctorId = doctorAppointment.doctor_id;
                     doctor_appointment.PatientId = doctorAppointment.patient_id;
                     doctor_appointment.PatientName = doctorAppointment.patient_name;
+                    doctorAppointment.visiting_price = doctorAppointment.visiting_price;
 
                     var allAppointments = await _context.DoctorAppointments.AsNoTracking().Where(a => a.DoctorId == doctorAppointment.doctor_id &&
                     a.AppointmentDate.Date == doctor_appointment.AppointmentDate.Date).ToListAsync();
@@ -358,6 +379,20 @@ namespace HospitalManagement.Controllers
                     {
                         doctor_appointment.SerialNo = 1;
                     }
+
+                    //visiting price calculation
+                    //var threeMonthsAgo = doctor_appointment.AppointmentDate.AddDays(-90);
+                    //var last_appointments_count = await _context.DoctorAppointments.Where(a => a.AppointmentDate.Date >= threeMonthsAgo.Date &&
+                    //a.DoctorId == doctorAppointment.doctor_id && a.PatientId == doctorAppointment.patient_id).CountAsync();
+
+                    //var visiting_price = doctor.NewPatientVisitingPrice;
+                    //if (last_appointments_count > 0)
+                    //{
+                    //    visiting_price = doctor.OldPatientVisitingPrice;
+                    //}
+
+                    doctor_appointment.VisitingPrice = doctorAppointment.visiting_price;
+
                     _context.DoctorAppointments.Add(doctor_appointment);
                     await _context.SaveChangesAsync();
 
@@ -529,9 +564,10 @@ namespace HospitalManagement.Controllers
         {
             try
             {
+                var today = DateTime.Now;
                 var da_list = await _context.DoctorAppointments.Join(_context.Users.Include(a => a.Schedules),
                     outter => outter.DoctorId, inner => inner.Id, (outter, inner) => new { da = outter, doc = inner }).
-                   Where(a => a.da.Consulted == true && a.da.PatientId == patient_id).ToListAsync();
+                   Where(a => a.da.Consulted == true && a.da.PatientId == patient_id && a.da.AppointmentDate.Date < today.Date).ToListAsync();
 
                 var appointments = new List<DoctorAppointmentModel>();
                 foreach (var item in da_list)
@@ -556,12 +592,37 @@ namespace HospitalManagement.Controllers
 
                 }
 
+                var ua = await _context.DoctorAppointments.Join(_context.Users.Include(a => a.Schedules),
+                   outter => outter.DoctorId, inner => inner.Id, (outter, inner) => new { da = outter, doc = inner }).
+                  FirstOrDefaultAsync(a => a.da.PatientId == patient_id && a.da.AppointmentDate.Date >= today.Date);
+
+                DoctorAppointmentModel upcomingAppointment = null;
+                if(ua != null)
+                {
+                    upcomingAppointment = new DoctorAppointmentModel();
+                    upcomingAppointment.appointment_date = ua.da.AppointmentDate;
+                    upcomingAppointment.appointment_date_str = ua.da.AppointmentDate.ToShortDateString();
+                    upcomingAppointment.consulted = ua.da.Consulted;
+                    upcomingAppointment.created_date = ua.da.CreatedDate;
+                    upcomingAppointment.doctor_id = ua.da.DoctorId;
+                    upcomingAppointment.doctor_name = ua.doc.Name;
+                    upcomingAppointment.end_time = ua.doc.Schedules.FirstOrDefault(a => a.DayName == ua.da.AppointmentDate.DayOfWeek).EndTime;
+                    upcomingAppointment.id = ua.da.Id;
+                    upcomingAppointment.patient_id = ua.da.PatientId;
+                    upcomingAppointment.patient_name = ua.da.PatientName;
+                    upcomingAppointment.serial_no = ua.da.SerialNo;
+                    upcomingAppointment.start_time = ua.doc.Schedules.FirstOrDefault(a => a.DayName == ua.da.AppointmentDate.DayOfWeek).StartTime;
+                    upcomingAppointment.visiting_price = ua.da.VisitingPrice;
+                }
+              
+                
 
                 return new JsonResult(new
                 {
                     success = true,
                     error = false,
-                    appointments
+                    appointments,
+                    upcoming_appointment = upcomingAppointment
                 });
 
             }

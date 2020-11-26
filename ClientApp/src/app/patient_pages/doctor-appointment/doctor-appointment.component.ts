@@ -42,6 +42,8 @@ export class DoctorAppointmentComponent implements OnInit {
   confirmingSchedule: boolean = false;
   error_msg: string;
   isScheduleConfirmed: boolean = false;
+  gettingAppointmentSerialNo: boolean = false;
+
 
 
 
@@ -150,10 +152,7 @@ export class DoctorAppointmentComponent implements OnInit {
 
           if (this.existedAppointments.length > 0) {
             this.existedAppointments.forEach(val => {
-              console.log('resolving existed serials: ' + val.appointment_date);
               var week_day = val.appointment_date.getDay();
-              console.log('resolving existed serials: ' + week_day);
-
               var schedules_obj = result.schedules.find(schedule_val => {
                 if (schedule_val.day_name == week_day) {
                   return schedule_val;
@@ -168,13 +167,6 @@ export class DoctorAppointmentComponent implements OnInit {
             });
           }
 
-
-
-
-
-
-          console.log('availale dates: ' + this.availableDates);
-          console.log('unavailale dates: ' + this.unavailableDates);
         }
       });
   }
@@ -193,12 +185,13 @@ export class DoctorAppointmentComponent implements OnInit {
 
 
   getAppointmentInfoOnSelectedDate() {
-
+ this.gettingAppointmentSerialNo = true;
     this.httpClient.post<{
       success: boolean,
       error: boolean,
       error_msg: string,
       serial_no: number,
+      visiting_price,
       appointments: DoctorAppointment[]
     }>(this._baseUrl + 'api/Appointment/GetAppointmentSerialNo',
       {
@@ -207,6 +200,7 @@ export class DoctorAppointmentComponent implements OnInit {
         appointment_date: this.selectedDate
       }).subscribe(result => {
         console.log(result);
+        this.gettingAppointmentSerialNo = false;
         this.fetchingScheduleInfo = false;
         this.userAppointments = [];
         if (result.success) {
@@ -228,6 +222,7 @@ export class DoctorAppointmentComponent implements OnInit {
           ap.patient_id = this.userService.user.id;
           ap.patient_name = this.userService.user.name;
           ap.serial_no = result.serial_no;
+          ap.visiting_price = result.visiting_price;
           this.existedAppointments.push(ap);
 
           if (result.appointments != undefined) {
@@ -269,7 +264,7 @@ export class DoctorAppointmentComponent implements OnInit {
       appointment.doctor_name = this.doctor.name;
       appointment.patient_id = this.userService.user.id;
       appointment.patient_name = this.userService.user.name;
-
+      appointment.visiting_price = this.existedAppointments[0].visiting_price;
       this.confirmingSchedule = true;
       this.isEnableConfirmBtn = false;
 

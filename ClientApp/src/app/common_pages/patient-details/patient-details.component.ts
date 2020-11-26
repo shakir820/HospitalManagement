@@ -31,6 +31,7 @@ export class PatientDetailsComponent implements OnInit {
   fetchingInvestigationList: boolean = false;
   appointmentList:DoctorAppointment[];
   investigationGroupList: {group_name: string, investigations: InvestigationDoc[] }[];
+  upcoming_appointment: DoctorAppointment;
 
 
 
@@ -96,6 +97,7 @@ export class PatientDetailsComponent implements OnInit {
       success: boolean,
       error: boolean,
       appointments:DoctorAppointment[],
+      upcoming_appointment: DoctorAppointment,
       error_msg: string
     }>(this._baseUrl + 'api/Appointment/GetPatientAllAppointmentList', {params: {patient_id: this.patient_id.toString()}}).subscribe(result => {
       console.log(result);
@@ -123,6 +125,25 @@ export class PatientDetailsComponent implements OnInit {
         });
 
         this.appointmentList.sort(sortBy('appointment_date'));
+
+        console.log( result.upcoming_appointment);
+        if(result.upcoming_appointment != undefined){
+          console.log("I am in! hahah");
+          this.upcoming_appointment = new DoctorAppointment();
+          this.upcoming_appointment.appointment_date = new Date(result.upcoming_appointment.appointment_date);
+          this.upcoming_appointment.consulted = result.upcoming_appointment.consulted;
+          this.upcoming_appointment.created_date = new Date(result.upcoming_appointment.created_date);
+          this.upcoming_appointment.doctor_id = result.upcoming_appointment.doctor_id;
+          this.upcoming_appointment.doctor_name = result.upcoming_appointment.doctor_name;
+          this.upcoming_appointment.end_time = new Date(result.upcoming_appointment.end_time);
+          this.upcoming_appointment.id = result.upcoming_appointment.id;
+          this.upcoming_appointment.patient_id = result.upcoming_appointment.patient_id;
+          this.upcoming_appointment.patient_name = result.upcoming_appointment.patient_name;
+          this.upcoming_appointment.serial_no = result.upcoming_appointment.serial_no;
+          this.upcoming_appointment.start_time = new Date(result.upcoming_appointment.start_time);
+          this.upcoming_appointment.visiting_price = result.upcoming_appointment.visiting_price;
+        }
+
       }
     },
     error => {
@@ -154,7 +175,7 @@ export class PatientDetailsComponent implements OnInit {
          investigation.abbreviation = inv.abbreviation;
          investigation.created_date = new Date(inv.created_date);
          investigation.doctor_id = inv.doctor_id;
-         //investigation.file_location = inv.file_location;
+         investigation.file_location = `${this._baseUrl}api/Investigation/GetInvestigationFile?investigation_id=${inv.id}`;
          investigation.id = inv.id;
          investigation.investigation_tag_id = inv.investigation_tag_id;
          investigation.investigator_id = inv.investigator_id;
@@ -182,4 +203,22 @@ export class PatientDetailsComponent implements OnInit {
       this.fetchingInvestigationList = false;
     });
   }
+
+
+
+
+
+
+  onCreatePrescriptionClicked(event_data){
+    this.router.navigate(['Prescription/CreatePrescription'], {queryParams: {patient_id: this.patient_id}});
+  }
+
+
+
+
+
+  getUpcomingAppointmentDetails(){
+
+  }
+
 }

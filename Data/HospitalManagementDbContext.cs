@@ -28,6 +28,12 @@ namespace HospitalManagement.Data
         public DbSet<InvestigationDoc> InvestigationDocs { get; set; }
         public DbSet<InvestigationTag> InvestigationTags { get; set; }
         public DbSet<Prescription> Prescriptions { get; set; }
+        public DbSet<Medicine> Medicines { get; set; }
+        public DbSet<PrescriptionMedicine> PrescriptionMedicines { get; set; }
+        public DbSet<PrescriptionNote> PrescriptionNotes { get; set; }
+        public DbSet<PrescriptionPatientComplain> PrescriptionPatientComplains { get; set; }
+        public DbSet<PrescriptionPatientExamination> PrescriptionPatientExaminations { get; set; }
+       
 
     }
 }

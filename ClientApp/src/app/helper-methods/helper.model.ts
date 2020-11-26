@@ -133,7 +133,8 @@ export class Helper {
       appointment.doctor_id = val.doctor_id;
       appointment.doctor_name = val.doctor_name;
       appointment.id = val.id;
-
+      appointment.consulted = val.consulted;
+      appointment.visiting_price = val.visiting_price;
       appointment.patient_id = val.patient_id;
       appointment.patient_name = val.patient_name;
       appointment.serial_no = val.serial_no;

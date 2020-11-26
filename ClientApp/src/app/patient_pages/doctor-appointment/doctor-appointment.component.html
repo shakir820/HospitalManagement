@@ -75,13 +75,13 @@
             <small *ngIf="!can_create_appointment" class="text-danger">You already have an appointment</small>
           </div>
         </div>
-        <div *ngIf="fetchingScheduleInfo" class="d-flex my-5 justify-content-center align-items-center">
+        <div *ngIf="fetchingScheduleInfo || gettingAppointmentSerialNo" class="d-flex my-5 justify-content-center align-items-center">
           <div class="spinner-border text-success" role="status">
             <span class="sr-only">Loading...</span>
           </div>
-          <span class="ml-3">Checking...</span>
+          <span class="ml-3">{{gettingAppointmentSerialNo == true?'Reserving...': 'Checking...'}}</span>
         </div>
-        <div *ngIf="!fetchingScheduleInfo && existedAppointments != undefined && existedAppointments.length > 0">
+        <div *ngIf="!fetchingScheduleInfo && existedAppointments != undefined && existedAppointments.length > 0 && !gettingAppointmentSerialNo">
           <p>{{existedAppointments.length > 1? 'Your appointments': 'Your appointment'}}</p>
           <div class="rounded mb-2 bg-gray-100 p-2" *ngFor="let item of existedAppointments">
             <div class="d-flex align-items-start">
@@ -93,9 +93,11 @@
                 <h6 class="mb-0 text-gray-800 font-weight-bold">{{item.doctor_name}} <span class="text-success">(#{{item.serial_no}})</span></h6>
                 <p class="mb-0">{{item.appointment_date | date: 'mediumDate'}}</p>
                 <p class="small mb-0">{{item.start_time | date: 'shortTime'}} - {{item.end_time | date: 'shortTime'}}</p>
+                <p class="small mb-0">Visiting price: {{item.visiting_price}} TK</p>
               </div>
             </div>
           </div>
+
         </div>
 
         <div>
@@ -115,6 +117,7 @@
                   <h6 class="mb-0 text-gray-800 font-weight-bold">{{item.doctor_name}} <span class="text-success">(#{{item.serial_no}})</span></h6>
                   <p class="mb-0">{{item.appointment_date | date: 'mediumDate'}}</p>
                   <p class="small mb-0">{{item.start_time | date: 'shortTime'}} - {{item.end_time | date: 'shortTime'}}</p>
+                  <p class="small mb-0">Visiting price: {{item.visiting_price}} TK</p>
                 </div>
               </div>
             </div>

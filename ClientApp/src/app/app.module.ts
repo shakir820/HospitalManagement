@@ -30,6 +30,11 @@ import { DoctorListComponent } from './patient_pages/doctor-list/doctor-list.com
 import { AppointmentListComponent } from './patient_pages/appointment-list/appointment-list.component';
 import { PatientListComponent } from './doctor_pages/patient-list/patient-list.component';
 import { PatientDetailsComponent } from './common_pages/patient-details/patient-details.component';
+import { CreatePrescriptionComponent } from './common_pages/prescription/create-prescription/create-prescription.component';
+import { EditMedicineDialogComponent } from './modal-dialogs/edit-medicine-dialog/edit-medicine-dialog.component';
+import { PresEditComplainDialogComponent } from './modal-dialogs/pres-edit-complain-dialog/pres-edit-complain-dialog.component';
+import { PresEditExaminationDialogComponent } from './modal-dialogs/pres-edit-examination-dialog/pres-edit-examination-dialog.component';
+import { PresEditInvestigationDialogComponent } from './modal-dialogs/pres-edit-investigation-dialog/pres-edit-investigation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +60,12 @@ import { PatientDetailsComponent } from './common_pages/patient-details/patient-
     DoctorListComponent,
     AppointmentListComponent,
     PatientListComponent,
-    PatientDetailsComponent
+    PatientDetailsComponent,
+    CreatePrescriptionComponent,
+    EditMedicineDialogComponent,
+    PresEditComplainDialogComponent,
+    PresEditExaminationDialogComponent,
+    PresEditInvestigationDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

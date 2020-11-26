@@ -1,0 +1,241 @@
+
+
+<div class="container">
+<div class="card p-0 shadow">
+  <div class="card-body p-0">
+    <div class="d-flex">
+      <div class="p-3 d-flex flex-column">
+        <div class="name-title">Prescription</div>
+        <!-- <div class="small font-weight-bold">Id: 56456</div> -->
+        <div class="small font-weight-bold mt-auto" >
+         Date: {{today_date | date: 'mediumDate'}}
+        </div>
+      </div>
+      <div class="d-flex justify-content-between flex-grow-1 bg-gray-100" style="border-bottom-left-radius: 50px;">
+        <div class="d-flex p-3">
+          <h5 class="name-title">Patient</h5>
+          <div class="bg-gray-300 mx-2" style="width: 4px; border-radius: 2px;"></div>
+          <div class="d-flex">
+            <div style="width: 50px; height: 50px;">
+              <app-profile-pic-preview [user_id]="patient_id"></app-profile-pic-preview>
+            </div>
+            <div class="ml-2 d-flex flex-column">
+              <div class="name-title">{{patient.name}}</div>
+              <div class="small font-weight-bold">Age: {{patient.age}}</div>
+              <div class="small font-weight-bold">Sex: {{patient.gender}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="text-light p-3 d-flex bg-primary" style="border-bottom-left-radius: 50px;">
+          <h5 class="name-title">Doctor</h5>
+          <div class="bg-light mx-2" style="width: 4px; border-radius: 2px;"></div>
+          <div class="d-flex">
+            <div style="width: 50px; height: 50px;">
+              <app-profile-pic-preview [user_id]="userService.user.id"></app-profile-pic-preview>
+            </div>
+            <div class="ml-2 d-flex flex-column">
+              <div class="name-title">{{userService.user.name}}</div>
+              <div class="small font-weight-bold">{{userService.user.doctor_title}}</div>
+              <div class="small font-weight-bold">{{userService.user.degree_title}}</div>
+              <div class="small mt-auto font-weight-bold">Mob: {{userService.user.phoneNumber}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  </div>
+
+
+  <div class="d-flex mt-2">
+    <div class="d-flex flex-column" style="max-width: 300px;">
+      <div class="card shadow">
+        <div class=" card-header bg-light-gray d-flex">
+          <div><i class="text-primary fad fa-lungs-virus"></i></div>
+          <div class="name-title ml-3">Complain</div>
+        </div>
+        <div class="p-0 card-body">
+          <div class="d-flex m-2 flex-column">
+            <div *ngIf="prescription.patient_complains.length == 0" class="d-flex justify-content-center d-print-none">
+              <p class="my-3 small font-weight-bold">Add Complain</p>
+            </div>
+           <div class="d-flex align-items-center justify-content-between" *ngFor="let item of prescription.patient_complains">
+            <div class="my-1 d-flex">
+              <div class="my-1 bg-gray-300" style="min-width:5px; border-radius: 2px;"></div>
+              <div class="mx-2 d-flex flex-column">
+                <a (click)="onComplainItemClicked($event, item.id)" class="name-title">{{item.title}}</a>
+                <div class="small">{{item.description}}</div>
+              </div>
+            </div>
+            <a class="text-danger d-print-none" (click)="onComplainDeleteBtnClicked($event, item.id)"><i class="fad fa-trash"></i></a>
+           </div>
+          </div>
+          <div class="d-flex">
+            <button class="btn d-print-none btn-sm flex-fill btn-primary" (click)="onAddMoreComplainBtnClicked($event)">
+              <div class="d-flex justify-content-center">
+                <div><i class="far fa-plus"></i></div>
+                <div class="ml-2">Add More</div>
+              </div>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="card mt-2 shadow">
+        <div class=" card-header bg-light-gray d-flex">
+          <div><i class="fad fa-stethoscope text-primary"></i></div>
+          <div class="name-title ml-3">Examination</div>
+        </div>
+        <div class="p-0 card-body">
+          <div class="d-flex m-2 flex-column">
+            <div *ngIf="prescription.patient_examinations.length == 0" class="d-flex justify-content-center d-print-none">
+              <p class="my-3 small font-weight-bold">Add Examination</p>
+            </div>
+           <div class="d-flex justify-content-between align-items-center" *ngFor="let item of prescription.patient_examinations">
+            <div class="my-1 d-flex">
+              <div class="my-1 bg-gray-300" style="min-width: 5px; border-radius: 2px;"></div>
+              <div class="mx-2 d-flex flex-column">
+                <a (click)="onExaminationItemClicked($event, item.id)" class="name-title">{{item.title}}</a>
+                <div class="small">{{ item.description }}</div>
+              </div>
+            </div>
+            <a class="d-print-none text-danger" (click)="onExaminationDeleteBtnClicked($event, item.id)"><i class="fad fa-trash" ></i></a>
+           </div>
+          </div>
+          <div class="d-flex">
+            <button class="btn d-print-none btn-sm flex-fill btn-primary" (click)="onAddMoreExaminationBtnClicked($event)">
+              <div class="d-flex justify-content-center">
+                <div><i class="far fa-plus"></i></div>
+                <div class="ml-2">Add More</div>
+              </div>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <div class="card mt-2 shadow">
+        <div class=" card-header bg-light-gray d-flex">
+          <div><i class="fad fa-vial text-primary"></i></div>
+          <div class="name-title ml-3">Investigation(Lab Test)</div>
+        </div>
+        <div class="p-0 card-body">
+          <div class="d-flex m-2 flex-column">
+            <div *ngIf="prescription.patient_investigations.length == 0" class="d-flex justify-content-center d-print-none">
+              <p class="my-3 small font-weight-bold">Add Investigation</p>
+            </div>
+           <div class="d-flex justify-content-between align-items-center" *ngFor="let item of prescription.patient_investigations">
+            <div class="my-1 d-flex">
+              <div class="my-1 bg-gray-300" style="min-width: 5px; border-radius: 2px;"></div>
+              <div class="mx-2 d-flex flex-column">
+                <div class="name-title">{{item.abbreviation}}</div>
+              </div>
+            </div>
+            <a class="d-print-none text-danger" (click)="onInvestigationDeleteBtnClicked($event, item.id)"><i class="fad fa-trash"></i></a>
+           </div>
+          </div>
+          <div class="d-flex">
+            <button class="btn d-print-none btn-sm flex-fill btn-primary" (click)="onAddMoreInvestigationBtnClicked($event)">
+              <div class="d-flex justify-content-center">
+                <div><i class="far fa-plus"></i></div>
+                <div class="ml-2">Add More</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+
+    </div>
+
+
+    <div class="ml-2 d-flex flex-column flex-fill">
+      <div class="card shadow">
+        <div class="card-header d-flex">
+          <div><i class="fad fa-pills text-primary"></i></div>
+          <div class="name-title ml-3">Medicines</div>
+        </div>
+        <div class="card-body">
+          <div class="d-flex flex-column">
+            <div *ngIf="prescription.medicines.length == 0" class="d-flex justify-content-center d-print-none">
+              <p class="my-3 small font-weight-bold">Add Medicine</p>
+            </div>
+            <div class="d-flex my-2" *ngFor="let item of prescription.medicines; index as i">
+              <div class="align-self-center font-weight-bold">{{i + 1}}</div>
+              <div class="bg-gray-300 my-1 mx-3" style="width: 5px; border-radius: 2px;"></div>
+              <div class="d-flex flex-column">
+                <div class="name-title">{{item.title}}</div>
+                 <div class="d-flex small font-weight-bold">
+                  <div>{{item.schedule}}</div>
+                  <div>{{ item.duration }}</div>
+                 </div>
+                <div class="small font-weight-bold">{{ item.note }}</div>
+              </div>
+              <a  class="text-danger d-print-none align-self-center" (click)="onMedicineDeleteBtnClicked($event, item.id)"><i class="fad fa-trash"></i></a>
+            </div>
+
+            <div class="">
+              <button (click)="onAddMedicineBtnClicked($event)"
+               class="btn d-print-none shadow btn-primary ml-3 btn-circle"><i class="far fa-plus"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+      <div class="card mt-2 shadow">
+        <div class="card-header d-flex">
+          <div><i class="fad fa-notes-medical text-primary"></i></div>
+          <div class="name-title ml-3">Notes</div>
+        </div>
+        <div class="card-body">
+          <div class="d-flex flex-column">
+            <div *ngIf="prescription.notes.length == 0" class="d-flex justify-content-center d-print-none">
+              <p class="my-3 small font-weight-bold">Add Note</p>
+            </div>
+            <div class="d-flex my-2" *ngFor="let item of prescription.notes; index as i">
+              <div class="align-self-center font-weight-bold">{{i + 1}}</div>
+              <div class="bg-gray-300 my-1 mx-3" style="width: 5px; border-radius: 2px;"></div>
+              <div class="d-flex flex-column">
+                <div class="name-title">{{item.note}}</div>
+              </div>
+              <a class="text-danger d-print-none align-self-center" (click)="onNoteDeleteBtnClicked($event, item.id)"><i class="fad fa-trash"></i></a>
+            </div>
+
+            <div class="">
+              <button class="btn d-print-none shadow btn-primary ml-3 btn-circle" (click)="onAddNoteBtnClicked($event)"><i class="far fa-plus"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+<app-edit-medicine-dialog #medicineModalComponent></app-edit-medicine-dialog>
+<app-pres-edit-complain-dialog #complainModalComponent (complainChanged)="onComplainChanged($event)"></app-pres-edit-complain-dialog>
+<app-pres-edit-examination-dialog #examinationModalComponent (examinationChanged)="onExaminationChanged($event)"></app-pres-edit-examination-dialog>
+
+
+
+
+
+

@@ -17,7 +17,7 @@ namespace HospitalManagement.Models
         public string Abbreviation { get; set; }
         public string FileLocation { get; set; }
         public string FileName { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
         public DateTime ModifiedDate { get; set; }
        
     }

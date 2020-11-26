@@ -110,12 +110,57 @@ namespace HospitalManagement.Controllers
 
 
 
-        public async Task<IActionResult> GetInvestigationFile(long investigation_id)
+        public IActionResult GetInvestigationFile(long investigation_id)
         {
+            
             var rootDirectory = _webHostEnvironment.ContentRootPath;
-            var investigationData = await System.IO.File.ReadAllBytesAsync(Path.Combine(rootDirectory, "FileData/Advanced Organic Chemistry Structure & Mechanisms.pdf"));
-            return File(investigationData, "application/pdf");
+            var stream = new FileStream(Path.Combine(rootDirectory, "FileData/Advanced Organic Chemistry Structure & Mechanisms.pdf"), FileMode.Open, FileAccess.Read, FileShare.Read);
+            //var stream = Path.Combine(rootDirectory, "FileData/Advanced Organic Chemistry Structure & Mechanisms.pdf");    
+            //var investigationData = await System.IO.File.(Path.Combine(rootDirectory, "FileData/Advanced Organic Chemistry Structure & Mechanisms.pdf"));
+            return new FileStreamResult(stream, "application/pdf");
 
+        }
+
+
+
+
+
+        public async Task<IActionResult> GetInvestigations(string search_key)
+        {
+            try
+            {
+                var investigations_List = await _context.InvestigationTags.Where(a => a.Abbreviation.
+                IndexOf(search_key, StringComparison.OrdinalIgnoreCase) >= 0).Take(20).ToListAsync();
+
+                var investigations = new List<InvestigationTagModel>();
+
+                foreach (var item in investigations_List)
+                {
+                    var investigation = new InvestigationTagModel();
+                    investigation.abbreviation = item.Abbreviation;
+                    investigation.id = item.Id;
+                    investigation.name = item.Name;
+
+                    investigations.Add(investigation);
+                }
+
+                return new JsonResult(new
+                {
+                    success = true,
+                    error = false,
+                    investigations
+                });
+            }
+            catch(Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = ex.Message
+                });
+            }
+           
         }
     }
 }
