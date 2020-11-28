@@ -1,53 +1,92 @@
 
     <button role="button" id="toggleMedicineModalBtn" hidden data-toggle="modal"
+    data-target="#medicineModal"
     class="btn d-print-none shadow btn-primary ml-3 btn-circle"><i class="far fa-plus"></i></button>
 
 
-<div class="modal fade" id="" tabindex="-1" role="dialog"
-aria-hidden="true">
+<div class="modal fade" id="medicineModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content ">
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-sm-12">
-            <h5 class=" font-weight-bold">Medicine</h5>
+    <div class="modal-content">
+      <form #medicineForm="ngForm" (ngSubmit)="onSubmit()">
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-12">
+              <h5 class=" font-weight-bold">Medicine</h5>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label for="medicineName">Medicine Name</label>
-              <input type="text" id="medicineName" class="form-control">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label for="medicineName">Medicine Name</label>
+                <div #medicineDropDown="ngbDropdown" ngbDropdown  (openChange)="onDropDownOpenChanged($event)">
+                  <input type="text"
+                  (focusout)="onMedicineInputFocusOut($event)"
+                  id="medicineName"
+                  (input)="onMedicineInput($event)"
+                  name="medicine_name"
+                  [(ngModel)]="medicineName"
+                  required
+                  class="form-control">
+                  <div ngbDropdownMenu style="width: 100%;" >
+                    <a ngbDropdownItem
+                    *ngFor="let medicine_item of medicine_list"
+                    (click)="onMedicineItemClicked($event, medicine_item.id)">
+                    {{ medicine_item.name }}
+                    </a>
+                  </div>
+                  <small class="text-danger" *ngIf="(submitted && !medicineForm.form.controls['medicine_name'].valid) ||
+                  (medicineForm.form.controls['medicine_name'].touched && !medicineForm.form.controls['medicine_name'].valid)">Medicine is required</small>
+                  <small *ngIf="medicineExist" class="text-danger">This is medicine is already selected</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 col-md-6">
+              <div class="form-group">
+                <label for="medicineSchedule">Schedule</label>
+                <input type="text"
+                id="medicineSchedule"
+                name="medicine_schedule"
+                [(ngModel)]="medicineSchedule"
+                required
+                class="form-control">
+                <small class="text-danger" *ngIf="(submitted && !medicineForm.form.controls['medicine_schedule'].valid) ||
+                (medicineForm.form.controls['medicine_schedule'].touched && !medicineForm.form.controls['medicine_schedule'].valid)">Schedule is required</small>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+              <div class="form-group">
+                <label for="medicineDuration">Duration</label>
+                <input type="text"
+                id="medicineDuration"
+                required
+                name="medicine_duration"
+                [(ngModel)]="medicineDuration"
+                class="form-control">
+                <small class="text-danger" *ngIf="(submitted && !medicineForm.form.controls['medicine_duration'].valid) ||
+                (medicineForm.form.controls['medicine_duration'].touched && !medicineForm.form.controls['medicine_duration'].valid)">Duration is required</small>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label for="medicineNote">Note</label>
+              <textarea class="form-control"
+              name="medicine_note"
+              id="medicineNote"
+              [(ngModel)]="medicineNote"
+              cols="30" rows="3"></textarea>
+              </div>
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-sm-12 col-md-6">
-            <div class="form-group">
-              <label for="medicineSchedule">Schedule</label>
-              <input type="text" id="medicineSchedule" class="form-control">
-            </div>
-          </div>
-          <div class="col-sm-12 col-md-6">
-            <div class="form-group">
-              <label for="medicineDuration">Duration</label>
-              <input type="text" id="medicineDuration" class="form-control">
-            </div>
-          </div>
+        <div class="modal-footer">
+          <button type="button" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" type="submit" class="btn btn-primary">Save changes</button>
         </div>
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label for="medicineNote">Note</label>
-             <textarea class="form-control" name="medicineNote"  id="medicineNote" cols="30" rows="3"></textarea>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
+    </form>
     </div>
   </div>
 </div>

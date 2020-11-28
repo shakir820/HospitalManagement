@@ -129,8 +129,8 @@ namespace HospitalManagement.Controllers
         {
             try
             {
-                var investigations_List = await _context.InvestigationTags.Where(a => a.Abbreviation.
-                IndexOf(search_key, StringComparison.OrdinalIgnoreCase) >= 0).Take(20).ToListAsync();
+                var sk = search_key.ToUpper();
+                var investigations_List = await _context.InvestigationTags.Where(a => a.Abbreviation.ToUpper().Contains(sk)).ToListAsync();
 
                 var investigations = new List<InvestigationTagModel>();
 

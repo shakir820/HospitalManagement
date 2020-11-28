@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Inject, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { InvestigationTag } from 'src/app/models/investigation-tag.model';
 import { PrescriptionPatientExamination } from 'src/app/models/prescription.model';
 
@@ -21,19 +22,17 @@ export class PresEditInvestigationDialogComponent implements OnInit {
 
   _baseUrl: string;
   investigationName: string;
-  @ViewChild('examinationForm') examinationForm: NgForm;
+  @ViewChild('investigaitonForm') investigaitonForm: NgForm;
   submitted: boolean = false;
-  patient_examination: PrescriptionPatientExamination;
-  @Output() examinationChanged: EventEmitter<{examination: PrescriptionPatientExamination, is_new: boolean}>
-  = new EventEmitter<{examination: PrescriptionPatientExamination, is_new: boolean}>();
-  isNew: boolean = false;
   fetchingInvestigaitonList: boolean = false;
   investigation_tag_list: InvestigationTag[];
-  showDropDown:boolean = false;
-
+  selectedInvestigation: InvestigationTag;
+  @ViewChild('investigationsDropDown') investigationDropDown: NgbDropdown;
+  @Output() investigationItemChanged: EventEmitter<{investigation: InvestigationTag}>
+  = new EventEmitter<{investigation: InvestigationTag}>();
 
   ngOnInit(): void {
-    this.patient_examination = new PrescriptionPatientExamination();
+
   }
 
 
@@ -42,10 +41,10 @@ export class PresEditInvestigationDialogComponent implements OnInit {
 
   onFormSubmit(){
     this.submitted =true;
-    if(this.examinationForm.valid){
+    if(this.investigaitonForm.valid){
       this.submitted = false;
-      this.examinationChanged.emit({examination: this.patient_examination, is_new: this.isNew});
-      var gg =  <HTMLButtonElement>document.getElementById('toggleExaminationModalBtn');
+      this.investigationItemChanged.emit({investigation: this.selectedInvestigation});
+      var gg =  <HTMLButtonElement>document.getElementById('toggleInvestigationModalBtn');
       gg.click();
     }
 
@@ -54,14 +53,9 @@ export class PresEditInvestigationDialogComponent implements OnInit {
 
 
 
-  showModal(examination: PrescriptionPatientExamination, is_new: boolean){
+  showModal(){
     this.submitted = false;
-    this.isNew = is_new;
-    this.patient_examination = examination;
-    var gg =  <HTMLButtonElement>document.getElementById('toggleExaminationModalBtn');
-    if(this.isNew){
-      this.examinationForm.resetForm();
-    }
+    var gg =  <HTMLButtonElement>document.getElementById('toggleInvestigationModalBtn');
     gg.click();
   }
 
@@ -74,8 +68,8 @@ export class PresEditInvestigationDialogComponent implements OnInit {
     if(this.investigationName != undefined || this.investigationName != ''){
       var regExp = /[a-zA-Z]/;
       if(regExp.test(this.investigationName)){
-        if(this.showDropDown == false){
-          this.showDropDown = true;
+        if(this.investigationDropDown.isOpen() == false){
+          this.investigationDropDown.open();
         }
         this.getInvestigations(this.investigationName);
 
@@ -87,8 +81,9 @@ export class PresEditInvestigationDialogComponent implements OnInit {
 
 
   onInvestigationTagItemClicked(event_data, investigation_tag_id){
-    //$('dfas').dropdown('hide')
-    this.showDropDown = false;
+    var investigation_item = this.investigation_tag_list.find(a => a.id == investigation_tag_id);
+    this.investigationName = investigation_item.abbreviation;
+    this.selectedInvestigation = investigation_item;
   }
 
 

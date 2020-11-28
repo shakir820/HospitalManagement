@@ -35,6 +35,8 @@ import { EditMedicineDialogComponent } from './modal-dialogs/edit-medicine-dialo
 import { PresEditComplainDialogComponent } from './modal-dialogs/pres-edit-complain-dialog/pres-edit-complain-dialog.component';
 import { PresEditExaminationDialogComponent } from './modal-dialogs/pres-edit-examination-dialog/pres-edit-examination-dialog.component';
 import { PresEditInvestigationDialogComponent } from './modal-dialogs/pres-edit-investigation-dialog/pres-edit-investigation-dialog.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { PresEditNoteDialogComponent } from './modal-dialogs/pres-edit-note-dialog/pres-edit-note-dialog.component';
 
 @NgModule({
   declarations: [
@@ -65,14 +67,16 @@ import { PresEditInvestigationDialogComponent } from './modal-dialogs/pres-edit-
     EditMedicineDialogComponent,
     PresEditComplainDialogComponent,
     PresEditExaminationDialogComponent,
-    PresEditInvestigationDialogComponent
+    PresEditInvestigationDialogComponent,
+    PresEditNoteDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    NgbModule
 
   ],
   providers: [CookieService],

@@ -9,7 +9,7 @@ class="btn d-print-none shadow btn-primary ml-3 btn-circle"><i class="far fa-plu
 aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-      <form #examinationForm="ngForm" (ngSubmit)="onFormSubmit()">
+      <form #investigaitonForm="ngForm" (ngSubmit)="onFormSubmit()">
       <div class="modal-body">
         <div class="row">
           <div class="col-sm-12">
@@ -17,11 +17,13 @@ aria-hidden="true">
           </div>
         </div>
 
+
           <div class="row">
             <div class="col-sm-12">
               <div class="form-group">
                 <label for="investigationName">Investigation Name</label>
-                <div class="dropdown">
+
+                <div #investigationsDropDown="ngbDropdown" ngbDropdown >
                   <input type="text"
                   id="investigationName"
                   (input)="onInvestigationInput($event)"
@@ -29,37 +31,23 @@ aria-hidden="true">
                   [(ngModel)]="investigationName"
                   required
                   class="form-control">
-                  <!-- <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-                  aria-haspopup="true" aria-expanded="false">
-                    Dropdown button
-                  </button> -->
-                  <div class="dropdown-menu" [ngClass]="{'show': showDropDown == true}">
-                    <a href="#" class="dropdown-item"
+                  <div ngbDropdownMenu style="width: 100%;" >
+                    <a ngbDropdownItem
                     *ngFor="let investigation_tag_item of investigation_tag_list"
                     (click)="onInvestigationTagItemClicked($event, investigation_tag_item.id)">
                     {{investigation_tag_item.abbreviation}}
                     </a>
                   </div>
-
                 </div>
 
 
-                <small id="investigationNameError" class="text-danger"
+                <!-- <small id="investigationNameError" class="text-danger"
                 *ngIf="((!examinationForm.form.controls['examination_title'].valid && examinationForm.form.controls['examination_title'].touched) ||
-                (!examinationForm.form.controls['examination_title'].valid && submitted == true ))">Name is required</small>
+                (!examinationForm.form.controls['examination_title'].valid && submitted == true ))">Name is required</small> -->
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-sm-12">
-              <div class="form-group">
-                <label for="examinationDescription">Description</label>
-                <input type="text" id="examinationDescription" name="examination_description"
-                [(ngModel)]="patient_examination.description"
-                class="form-control">
-              </div>
-            </div>
-          </div>
+
       </div>
 
 
@@ -67,7 +55,6 @@ aria-hidden="true">
         <button type="button" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" type="submit" class="btn btn-primary">Save changes</button>
       </div>
-
 
     </form>
     </div>

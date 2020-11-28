@@ -1,7 +1,7 @@
 
 
-<div class="container">
-<div class="card p-0 shadow">
+<div class="container" id="section-to-print">
+<div class="card p-0 shadow" >
   <div class="card-body p-0">
     <div class="d-flex">
       <div class="p-3 d-flex flex-column">
@@ -173,14 +173,16 @@
               <div class="align-self-center font-weight-bold">{{i + 1}}</div>
               <div class="bg-gray-300 my-1 mx-3" style="width: 5px; border-radius: 2px;"></div>
               <div class="d-flex flex-column">
-                <div class="name-title">{{item.title}}</div>
+                <a class="name-title" (click)="onMedicineItemClicked($event, item.id)">{{item.title}}</a>
                  <div class="d-flex small font-weight-bold">
-                  <div>{{item.schedule}}</div>
-                  <div>{{ item.duration }}</div>
+                  <div style="letter-spacing: 4px;" >{{item.schedule}}</div>
+                  <div class="ml-4">{{ item.duration }}</div>
                  </div>
                 <div class="small font-weight-bold">{{ item.note }}</div>
               </div>
-              <a  class="text-danger d-print-none align-self-center" (click)="onMedicineDeleteBtnClicked($event, item.id)"><i class="fad fa-trash"></i></a>
+             <div class="flex-fill d-flex flex-row-reverse align-items-end d-print-none align-self-center">
+               <a  class="text-danger" (click)="onMedicineDeleteBtnClicked($event, item.id)"><i class="fad fa-trash"></i></a>
+              </div>
             </div>
 
             <div class="">
@@ -208,9 +210,9 @@
               <div class="align-self-center font-weight-bold">{{i + 1}}</div>
               <div class="bg-gray-300 my-1 mx-3" style="width: 5px; border-radius: 2px;"></div>
               <div class="d-flex flex-column">
-                <div class="name-title">{{item.note}}</div>
+                <a class="name-title" (click)="onNoteItmeClicked($event, item.id)">{{item.note}}</a>
               </div>
-              <a class="text-danger d-print-none align-self-center" (click)="onNoteDeleteBtnClicked($event, item.id)"><i class="fad fa-trash"></i></a>
+              <div class="d-print-none flex-fill ml-3 d-flex flex-row-reverse align-self-center"><a class="text-danger " (click)="onNoteDeleteBtnClicked($event, item.id)"><i class="fad fa-trash"></i></a></div>
             </div>
 
             <div class="">
@@ -230,10 +232,11 @@
 
 
 
-<app-edit-medicine-dialog #medicineModalComponent></app-edit-medicine-dialog>
+<app-edit-medicine-dialog #medicineModalComponent (medicineChanged)="onMedicineChanged($event)"></app-edit-medicine-dialog>
 <app-pres-edit-complain-dialog #complainModalComponent (complainChanged)="onComplainChanged($event)"></app-pres-edit-complain-dialog>
 <app-pres-edit-examination-dialog #examinationModalComponent (examinationChanged)="onExaminationChanged($event)"></app-pres-edit-examination-dialog>
-
+<app-pres-edit-investigation-dialog #investigationModalComponent (investigationItemChanged)="onInvestigationItemChanged($event)"></app-pres-edit-investigation-dialog>
+<app-pres-edit-note-dialog #noteModalComponent (noteItemChanged)="onNoteItemChanged($event)" ></app-pres-edit-note-dialog>
 
 
 
