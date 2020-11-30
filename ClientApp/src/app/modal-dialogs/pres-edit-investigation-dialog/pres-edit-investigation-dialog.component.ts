@@ -55,6 +55,7 @@ export class PresEditInvestigationDialogComponent implements OnInit {
 
   showModal(){
     this.submitted = false;
+    this.investigaitonForm.reset();
     var gg =  <HTMLButtonElement>document.getElementById('toggleInvestigationModalBtn');
     gg.click();
   }

@@ -99,7 +99,7 @@ export class PatientDetailsComponent implements OnInit {
       appointments:DoctorAppointment[],
       upcoming_appointment: DoctorAppointment,
       error_msg: string
-    }>(this._baseUrl + 'api/Appointment/GetPatientAllAppointmentList', {params: {patient_id: this.patient_id.toString()}}).subscribe(result => {
+    }>(this._baseUrl + 'api/Appointment/GetPatientAllAppointmentList', {params: {patient_id: this.patient_id.toString(), doctor_id: this.userService.user.id.toString()}}).subscribe(result => {
       console.log(result);
       this.fetchingAppointmentList = false;
       if (result.success) {

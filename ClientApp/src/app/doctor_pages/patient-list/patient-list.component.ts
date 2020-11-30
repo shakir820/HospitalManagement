@@ -7,6 +7,8 @@ import { Helper } from 'src/app/helper-methods/helper.model';
 import { User } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user.service';
 
+
+
 @Component({
   selector: 'app-patient-list',
   templateUrl: './patient-list.component.html',
@@ -35,6 +37,7 @@ export class PatientListComponent implements OnInit {
   @ViewChild('f') searchForm: NgForm;
 
 
+
   ngOnInit(): void {
   }
 
@@ -45,6 +48,9 @@ export class PatientListComponent implements OnInit {
       this.getPatients(this.search_string);
     }
   }
+
+
+
 
   toggleDoctorListSort(event_data) {
     this.sortByAscending = !this.sortByAscending;
@@ -91,6 +97,6 @@ export class PatientListComponent implements OnInit {
 
 
   onPatientDetailsBtnClicked(event_data, id: number) {
-    this.router.navigate(['Patients/PatientDetails',], { queryParams: { patient_id: id } });
+    this.router.navigate(['Patients/PatientDetails'], { queryParams: { patient_id: id }});
   }
 }

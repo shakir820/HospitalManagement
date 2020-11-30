@@ -47,12 +47,14 @@ export class CreatePrescriptionComponent implements OnInit {
    });
 
    this.prescription = new Prescription();
-   this.prescription.doctor_id = this.userService.user.id;
+   this.prescription.doctor = new User();
+   this.prescription.doctor.id = this.userService.user.id;
    this.prescription.medicines = [];
    this.prescription.notes = [];
    this.prescription.patient_complains = [];
    this.prescription.patient_examinations = [];
-   this.prescription.patient_id = this.patient_id;
+   this.prescription.patient = new User();
+   this.prescription.patient.id = this.patient_id;
    this.prescription.patient_investigations = [];
 
    this.getPatientDetails();

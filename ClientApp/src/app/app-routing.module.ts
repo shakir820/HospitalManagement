@@ -39,6 +39,7 @@ export const appRoutes: Routes = [
   { path: 'Appointment', component: AppointmentListComponent, canActivate: [UserPagesCanActivateService] },
   { path: 'Appointment/NewAppointment', component: DoctorAppointmentComponent, canActivate: [UserPagesCanActivateService] },
   { path: 'PatientList', component: PatientListComponent, canActivate: [UserPagesCanActivateService] },
+  // { path: 'PatientList/PatientDetails', component: PatientDetailsComponent, canActivate: [UserPagesCanActivateService] },
   { path: 'TodaysPatientList', component: TodaysPatientComponent, canActivate: [UserPagesCanActivateService] },
   { path: 'Patients/PatientDetails', component: PatientDetailsComponent, canActivate: [UserPagesCanActivateService] },
   { path: 'Prescription/CreatePrescription', component: CreatePrescriptionComponent, canActivate: [UserPagesCanActivateService] },

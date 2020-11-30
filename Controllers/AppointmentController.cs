@@ -560,7 +560,7 @@ namespace HospitalManagement.Controllers
 
 
 
-        public async Task<IActionResult> GetPatientAllAppointmentList(long patient_id)
+        public async Task<IActionResult> GetPatientAllAppointmentList(long patient_id, long doctor_id)
         {
             try
             {
@@ -594,7 +594,7 @@ namespace HospitalManagement.Controllers
 
                 var ua = await _context.DoctorAppointments.Join(_context.Users.Include(a => a.Schedules),
                    outter => outter.DoctorId, inner => inner.Id, (outter, inner) => new { da = outter, doc = inner }).
-                  FirstOrDefaultAsync(a => a.da.PatientId == patient_id && a.da.AppointmentDate.Date >= today.Date);
+                  FirstOrDefaultAsync(a => a.da.PatientId == patient_id && a.da.AppointmentDate.Date >= today.Date && a.doc.Id == doctor_id);
 
                 DoctorAppointmentModel upcomingAppointment = null;
                 if(ua != null)
