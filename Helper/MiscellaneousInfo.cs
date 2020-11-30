@@ -8,5 +8,6 @@ namespace HospitalManagement.Helper
     public class MiscellaneousInfo
     {
         public static int ConsultDoctorTimeDurationInMins = 10;
+        
     }
 }

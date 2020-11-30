@@ -40,7 +40,7 @@ namespace HospitalManagement
                 
                 options.SignIn.RequireConfirmedAccount = false;
             })
-            .AddEntityFrameworkStores<HospitalManagementDbContext>();
+            .AddEntityFrameworkStores<HospitalManagementDbContext>().AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -50,6 +50,8 @@ namespace HospitalManagement
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 6;
+                
+
                 
 
                 // Lockout settings.
@@ -63,6 +65,8 @@ namespace HospitalManagement
                 options.User.RequireUniqueEmail = true;
                 
             });
+
+           
 
 
             services.AddAuthorization();

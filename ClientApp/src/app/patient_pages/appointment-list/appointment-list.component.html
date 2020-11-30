@@ -1,0 +1,68 @@
+<div class="container-fluid">
+
+  <!-- Page Heading -->
+  <div class="mt-2 d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Doctor Appointments</h1>
+  </div>
+
+
+  <div class="card mb-4">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+     <a class="shadow btn btn-primary" [routerLink]="['/DoctorList']" routerLinkActive="active" ><i class="fad fa-calendar-check"></i> Create New Appointment</a>
+     <button class="btn shadow text-danger" (click)="onCancelBtnClicked($event)">
+      <div class="align-items-center d-flex justify-content-between">
+        <div>
+          <i class="fad fa-calendar-times"></i> {{cancelingAllAppointments == true? 'Canceling' : 'Cancel All Appointments'}}
+        </div>
+        <div *ngIf="cancelingAllAppointments" class="spinner-border ml-3 spinner-border-sm" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+    </button>
+    </div>
+    <!-- Card Body -->
+    <div class="card-body">
+     <div class="d-flex flex-wrap">
+
+
+      <div class="rounded d-flex justify-content-between shadow mx-2 mb-2 bg-gray-100 p-2"
+      *ngFor="let item of appointmentList">
+        <div class="d-flex align-items-start">
+          <div class="mr-3" style="width: 50px; height: 50px;">
+            <app-profile-pic-preview class="mr-3"
+                                     [user_id]="item.doctor_id"></app-profile-pic-preview>
+          </div>
+          <div>
+            <h6 class="mb-0 text-gray-800 font-weight-bold">{{item.doctor_name}} <span class="text-success">(#{{item.serial_no}})</span></h6>
+            <p class="mb-0">{{item.appointment_date | date: 'mediumDate'}}</p>
+            <p class="small mb-0">{{item.start_time | date: 'shortTime'}} - {{item.end_time | date: 'shortTime'}}</p>
+          </div>
+        </div>
+
+
+        <div class="dropdown no-arrow ml-3">
+          <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+            <button class="dropdown-item btn text-danger" (click)="onCancelAppointment($event, item.id)">  <i class="fad fa-calendar-times"></i> Cancel Appointment</button>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+     </div>
+    </div>
+  </div>
+</div>

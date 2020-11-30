@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
     if (this.signinForm.valid) {
       this.submitted = false;
       this.loggingIn = true;
-      var result = await this.userService.SignIn(this.signinForm.controls['email'].value, this.signinForm.controls['password'].value);
+      var result = await this.userService.SignIn(this.signinForm.controls['email'].value, this.signinForm.controls['password'].value, this.rememberMe);
       this.loggingIn = false;
       if (result.success == true) {
         this.userService.isLoggedIn = true;

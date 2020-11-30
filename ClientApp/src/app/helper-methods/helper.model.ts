@@ -1,3 +1,4 @@
+import { DoctorAppointment } from "../models/doctor-appointment.model";
 import { Language } from "../models/langauge.model";
 import { Schedule } from "../models/schedule.model";
 import { Speciality } from "../models/speciality.model";
@@ -55,7 +56,7 @@ export class Helper {
 
 
 
-  static resolveDoctorListResult(result_doctor_list:User[], doctor_list:User[]){
+  static resolveUserListResult(result_doctor_list:User[], doctor_list:User[]){
     result_doctor_list.forEach(doctor_result => {
       var doctor = new User();
       doctor.username = doctor_result.username;
@@ -109,7 +110,67 @@ export class Helper {
       doctor.state_name = doctor_result.state_name;
       doctor.types_of =  doctor_result.types_of;
 
+
+      //appointment details
+      if(doctor_result.appointment != undefined){
+        doctor.appointment = new DoctorAppointment();
+        if(doctor_result.appointment.appointment_date != undefined){
+          doctor.appointment.appointment_date = new Date(doctor_result.appointment.appointment_date);
+        }
+
+        doctor.appointment.consulted = doctor_result.appointment.consulted;
+        if(doctor_result.appointment.created_date != undefined){
+          doctor.appointment.created_date = new Date(doctor_result.appointment.created_date);
+        }
+
+        doctor.appointment.doctor_id = doctor_result.appointment.doctor_id;
+        doctor.appointment.doctor_name = doctor_result.appointment.doctor_name;
+        if(doctor_result.appointment.end_time != undefined){
+          doctor.appointment.end_time = new Date(doctor_result.appointment.end_time);
+        }
+
+        doctor.appointment.id = doctor_result.appointment.id;
+        doctor.appointment.patient_id = doctor_result.appointment.patient_id;
+        doctor.appointment.patient_name = doctor_result.appointment.patient_name;
+        doctor.appointment.serial_no = doctor_result.appointment.serial_no;
+        if(doctor_result.appointment.start_time != undefined){
+          doctor.appointment.start_time = new Date(doctor_result.appointment.start_time)
+        }
+        doctor.appointment.visiting_price = doctor_result.appointment.visiting_price;
+      }
+
+
+
       doctor_list.push(doctor);
+    });
+  }
+
+
+  static resolveAppointments(result:DoctorAppointment[], model_List:DoctorAppointment[]){
+    result.forEach(val => {
+      var appointment = new DoctorAppointment();
+      if(val.appointment_date != undefined){
+        appointment.appointment_date = new Date(val.appointment_date);
+      }
+
+      if(val.created_date != undefined){
+        appointment.created_date = new Date(val.created_date);
+      }
+
+      if(val.modified_date != undefined){
+        appointment.modified_date = new Date(val.modified_date);
+      }
+
+      appointment.doctor_id = val.doctor_id;
+      appointment.doctor_name = val.doctor_name;
+      appointment.id = val.id;
+      appointment.consulted = val.consulted;
+      appointment.visiting_price = val.visiting_price;
+      appointment.patient_id = val.patient_id;
+      appointment.patient_name = val.patient_name;
+      appointment.serial_no = val.serial_no;
+
+      model_List.push(appointment);
     });
   }
 

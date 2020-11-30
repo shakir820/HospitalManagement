@@ -9906,7 +9906,7 @@ a:focus {
   border: 0;
   font-weight: 900;
   content: '\f105';
-  font-family: 'Font Awesome 5 Free';
+  font-family: 'Font Awesome 5 Pro';
 }
 
 .sidebar .nav-item.dropdown.show .dropdown-toggle::after,
@@ -10276,11 +10276,11 @@ a:focus {
     vertical-align: 0;
     border: 0;
     font-weight: 900;
-    content: '\f107';
-    font-family: 'Font Awesome 5 Free';
+    content: '\f078';
+    font-family: 'Font Awesome 5 Pro';
   }
   .sidebar .nav-item .nav-link[data-toggle="collapse"].collapsed::after {
-    content: '\f105';
+    content: '\f054';
   }
   .sidebar .sidebar-brand .sidebar-brand-icon i {
     font-size: 2rem;

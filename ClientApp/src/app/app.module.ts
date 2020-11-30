@@ -27,6 +27,17 @@ import { AdminDoctorDetailsComponent } from './admin/admin-doctor-details/admin-
 import { WeekDayPipe } from './pipes/week-day.pipe';
 import { DoctorAppointmentComponent } from './patient_pages/doctor-appointment/doctor-appointment.component';
 import { DoctorListComponent } from './patient_pages/doctor-list/doctor-list.component';
+import { AppointmentListComponent } from './patient_pages/appointment-list/appointment-list.component';
+import { PatientListComponent } from './doctor_pages/patient-list/patient-list.component';
+import { PatientDetailsComponent } from './common_pages/patient-details/patient-details.component';
+import { CreatePrescriptionComponent } from './common_pages/prescription/create-prescription/create-prescription.component';
+import { EditMedicineDialogComponent } from './modal-dialogs/edit-medicine-dialog/edit-medicine-dialog.component';
+import { PresEditComplainDialogComponent } from './modal-dialogs/pres-edit-complain-dialog/pres-edit-complain-dialog.component';
+import { PresEditExaminationDialogComponent } from './modal-dialogs/pres-edit-examination-dialog/pres-edit-examination-dialog.component';
+import { PresEditInvestigationDialogComponent } from './modal-dialogs/pres-edit-investigation-dialog/pres-edit-investigation-dialog.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { PresEditNoteDialogComponent } from './modal-dialogs/pres-edit-note-dialog/pres-edit-note-dialog.component';
+import { TodaysPatientComponent } from './doctor_pages/todays-patient/todays-patient.component';
 
 @NgModule({
   declarations: [
@@ -49,14 +60,25 @@ import { DoctorListComponent } from './patient_pages/doctor-list/doctor-list.com
     AdminDoctorDetailsComponent,
     WeekDayPipe,
     DoctorAppointmentComponent,
-    DoctorListComponent
+    DoctorListComponent,
+    AppointmentListComponent,
+    PatientListComponent,
+    PatientDetailsComponent,
+    CreatePrescriptionComponent,
+    EditMedicineDialogComponent,
+    PresEditComplainDialogComponent,
+    PresEditExaminationDialogComponent,
+    PresEditInvestigationDialogComponent,
+    PresEditNoteDialogComponent,
+    TodaysPatientComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    NgbModule
 
   ],
   providers: [CookieService],

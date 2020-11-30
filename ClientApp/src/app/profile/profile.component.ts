@@ -861,7 +861,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
             phoneNumber: string,
             approved: boolean,
             biography: string,
-            degree_tittle: string,
+            degree_title: string,
             doctor_title: string,
             experience: number,
             languages: Language[],
@@ -901,7 +901,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
             this.userService.user.state_name = result.user.state_name;
             // console.log(this.user.roles);
             this.userService.user.biography = result.user.biography;
-            this.userService.user.degree_title = result.user.degree_tittle;
+            this.userService.user.degree_title = result.user.degree_title;
             this.userService.user.doctor_title = result.user.doctor_title;
             this.userService.user.experience = result.user.experience;
 

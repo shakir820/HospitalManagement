@@ -91,7 +91,7 @@ namespace HospitalManagement.Controllers
                                     approved = user.Approved,
                                     id = user.Id,
                                     name = user.Name,
-                                    roles = role_collection,
+                                    roles = role_collection.ToList(),
                                     phoneNumber = user.PhoneNumber,
                                     state_name = user.state_name,
                                     username = user.UserName

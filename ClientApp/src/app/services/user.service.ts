@@ -229,7 +229,7 @@ export class UserService {
 
 
 
-  SignIn(email: string, password: string): Promise<{ msg: string, success: boolean, emailExist: boolean }> {
+  SignIn(email: string, password: string, remember_me: boolean): Promise<{ msg: string, success: boolean, emailExist: boolean }> {
     let promise = new Promise<{ msg: string, success: boolean, emailExist: boolean }>((resolve, rejects) => {
       this.httpClient.post<{
         error_msg: string,
@@ -322,7 +322,10 @@ export class UserService {
           this.fetchProfilePic(result.user.id);
           this.clearUserData('/');
           this.clearUserData('/admin');
-          this.SaveUserCredientials();
+          if(remember_me){
+            this.SaveUserCredientials();
+          }
+
           resolve({ msg: result.msg, success: true, emailExist: true });
 
         }
