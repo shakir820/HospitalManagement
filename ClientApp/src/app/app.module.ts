@@ -37,6 +37,7 @@ import { PresEditExaminationDialogComponent } from './modal-dialogs/pres-edit-ex
 import { PresEditInvestigationDialogComponent } from './modal-dialogs/pres-edit-investigation-dialog/pres-edit-investigation-dialog.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PresEditNoteDialogComponent } from './modal-dialogs/pres-edit-note-dialog/pres-edit-note-dialog.component';
+import { TodaysPatientComponent } from './doctor_pages/todays-patient/todays-patient.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import { PresEditNoteDialogComponent } from './modal-dialogs/pres-edit-note-dial
     PresEditComplainDialogComponent,
     PresEditExaminationDialogComponent,
     PresEditInvestigationDialogComponent,
-    PresEditNoteDialogComponent
+    PresEditNoteDialogComponent,
+    TodaysPatientComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

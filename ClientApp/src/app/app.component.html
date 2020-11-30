@@ -171,6 +171,9 @@
         </a>
         <!-- Dropdown - User Information -->
         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+          <div class=" dropdown-item-text font-weight-bold">
+            <i class="fad fa-sm fa-fw fa-id-card  text-gray-400 mr-2"></i><span>{{ userService.user.id }}</span>
+          </div>
           <a class="dropdown-item" [routerLink]="['profile']" routerLinkActive="active">
             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
             Profile
@@ -261,7 +264,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
               <h6 class="collapse-header">Patient Filter:</h6>
               <a class="collapse-item" routerLinkActive="active" [routerLink]="['PatientList']">All Patients</a>
-              <a class="collapse-item">Today's Patient</a>
+              <a class="collapse-item" [routerLink]="['TodaysPatientList']" routerLinkActive="active">Today's Patient</a>
             </div>
           </div>
         </li>

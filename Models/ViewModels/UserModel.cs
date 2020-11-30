@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using HospitalManagement.Models.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -26,9 +27,14 @@ namespace HospitalManagement.Models
         public string state_name { get; set; }
         public string city_name { get; set; }
         public string bloodGroup { get; set; }
-        public IFormFile profilePic { get; set; }
+        public IFormFile profilePic { get; set; } 
         public bool isActive { get; set; }
 
+
+
+
+        //AppointmentInfo
+        public DoctorAppointmentModel appointment { get; set; }
 
 
 

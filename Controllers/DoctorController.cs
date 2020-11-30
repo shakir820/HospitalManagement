@@ -170,6 +170,78 @@ namespace HospitalManagement.Controllers
 
 
 
+        public async Task<IActionResult> GetTodayPatients(long doctor_id)
+        {
+            try
+            {
+                var today = DateTime.Now;
+                var doctor = await _context.Users.FirstOrDefaultAsync(a => a.Id == doctor_id);
+                var patient_appointments = await _context.Users.Join(_context.DoctorAppointments, outter => outter.Id, inner => inner.PatientId, (outter, inner) =>
+                 new { patient = outter, appointment = inner }).Where(a => a.appointment.DoctorId == doctor_id &&
+                  a.appointment.AppointmentDate.Date == today.Date).ToListAsync();
+                var patients = new List<UserModel>();
+
+                foreach(var item in patient_appointments)
+                {
+                    var patient = new UserModel();
+                    var ap = item.appointment;
+                    var u = item.patient;
+                    patient.age = u.Age;
+                    patient.city_name = u.city_name;
+                    patient.country_name = u.country_name;
+                    patient.country_phone_code = u.country_phone_code;
+                    patient.country_short_name = u.country_short_name;
+                    patient.email = u.Email;
+                    patient.gender = u.Gender;
+                    patient.id = u.Id;
+                    patient.isActive = u.IsActive;
+                    patient.name = u.Name;
+                    patient.phoneNumber = u.PhoneNumber;
+                    patient.roles = new List<string> { "Patient" };
+                    patient.state_name = u.state_name;
+                    patient.username = u.UserName;
+                    patient.approved = u.Approved;
+                    patient.biography = u.Biography;
+                    patient.bloodGroup = u.BloodGroup;
+                    patient.bmdc_certifcate = u.BMDC_certifcate;
+                    patient.degree_title = u.DegreeTittle;
+                    patient.doctor_title = u.DoctorTitle;
+                    patient.experience = u.year_of_Experience;
+                    patient.new_patient_visiting_price = u.NewPatientVisitingPrice;
+                    patient.old_patient_visiting_price = u.OldPatientVisitingPrice;
+                    patient.types_of = u.TypesOf;
+                    patient.appointment = new DoctorAppointmentModel();
+                    patient.appointment.appointment_date = ap.AppointmentDate;
+                    patient.appointment.consulted = ap.Consulted;
+                    patient.appointment.created_date = ap.CreatedDate;
+                    patient.appointment.doctor_id = doctor_id;
+                    patient.appointment.doctor_name = doctor.Name;
+                    patient.appointment.id = ap.Id;
+                    patient.appointment.serial_no = ap.SerialNo;
+                    patient.appointment.visiting_price = ap.VisitingPrice;
+
+                    patients.Add(patient);
+                }
+
+
+
+                return new JsonResult(new
+                {
+                    success = true,
+                    error = false,
+                    patients
+                });
+            }
+            catch(Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = ex.Message
+                });
+            }
+        }
 
 
 

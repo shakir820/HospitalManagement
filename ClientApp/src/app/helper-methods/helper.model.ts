@@ -110,6 +110,37 @@ export class Helper {
       doctor.state_name = doctor_result.state_name;
       doctor.types_of =  doctor_result.types_of;
 
+
+      //appointment details
+      if(doctor_result.appointment != undefined){
+        doctor.appointment = new DoctorAppointment();
+        if(doctor_result.appointment.appointment_date != undefined){
+          doctor.appointment.appointment_date = new Date(doctor_result.appointment.appointment_date);
+        }
+
+        doctor.appointment.consulted = doctor_result.appointment.consulted;
+        if(doctor_result.appointment.created_date != undefined){
+          doctor.appointment.created_date = new Date(doctor_result.appointment.created_date);
+        }
+
+        doctor.appointment.doctor_id = doctor_result.appointment.doctor_id;
+        doctor.appointment.doctor_name = doctor_result.appointment.doctor_name;
+        if(doctor_result.appointment.end_time != undefined){
+          doctor.appointment.end_time = new Date(doctor_result.appointment.end_time);
+        }
+
+        doctor.appointment.id = doctor_result.appointment.id;
+        doctor.appointment.patient_id = doctor_result.appointment.patient_id;
+        doctor.appointment.patient_name = doctor_result.appointment.patient_name;
+        doctor.appointment.serial_no = doctor_result.appointment.serial_no;
+        if(doctor_result.appointment.start_time != undefined){
+          doctor.appointment.start_time = new Date(doctor_result.appointment.start_time)
+        }
+        doctor.appointment.visiting_price = doctor_result.appointment.visiting_price;
+      }
+
+
+
       doctor_list.push(doctor);
     });
   }

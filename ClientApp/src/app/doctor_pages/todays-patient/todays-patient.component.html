@@ -1,0 +1,97 @@
+<div class="container-fluid">
+  <div class="card shadow mb-4 mt-2">
+    <div class="card-header d-flex flex-row align-items-center justify-content-between">
+      <h5 class="my-auto">Today's Patients</h5>
+      <div class="d-flex">
+       <div>
+        <form #f="ngForm" (ngSubmit)="onSearchSubmit()"
+        class="d-none d-sm-inline-block form-inline">
+    <div class="input-group">
+      <input type="text" id="search_string"
+             name="search_string"
+             [(ngModel)]="search_string"
+             class="form-control bg-light small"
+             placeholder="Search patient" aria-label="Search">
+      <div class="input-group-append">
+        <button class="btn btn-primary" type="submit">
+          <i class="fas fa-search fa-sm"></i>
+        </button>
+      </div>
+    </div>
+  </form>
+       </div>
+       <div class="dropdown ml-2">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="sortOrderDropdownMenuButton"
+        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Sort by {{sortBy}}
+        </button>
+        <div class="dropdown-menu" aria-labelledby="sortOrderDropdownMenuButton">
+          <a class="dropdown-item" (click)="sortOrderChanged($event, 'Name')">Name</a>
+          <a class="dropdown-item" (click)="sortOrderChanged($event, 'Serial No')">Serial No</a>
+        </div>
+      </div>
+        <button type="button" (click)="toggleDoctorListSort($event)" class="btn ml-4 "><i class="fad text-dark fa-sort"></i></button>
+      </div>
+    </div>
+    <!-- Card Body -->
+    <div class="card-body">
+      <div class="d-flex flex-column">
+        <div *ngFor="let item of filteredPatients; even as isEven" [ngClass]="{'bg-gray-100': isEven}" class="rounded flex-fill px-4 mb-2 py-3">
+          <div class="row">
+            <div class="col-sm-12 col-md-8">
+              <div class="d-flex align-self-center align-items-center">
+                <div style="width: 100px; height: 100px;">
+                  <app-profile-pic-preview [user_id]="item.id"></app-profile-pic-preview>
+                </div>
+                <div class="ml-3 d-flex flex-column">
+                  <a class="font-weight-bold text-dark" style="font-size: 22px;" (click)="onPatientDetailsBtnClicked($event, item.id)">{{ item.name }}</a>
+                  <div>
+                    id: <span class="ml-1">{{ item.id }}</span>
+                  </div>
+                  <div>
+                    {{ item.email }}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="col-md-2 col-sm-3">
+              <div class="mx-3 bg-gray-300" style="border-radius: 2px; min-width: 4px; width: 4px; height: 100%;"></div>
+            </div>
+
+            <div class="col-sm-3 col-md-2">
+              <div class="d-flex align-self-center  align-items-end flex-column">
+                <h4 class=" font-weight-bold text-dark">{{ item.appointment.serial_no }}</h4>
+                <div class="mt-2">Serial</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+
+
+
+        <div *ngIf="filteredPatients == undefined || filteredPatients.length == 0" class="m-auto align-items-center d-flex flex-column">
+          <i class="fad fa-5x fa-user-injured"></i>
+          <h2 class="font-weight-bold mt-4">No Patient Found</h2>
+        </div>
+
+        <!-- <div *ngIf="filteredPatients == undefined || filteredPatients.length == 0" class="m-auto align-items-center d-flex flex-column">
+          <i class="fas fa-4x fa-dolly-empty"></i>
+          <h2 class="font-weight-bold mt-4">Search Any Patient</h2>
+        </div> -->
+
+
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+
+</div>

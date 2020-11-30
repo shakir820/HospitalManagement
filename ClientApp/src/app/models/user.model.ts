@@ -1,5 +1,6 @@
 
 import { Inject } from "@angular/core";
+import { DoctorAppointment } from "./doctor-appointment.model";
 import { Language } from "./langauge.model";
 import { Schedule } from "./schedule.model";
 import { Speciality } from "./speciality.model";
@@ -27,6 +28,13 @@ export class User{
   public country_short_name: string;
   public state_name: string;
   public bloodGroup: string;
+
+
+
+
+  //appointment info
+  appointment: DoctorAppointment;
+
 
 
   // doctor info
