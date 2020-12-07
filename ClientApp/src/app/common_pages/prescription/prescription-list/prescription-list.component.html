@@ -39,7 +39,7 @@
       </div>
        <hr>
       <div class="row mt-3">
-        <div class="col-sm-4">
+        <div class="col-sm-5">
          <div class="d-flex">
           <a class="flex-fill text-dark" (click)="sortPrescriptionList($event, 'Doctor')">
             <div class="d-flex">
@@ -49,9 +49,9 @@
           </a>
          </div>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-5">
           <div class="d-flex">
-            <a class="flex-fill text-dark" (click)="sortAppointmentList($event, 'Date')">
+            <a class="flex-fill text-dark" (click)="sortPrescriptionList($event, 'Date')">
               <div class="d-flex">
                 <div>Date</div>
                 <div class="ml-3" *ngIf="sortOrderBy == 'Date'"><i class="fas fa-sort"></i></div>
@@ -59,28 +59,7 @@
             </a>
            </div>
         </div>
-
         <div class="col-sm-2">
-          <div class="d-flex">
-            <a class="flex-fill text-dark" (click)="sortAppointmentList($event, 'Serial')">
-              <div class="d-flex">
-                <div>Serial</div>
-                <div class="ml-3" *ngIf="sortOrderBy == 'Serial'"><i class="fas fa-sort"></i></div>
-              </div>
-            </a>
-           </div>
-        </div>
-        <div class="col-sm-2">
-          <div class="d-flex">
-            <a class="flex-fill text-dark" (click)="sortAppointmentList($event, 'Price')">
-              <div class="d-flex">
-                <div>Visiting Price</div>
-                <div class="ml-3" *ngIf="sortOrderBy == 'Price'"><i class="fas fa-sort"></i></div>
-              </div>
-            </a>
-           </div>
-        </div>
-        <div class="col-sm-1">
           <!-- <div>
            Action
           </div> -->
@@ -93,43 +72,21 @@
 
 
      <div>
-      <div class="row py-2 mx-0" *ngFor="let item of filteredAppointmentList; even as evenItem" [ngClass]="{'bg-gray-100': evenItem == true}">
-        <div class="col-sm-4">
+      <div class="row py-2 mx-0" *ngFor="let item of filteredPrescriptionList; even as evenItem" [ngClass]="{'bg-gray-100': evenItem == true}">
+        <div class="col-sm-5">
          <div class="d-flex align-items-center">
-           <div style="width: 50px; height:50px;"> <app-profile-pic-preview  [user_id]="item.doctor_id"></app-profile-pic-preview></div>
-           <div class="ml-2 name-title">{{ item.doctor_name }}</div>
+           <div style="width: 50px; height:50px;"> <app-profile-pic-preview  [user_id]="item.doctor.id"></app-profile-pic-preview></div>
+           <div class="ml-2 name-title">{{ item.doctor.name }}</div>
          </div>
         </div>
-        <div class="col-sm-3">
-          <div class="d-flex flex-column">
-            <div class="name-title">{{ item.appointment_date | date: 'mediumDate' }}</div>
-            <div class="small mt-2">{{ item.start_time | date: 'shortTime' }} - {{ item.end_time | date: 'shortTime' }}</div>
+        <div class="col-sm-5">
+          <div class="d-flex">
+            <div class="name-title">{{ item.created_date | date: 'mediumDate' }}</div>
           </div>
         </div>
-
         <div class="col-sm-2">
-          <div class="d-flex align-items-center">
-            <div class=" name-title">{{ item.serial_no }}</div>
-           </div>
-        </div>
-        <div class="col-sm-2">
-          <div class="d-flex align-items-center">
-            <div class=" name-title">{{item.visiting_price}} TK</div>
-           </div>
-        </div>
-        <div class="col-sm-1">
           <div class="d-flex flex-row-reverse">
-            <div class="dropdown no-arrow">
-              <a class="dropdown-toggle" role="button" id="appointmentActionOptionDropdown" data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-ellipsis-v fa-sm fa-fw text-dark"></i>
-              </a>
-              <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="appointmentActionOptionDropdown">
-                <div class="dropdown-header">Action:</div>
-                <a class="dropdown-item text-primary" *ngIf="item.consulted" (click)="onViewPrescriptionClicked($event, item.id)">View Prescription</a>
-                <a class="dropdown-item text-danger" *ngIf="!item.consulted" (click)="onCancelAppointmentClicked($event, item.id)">Cancel Appointment</a>
-              </div>
-            </div>
+            <button class="btn btn-primary" (click)="onViewPrescriptionClicked($event, item.id)">View Prescription</button>
           </div>
         </div>
       </div>

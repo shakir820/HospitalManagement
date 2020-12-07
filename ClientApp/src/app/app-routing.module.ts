@@ -6,6 +6,7 @@ import { AdminDoctorListComponent } from "./admin/admin-doctor-list/admin-doctor
 import { AdminLoginComponent } from "./admin/admin-login/admin-login.component";
 import { PatientDetailsComponent } from "./common_pages/patient-details/patient-details.component";
 import { CreatePrescriptionComponent } from "./common_pages/prescription/create-prescription/create-prescription.component";
+import { PrescriptionListComponent } from "./common_pages/prescription/prescription-list/prescription-list.component";
 import { ViewPrescriptionComponent } from "./common_pages/prescription/view-prescription/view-prescription.component";
 import { CounterComponent } from "./counter/counter.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
@@ -45,6 +46,7 @@ export const appRoutes: Routes = [
   { path: 'Patients/PatientDetails', component: PatientDetailsComponent, canActivate: [UserPagesCanActivateService] },
   { path: 'Prescription/CreatePrescription', component: CreatePrescriptionComponent, canActivate: [UserPagesCanActivateService] },
   { path: 'Prescription/ViewPrescription', component: ViewPrescriptionComponent, canActivate: [UserPagesCanActivateService] },
+  { path: 'Prescription/PrescriptionList', component: PrescriptionListComponent, canActivate: [UserPagesCanActivateService] },
   { path: '**', redirectTo: "" },
 ]
 

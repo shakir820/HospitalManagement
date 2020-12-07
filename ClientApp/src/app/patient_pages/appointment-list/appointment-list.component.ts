@@ -84,7 +84,6 @@ export class AppointmentListComponent implements OnInit {
   appointmentSearchOnInput(event_data){
     if(this.search_string.length == 0){
       this.filteredAppointmentList = this.appointmentList.slice();
-
     }
   }
 
