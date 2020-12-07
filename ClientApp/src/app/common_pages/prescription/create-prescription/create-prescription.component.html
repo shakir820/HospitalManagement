@@ -58,7 +58,7 @@
         </div>
         <div class="p-0 card-body">
           <div class="d-flex m-2 flex-column">
-            <div *ngIf="prescription.patient_complains.length == 0" class="d-flex justify-content-center d-print-none">
+            <div *ngIf="prescription.patient_complains.length == 0 && showSaveBtn" class="d-flex justify-content-center d-print-none">
               <p class="my-3 small font-weight-bold">Add Complain</p>
             </div>
            <div class="d-flex align-items-center justify-content-between" *ngFor="let item of prescription.patient_complains">
@@ -69,10 +69,10 @@
                 <div class="small">{{item.description}}</div>
               </div>
             </div>
-            <a class="text-danger d-print-none" (click)="onComplainDeleteBtnClicked($event, item.id)"><i class="fad fa-trash"></i></a>
+            <a *ngIf="showSaveBtn" class="text-danger d-print-none" (click)="onComplainDeleteBtnClicked($event, item.id)"><i class="fad fa-trash"></i></a>
            </div>
           </div>
-          <div class="d-flex">
+          <div *ngIf="showSaveBtn" class="d-flex">
             <button class="btn d-print-none btn-sm flex-fill btn-primary" (click)="onAddMoreComplainBtnClicked($event)">
               <div class="d-flex justify-content-center">
                 <div><i class="far fa-plus"></i></div>
@@ -93,7 +93,7 @@
         </div>
         <div class="p-0 card-body">
           <div class="d-flex m-2 flex-column">
-            <div *ngIf="prescription.patient_examinations.length == 0" class="d-flex justify-content-center d-print-none">
+            <div *ngIf="prescription.patient_examinations.length == 0 && showSaveBtn" class="d-flex justify-content-center d-print-none">
               <p class="my-3 small font-weight-bold">Add Examination</p>
             </div>
            <div class="d-flex justify-content-between align-items-center" *ngFor="let item of prescription.patient_examinations">
@@ -104,10 +104,10 @@
                 <div class="small">{{ item.description }}</div>
               </div>
             </div>
-            <a class="d-print-none text-danger" (click)="onExaminationDeleteBtnClicked($event, item.id)"><i class="fad fa-trash" ></i></a>
+            <a *ngIf="showSaveBtn" class="d-print-none text-danger" (click)="onExaminationDeleteBtnClicked($event, item.id)"><i class="fad fa-trash" ></i></a>
            </div>
           </div>
-          <div class="d-flex">
+          <div *ngIf="showSaveBtn" class="d-flex">
             <button class="btn d-print-none btn-sm flex-fill btn-primary" (click)="onAddMoreExaminationBtnClicked($event)">
               <div class="d-flex justify-content-center">
                 <div><i class="far fa-plus"></i></div>
@@ -129,7 +129,7 @@
         </div>
         <div class="p-0 card-body">
           <div class="d-flex m-2 flex-column">
-            <div *ngIf="prescription.patient_investigations.length == 0" class="d-flex justify-content-center d-print-none">
+            <div *ngIf="prescription.patient_investigations.length == 0 && showSaveBtn" class="d-flex justify-content-center d-print-none">
               <p class="my-3 small font-weight-bold">Add Investigation</p>
             </div>
            <div class="d-flex justify-content-between align-items-center" *ngFor="let item of prescription.patient_investigations">
@@ -139,10 +139,10 @@
                 <div class="name-title">{{item.abbreviation}}</div>
               </div>
             </div>
-            <a class="d-print-none text-danger" (click)="onInvestigationDeleteBtnClicked($event, item.id)"><i class="fad fa-trash"></i></a>
+            <a *ngIf="showSaveBtn" class="d-print-none text-danger" (click)="onInvestigationDeleteBtnClicked($event, item.id)"><i class="fad fa-trash"></i></a>
            </div>
           </div>
-          <div class="d-flex">
+          <div *ngIf="showSaveBtn" class="d-flex">
             <button class="btn d-print-none btn-sm flex-fill btn-primary" (click)="onAddMoreInvestigationBtnClicked($event)">
               <div class="d-flex justify-content-center">
                 <div><i class="far fa-plus"></i></div>
@@ -166,7 +166,7 @@
         </div>
         <div class="card-body">
           <div class="d-flex flex-column">
-            <div *ngIf="prescription.medicines.length == 0" class="d-flex justify-content-center d-print-none">
+            <div *ngIf="prescription.medicines.length == 0 && showSaveBtn" class="d-flex justify-content-center d-print-none">
               <p class="my-3 small font-weight-bold">Add Medicine</p>
             </div>
             <div class="d-flex my-2" *ngFor="let item of prescription.medicines; index as i">
@@ -180,12 +180,12 @@
                  </div>
                 <div class="small font-weight-bold">{{ item.note }}</div>
               </div>
-             <div class="flex-fill d-flex flex-row-reverse align-items-end d-print-none align-self-center">
+             <div *ngIf="showSaveBtn" class="flex-fill d-flex flex-row-reverse align-items-end d-print-none align-self-center">
                <a  class="text-danger" (click)="onMedicineDeleteBtnClicked($event, item.id)"><i class="fad fa-trash"></i></a>
               </div>
             </div>
 
-            <div class="">
+            <div *ngIf="showSaveBtn" class="">
               <button (click)="onAddMedicineBtnClicked($event)"
                class="btn d-print-none shadow btn-primary ml-3 btn-circle"><i class="far fa-plus"></i></button>
             </div>
@@ -203,7 +203,7 @@
         </div>
         <div class="card-body">
           <div class="d-flex flex-column">
-            <div *ngIf="prescription.notes.length == 0" class="d-flex justify-content-center d-print-none">
+            <div *ngIf="prescription.notes.length == 0 && showSaveBtn" class="d-flex justify-content-center d-print-none">
               <p class="my-3 small font-weight-bold">Add Note</p>
             </div>
             <div class="d-flex my-2" *ngFor="let item of prescription.notes; index as i">
@@ -212,10 +212,9 @@
               <div class="d-flex flex-column">
                 <a class="name-title" (click)="onNoteItmeClicked($event, item.id)">{{item.note}}</a>
               </div>
-              <div class="d-print-none flex-fill ml-3 d-flex flex-row-reverse align-self-center"><a class="text-danger " (click)="onNoteDeleteBtnClicked($event, item.id)"><i class="fad fa-trash"></i></a></div>
+              <div *ngIf="showSaveBtn" class="d-print-none flex-fill ml-3 d-flex flex-row-reverse align-self-center"><a class="text-danger " (click)="onNoteDeleteBtnClicked($event, item.id)"><i class="fad fa-trash"></i></a></div>
             </div>
-
-            <div class="">
+            <div class="" *ngIf="showSaveBtn">
               <button class="btn d-print-none shadow btn-primary ml-3 btn-circle" (click)="onAddNoteBtnClicked($event)"><i class="far fa-plus"></i></button>
             </div>
           </div>
@@ -223,8 +222,30 @@
       </div>
 
 
-
-
+      <!-- buttons area -->
+     <div class="d-flex align-self-end mt-2">
+      <button *ngIf="showSaveBtn && inEditMode" class="btn btn-outline-danger px-3 shadow" (click)="onCancelbtnClicked($event)">
+        Cancel
+      </button>
+      <button *ngIf="showSaveBtn" class="btn ml-2 btn-outline-primary px-3 shadow" (click)="onClearAllbtnClicked($event)">
+        Clear All
+      </button>
+      <button class="btn ml-2 btn-primary px-3 shadow" *ngIf="showSaveBtn"
+      (click)="onSavebtnClicked($event)" [disabled]="(saveBtnDisabled || savingPrescription)">
+        <div class=" d-flex align-items-center">
+          <div class="flex-grow-1 ml-3 mr-3">
+            {{savingPrescription? 'Saving': 'Save'}}
+          </div>
+          <div *ngIf="savingPrescription" class="align-self-center d-flex">
+            <div class="spinner-border align-self-center spinner-border-sm text-light" role="status">
+            </div>
+          </div>
+        </div>
+      </button>
+      <button class="btn ml-2 btn-primary px-3 shadow" (click)="onEidtbtnClicked($event)" *ngIf="showEditBtn">
+        Edit
+      </button>
+     </div>
     </div>
   </div>
 </div>

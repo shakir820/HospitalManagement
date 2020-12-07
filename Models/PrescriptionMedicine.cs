@@ -13,18 +13,8 @@ namespace HospitalManagement.Models
         public long DoctorId { get; set; }
         public long MedicineId { get; set; }
         public long PrescriptionId { get; set; }
-        public bool ThreeTimesAday { get; set; } = true;
-
-        [Column(TypeName = "decimal(2,2)")]
-        public decimal BreakfastTime { get; set; }
-        
-        [Column(TypeName = "decimal(2,2)")]
-        public decimal LunchTime { get; set; }
-        
-        [Column(TypeName = "decimal(2,2)")]
-        public decimal DinnerTime { get; set; }
-        
-        public string CustomSchedule { get; set; }
+        public string Schedule { get; set; }
+        public string Duration { get; set; }
         public string Note { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.Now;
 

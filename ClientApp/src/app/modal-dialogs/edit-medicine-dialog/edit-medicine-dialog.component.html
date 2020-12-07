@@ -18,8 +18,9 @@
             <div class="col-sm-12">
               <div class="form-group">
                 <label for="medicineName">Medicine Name</label>
-                <div #medicineDropDown="ngbDropdown" ngbDropdown  (openChange)="onDropDownOpenChanged($event)">
+                <div #medicineDropDown="ngbDropdown" ngbDropdown  (openChange)="onDropDownOpenChanged($event)" >
                   <input type="text"
+                  autocomplete="off"
                   (focusout)="onMedicineInputFocusOut($event)"
                   id="medicineName"
                   (input)="onMedicineInput($event)"
@@ -27,8 +28,10 @@
                   [(ngModel)]="medicineName"
                   required
                   class="form-control">
-                  <div ngbDropdownMenu style="width: 100%;" >
+                  <div ngbDropdownMenu  style="width: 100%; max-height: 300px; overflow-y:auto;">
                     <a ngbDropdownItem
+
+                    class=" text-dark"
                     *ngFor="let medicine_item of medicine_list"
                     (click)="onMedicineItemClicked($event, medicine_item.id)">
                     {{ medicine_item.name }}
@@ -36,7 +39,7 @@
                   </div>
                   <small class="text-danger" *ngIf="(submitted && !medicineForm.form.controls['medicine_name'].valid) ||
                   (medicineForm.form.controls['medicine_name'].touched && !medicineForm.form.controls['medicine_name'].valid)">Medicine is required</small>
-                  <small *ngIf="medicineExist" class="text-danger">This is medicine is already selected</small>
+                  <small *ngIf="medicineExist" class="text-danger">This medicine is already selected</small>
                 </div>
               </div>
             </div>
