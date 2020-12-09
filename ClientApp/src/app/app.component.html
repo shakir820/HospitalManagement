@@ -234,8 +234,8 @@
 
 
         <!-- Nav Item - Charts -->
-        <li class="nav-item" *ngIf="isPatient">
-          <a class="nav-link" [routerLink]="['/Appointment']" routerLinkActive="active" style="cursor: pointer;">
+        <li class="nav-item" routerLinkActive="active" *ngIf="isPatient">
+          <a class="nav-link" [routerLink]="['/Appointment']"  style="cursor: pointer;">
             <i class="fas fa-fw fa-calendar-check"></i>
             <span>Appointment</span>
           </a>
@@ -243,15 +243,24 @@
 
         <li class="nav-item" routerLinkActive="active" *ngIf="isPatient">
           <a class="nav-link" [routerLink]="['/DoctorList']">
-            <i class="fas fa-fw fa-calendar-check"></i>
+            <i class="fas fa-fw fa-user-md"></i>
+            <span>Doctor List</span>
+          </a>
+        </li>
+
+
+
+        <li class="nav-item" routerLinkActive="active" *ngIf="isAdmin">
+          <a class="nav-link" [routerLink]="['admin/doctorList']">
+            <i class="fas fa-fw fa-user-md"></i>
             <span>Doctor List</span>
           </a>
         </li>
 
         <li class="nav-item" routerLinkActive="active" *ngIf="isAdmin">
-          <a class="nav-link" [routerLink]="['admin/doctorList']">
-            <i class="fas fa-fw fa-calendar-check"></i>
-            <span>Doctor List</span>
+          <a class="nav-link" [routerLink]="['admin/StaffList']">
+            <i class="fad fa-fw fa-clipboard-user"></i>
+            <span>Staff List</span>
           </a>
         </li>
 

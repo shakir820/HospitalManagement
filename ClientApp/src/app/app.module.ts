@@ -40,6 +40,9 @@ import { PresEditNoteDialogComponent } from './modal-dialogs/pres-edit-note-dial
 import { TodaysPatientComponent } from './doctor_pages/todays-patient/todays-patient.component';
 import { ViewPrescriptionComponent } from './common_pages/prescription/view-prescription/view-prescription.component';
 import { PrescriptionListComponent } from './common_pages/prescription/prescription-list/prescription-list.component';
+import { StaffLoginComponent } from './staff/staff-login/staff-login.component';
+import { StaffDashboardComponent } from './staff/staff-dashboard/staff-dashboard.component';
+import { AdminStaffListComponent } from './admin/admin-staff-list/admin-staff-list.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +77,10 @@ import { PrescriptionListComponent } from './common_pages/prescription/prescript
     PresEditNoteDialogComponent,
     TodaysPatientComponent,
     ViewPrescriptionComponent,
-    PrescriptionListComponent
+    PrescriptionListComponent,
+    StaffLoginComponent,
+    StaffDashboardComponent,
+    AdminStaffListComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

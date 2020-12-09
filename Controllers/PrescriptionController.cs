@@ -578,31 +578,34 @@ namespace HospitalManagement.Controllers
         {
             try
             {
-                var prescription = await _context.Prescriptions.Include(a => a.Notes).Include(a => a.Examinations).Include(a => a.PatientComplains).
-                    GroupJoin(_context.InvestigationDocs, outter => outter.Id, innet => innet.PrescriptionId, (outter, inner) => new
-                    {
-                        pres = outter,
-                        investigations = inner.ToList()
-                    }).GroupJoin(_context.PrescriptionMedicines.Join(_context.Medicines, outter => outter.MedicineId, inner => inner.Id, (outter, inner) =>new 
-                    { 
-                        pres_medi = outter, 
-                        medicine = inner 
-                    }), outter => outter.pres.Id, inner => inner.pres_medi.PrescriptionId, (outter, inner) => new 
-                    { 
-                        pres = outter, 
-                        medicine_list = inner.ToList() 
-                    }).Join(_context.Users, outter => outter.pres.pres.DoctorId, inner => inner.Id, (outter, inner)=> new 
-                    { 
-                        pres = outter, 
-                        doctor = inner
-                    }).Join(_context.Users, outter => outter.pres.pres.pres.PatientId, inner => inner.Id, (outter, inner)=> new 
-                    { 
-                        pres = outter, 
-                        patient = inner 
-                    }).AsNoTracking().FirstOrDefaultAsync(a => a.pres.pres.pres.pres.Id == prescription_id);
+                //var prescription = await _context.Prescriptions.Include(a => a.Notes).Include(a => a.Examinations).Include(a => a.PatientComplains).
+                //    GroupJoin(_context.InvestigationDocs, outter => outter.Id, innet => innet.PrescriptionId, (outter, inner) => new
+                //    {
+                //        pres = outter,
+                //        investigations = inner.ToList()
+                //    }).GroupJoin(_context.PrescriptionMedicines, outter => outter.pres.Id, inner => inner.PrescriptionId, (outter, inner) => new 
+                //    { 
+                //        pres = outter, 
+                //        medicine_list = inner.ToList() 
+                //    }).Join(_context.Users, outter => outter.pres.pres.DoctorId, inner => inner.Id, (outter, inner)=> new 
+                //    { 
+                //        pres = outter, 
+                //        doctor = inner
+                //    }).Join(_context.Users, outter => outter.pres.pres.pres.PatientId, inner => inner.Id, (outter, inner)=> new 
+                //    { 
+                //        pres = outter, 
+                //        patient = inner 
+                //    }).AsNoTracking().FirstOrDefaultAsync(a => a.pres.pres.pres.pres.Id == prescription_id);
 
-                
-                if(prescription == null)
+
+
+                var pres_patient_doctor = await _context.Prescriptions.Include(a => a.Examinations).Include(a => a.Notes).Include(a => a.PatientComplains).
+                  Join(_context.Users, outter => outter.PatientId, inner => inner.Id, (outter, inner) => new { pres = outter, patient = inner }).
+                  Join(_context.Users, outter => outter.pres.DoctorId, inner => inner.Id, (outter, inner) => new { pres_patient = outter, doctor = inner }).
+                  AsNoTracking().FirstOrDefaultAsync(a => a.pres_patient.pres.Id == prescription_id);
+
+
+                if (pres_patient_doctor == null)
                 {
                     return new JsonResult(new
                     {
@@ -614,11 +617,24 @@ namespace HospitalManagement.Controllers
 
 
 
-                var p = prescription.pres.pres.pres.pres;
-                var doctor = prescription.pres.doctor;
-                var patient = prescription.patient;
-                var investigations = prescription.pres.pres.pres.investigations;
-                var medicines = prescription.pres.pres.medicine_list;
+                var p_medicines = await _context.PrescriptionMedicines.Join(_context.Medicines, outter => outter.MedicineId, inner => inner.Id,
+                       (outter, inner) => new { pre_medicine = outter, medicine = inner }).AsNoTracking().
+                       Where(a => a.pre_medicine.PrescriptionId == pres_patient_doctor.pres_patient.pres.Id).ToListAsync();
+
+                var p_investigations = await _context.InvestigationDocs.AsNoTracking().Where(a => a.PrescriptionId == pres_patient_doctor.pres_patient.pres.Id).ToListAsync();
+
+
+
+
+
+              
+
+
+                var p = pres_patient_doctor.pres_patient.pres;
+                var doctor = pres_patient_doctor.doctor;
+                var patient = pres_patient_doctor.pres_patient.patient;
+                var investigations = p_investigations;
+                var medicines = p_medicines;
 
                 var pres = ModelBindingResolver.ResolvePrescription(p);
                 pres.doctor = ModelBindingResolver.ResolveUser(doctor);
@@ -627,14 +643,14 @@ namespace HospitalManagement.Controllers
                 foreach(var item in medicines)
                 {
                     var m = new PrescriptionMedicineModel();
-                    m.doctor_id = item.pres_medi.DoctorId;
-                    m.duration = item.pres_medi.Duration;
-                    m.id = item.pres_medi.Id;
+                    m.doctor_id = item.pre_medicine.DoctorId;
+                    m.duration = item.pre_medicine.Duration;
+                    m.id = item.pre_medicine.Id;
                     m.medicine_id = item.medicine.Id;
-                    m.note = item.pres_medi.Note;
-                    m.patient_id = item.pres_medi.PatientId;
-                    m.prescription_id = item.pres_medi.PrescriptionId;
-                    m.schedule = item.pres_medi.Schedule;
+                    m.note = item.pre_medicine.Note;
+                    m.patient_id = item.pre_medicine.PatientId;
+                    m.prescription_id = item.pre_medicine.PrescriptionId;
+                    m.schedule = item.pre_medicine.Schedule;
                     m.title = item.medicine.Name;
 
                     pres.medicines.Add(m);

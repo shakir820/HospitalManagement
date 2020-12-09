@@ -1,25 +1,20 @@
 
-<div class="container">
-  <div class="row m-auto">
-    <div class="col-sm-12">
-      <div style="width: 500px; margin-top: 50px;" class="card p-5 mx-auto shadow">
-       <div class="">
-        <div class="d-flex justify-content-center"><h3>Admin Login</h3></div>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="d-flex justify-content-center">
+      <div style="width: 500px;" class=" card p-5 shadow">
         <form (ngSubmit)="onSubmit()" #f="ngForm">
           <div class="form-group">
             <label for="username">Username</label>
             <input type="text"
                    name="username"
                    required
-                   (input)="onUsernameInput($event)"
                    ngModel
                    class="form-control"
                    id="username"
                    placeholder="Enter username">
             <small id="usernameError"
                    class="text-danger" *ngIf="!usernameExist">Username doesn't exist</small>
-                   <small id="usernameError1"
-                   class="text-danger" *ngIf="(!f.form.controls['username'].valid && f.form.controls['username'].touched) || (submitted && !f.form.controls['username'].valid)">Username required</small>
           </div>
 
           <div class="form-group">
@@ -54,12 +49,7 @@
           </div>
           <small class="text-danger" *ngIf="error_msg !== null && error_msg !== '' && error_msg !== undefined">{{ error_msg }}</small>
         </form>
-       </div>
       </div>
-
     </div>
   </div>
-
 </div>
-
-

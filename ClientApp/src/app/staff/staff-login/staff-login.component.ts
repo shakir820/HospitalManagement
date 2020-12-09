@@ -7,11 +7,11 @@ import { User } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
-  selector: 'app-admin-login',
-  templateUrl: './admin-login.component.html',
-  styleUrls: ['./admin-login.component.css']
+  selector: 'app-staff-login',
+  templateUrl: './staff-login.component.html',
+  styleUrls: ['./staff-login.component.css']
 })
-export class AdminLoginComponent implements OnInit {
+export class StaffLoginComponent implements OnInit {
 
   _baseUrl: string;
   title: string = 'admin-login';
@@ -49,10 +49,14 @@ export class AdminLoginComponent implements OnInit {
       this.submitted = false;
       this.loggingIn = true;
 
-      this.httpClient.post<{success: boolean, error: boolean, error_msg: string,
-      user: {name: string, username: string, age: number, bloodGroup: string, city_name: string, country_name: string, country_phone_code: number,
-        country_short_name: string, email: string, approved: boolean, gender: string, id: number, roles: string[], phoneNumber: string, state_name: string }
-      }>(this._baseUrl + 'api/Admin/Login', {username: this.signinForm.controls['username'].value, password: this.signinForm.controls['password'].value}).subscribe(result => {
+      this.httpClient.post<
+      {
+        success: boolean,
+        error: boolean,
+        error_msg: string,
+        user: User
+      }>(this._baseUrl + 'api/Staff/Login', {username: this.signinForm.controls['username'].value, password: this.signinForm.controls['password'].value}).
+      subscribe(result => {
       this.loggingIn = false;
       console.log(result);
       if(result.error){
@@ -83,7 +87,7 @@ export class AdminLoginComponent implements OnInit {
         this.userService.clearUserData('/');
         this.userService.SaveUserCredientials();
         this.userService.roleChanged.emit(this.userService.user.roles);
-        this.router.navigate(['admin/dashboard']);
+        this.router.navigate(['staff/dashboard']);
       }
     });
 
@@ -104,13 +108,6 @@ export class AdminLoginComponent implements OnInit {
     // else {
 
      }
-  }
-
-  onUsernameInput(event_data){
-    var un:string = this.signinForm.controls['username'].value;
-    if(un.length == 0){
-      this.usernameExist = true;
-    }
   }
 
 
