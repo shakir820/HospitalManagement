@@ -1,11 +1,13 @@
 ﻿using HospitalManagement.Data;
 using HospitalManagement.Helper;
 using HospitalManagement.Models;
+using HospitalManagement.Models.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,8 +48,10 @@ namespace HospitalManagement.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> CreateStaff(UserModel user)
+        public async Task<IActionResult> CreateStaff(PostMethodRawData jsas)
         {
+            var user = JsonConvert.DeserializeObject<UserModel>(jsas.json_data);
+
             using (var transaction = await _context.Database.BeginTransactionAsync())
             {
                 try
@@ -63,7 +67,7 @@ namespace HospitalManagement.Controllers
                     staff_user.Age = user.age;
                     staff_user.Gender = user.gender;
                     
-
+                    
 
                     var create_result = await _userManager.CreateAsync(staff_user, user.password);
                     if (create_result.Succeeded)
@@ -244,6 +248,44 @@ namespace HospitalManagement.Controllers
 
             try
             {
+                //var user_list = new List<UserModel>();
+                //var random = new Random();
+                //for(long i = 0; i < 4000000000; i++)
+                //{
+                //    var user = new UserModel();
+                //    user.age = random.Next(5, 100);
+                //    user.approved = true;
+                //    user.biography = "sdaiudaiksd";
+                //    user.bloodGroup = "B+";
+                //    user.bmdc_certifcate = "asuihdaiksda";
+                //    user.city_name = "asdoad";
+                //    user.country_name = "asdhuaidaida";
+                //    user.country_phone_code = random.Next(0, 150);
+                //    user.country_short_name = "adsais";
+                //    user.degree_title = "asduaida";
+                //    user.doctor_title = "asduaida";
+                //    user.email = $"asjud{random.Next(0, 2500)}@gmail.com";
+                //    user.experience = random.Next(0, 15);
+                //    user.gender = "Male";
+                //    user.isActive = true;
+                //    user.languages = new List<LanguageTagModel>();
+                //    user.languages.Add(new LanguageTagModel { id = 4, languageName = "English" });
+                //    user.languages.Add(new LanguageTagModel { id = 1, languageName = "Bangla" });
+                //    user.name = "WhatEver Name is" + random.Next(0, 500);
+                //    user.new_patient_visiting_price = 1500;
+                //    user.old_patient_visiting_price = 500;
+                //    user.password = "123456";
+                //    user.phoneNumber = "01670074271";
+                //    user.roles = new List<string> { "Patient", "Doctor" };
+                //    user.schedules = new List<ScheduleModel>();
+                //    user.schedules.Add(new ScheduleModel { day_name = DayOfWeek.Monday, end_time = DateTime.Now, id = 4, start_time = DateTime.Now });
+                //    user.schedules.Add(new ScheduleModel { day_name = DayOfWeek.Tuesday, end_time = DateTime.Now, id = 5, start_time = DateTime.Now });
+                //    user.state_name = "asdjadsa";
+                //    user.username = "aisdik";
+                //    user.types_of = "sduaiod";
+                //    user_list.Add(user);
+                //}
+               
                 var sr = await  _context.Roles.FirstOrDefaultAsync(a => a.Name == "Staff");
                 if(sr == null)
                 {
@@ -255,6 +297,14 @@ namespace HospitalManagement.Controllers
                     });
                 }
                 var sui_list = await _context.UserRoles.Where(a => a.RoleId == sr.Id).ToListAsync();
+                var suis = new List<long>();
+                foreach(var item in sui_list)
+                {
+                    suis.Add(item.UserId);
+                }
+                var ss = _context.Users.Where(a => suis.Contains(a.Id)).AsQueryable();
+                
+
 
                 var staff_list = new List<UserModel>();
                 foreach (var item in sui_list)
@@ -301,5 +351,34 @@ namespace HospitalManagement.Controllers
             }
             
         }
+
+
+
+
+
+
+
+
+        public IActionResult GetStaffRoles()
+        {
+            var staff_roles = new List<string>();
+            staff_roles.Add("Investigator");
+
+            return new JsonResult(new
+            {
+                success = true,
+                error = false,
+                staff_roles
+            });
+        }
+
+
+
+
+
+
+
+
+       
     }
 }

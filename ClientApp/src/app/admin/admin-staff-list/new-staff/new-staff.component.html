@@ -1,0 +1,81 @@
+
+<div class="container">
+  <div class=" d-flex flex-column justify-content-center">
+
+
+
+    <div class="card mt-4 mx-auto shadow" style="min-width: 400px;">
+      <div class=" card-header">
+        <div class="d-flex align-items-center">
+          <h5>Create New Staff</h5>
+        </div>
+      </div>
+      <div class=" card-body">
+        <div>
+          <form #f="ngForm" (ngSubmit)="onFormSubmit()">
+            <div class="form-group">
+              <label for="staff_name">Staff Name</label>
+              <input class="form-control" type="text" [(ngModel)]="staff_name"
+              required name="staff_name" id="staff_name">
+              <small *ngIf="(!f.form.controls['staff_name'].valid && f.form.controls['staff_name'].touched) ||
+              (!f.form.controls['staff_name'].valid && submitted)" class=" text-danger">Name is required</small>
+            </div>
+            <div class="form-group">
+              <label for="staff_username">Username</label>
+              <div class=" d-flex align-items-center">
+                <input class=" flex-fill form-control" [(ngModel)]="staff_username"
+                (change)="onUsernameChanged($event)"
+                (input)="onUsernameInputChanged($event)"
+                required name="staff_username" id="staff_username" type="text">
+                <div class="ml-2" *ngIf="checkingUsername" >
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden"></span>
+                  </div>
+                </div>
+                <div *ngIf="uniqueUsername" class="ml-2">
+                  <i class="far text-success fa-thumbs-up"></i>
+                </div>
+              </div>
+
+              <small class="text-danger"
+              *ngIf="(!f.form.controls['staff_username'].valid && f.form.controls['staff_username'].touched) ||
+              (!f.form.controls['staff_username'].valid && submitted)">Username is required</small>
+              <small class=" text-danger" *ngIf="usernameTaken && !checkingUsername">Username is taken</small>
+            </div>
+
+
+            <div class=" form-group">
+              <label for="staff_role">Role</label>
+              <select class=" form-control" name="staff_role" id="staff_role" [(ngModel)]="staffSelectedRole">
+                <option *ngFor="let item of staffRoles" [value]="item">{{item}}</option>
+              </select>
+            </div>
+            <div class=" form-group">
+              <label for="staff_password">Password</label>
+              <input class=" form-control" [(ngModel)]="staff_password" required name="staff_password" type="password" id="staff_password">
+              <small class="text-danger"
+              *ngIf="(!f.form.controls['staff_password'].valid && f.form.controls['staff_password'].touched) ||
+              (!f.form.controls['staff_password'].valid && submitted)">Password is required</small>
+            </div>
+            <div class=" d-flex mt-3">
+              <button type="submit" [disabled]="creatingStaff" class="btn btn-primary flex-fill">
+                <div class=" d-flex">
+                  <div class="flex-grow-1">
+                    {{creatingStaff? 'Creating': 'Create'}}
+                  </div>
+                  <div class="spinner-border text-light mr-3" *ngIf="creatingStaff" role="status">
+                  </div>
+                </div>
+              </button>
+            </div>
+          </form>
+
+
+
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

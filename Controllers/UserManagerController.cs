@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using HospitalManagement.Data;
+using HospitalManagement.Helper;
 using HospitalManagement.Models;
 using HospitalManagement.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -821,6 +822,64 @@ namespace HospitalManagement.Controllers
 
 
 
+
+
+
+        public async Task<IActionResult> GetUsers(string search_key)
+        {
+            bool can_search_with_id = false;
+            long search_id;
+            if(long.TryParse(search_key, out search_id))
+            {
+                can_search_with_id = true;
+            }
+
+            try
+            {
+                
+                
+                var roles = await _context.Roles.Join(_context.UserRoles, o => o.Id, i => i.RoleId, (o, i) => new { role = o, user_role = i }).ToListAsync();
+
+                if(can_search_with_id == true)
+                {
+                    var db_user = await _context.Users.GroupJoin(_context.UserRoles, o => o.Id, i => i.UserId, (o, i) => new
+                    {
+                        user = o,
+                        roles = i.ToList()
+                    }).FirstOrDefaultAsync(a => a.user.Id == search_id);
+
+                    var list_of_roles = new List<string>();
+                    var user_list = new List<UserModel>();
+                    foreach(var item in db_user.roles)
+                    {
+                        var sp_role = roles.FirstOrDefault(a => a.role.Id == item.RoleId);
+                        list_of_roles.Add(sp_role.role.Name);
+                    }
+                    user_list.Add(ModelBindingResolver.ResolveUser(db_user.user, list_of_roles));
+
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        error = false,
+                        user_list
+                    });
+                }
+                else
+                {
+
+                }
+                
+            }
+            catch(Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = ex.Message
+                });
+            }
+        }
 
 
 

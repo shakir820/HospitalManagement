@@ -43,6 +43,9 @@ import { PrescriptionListComponent } from './common_pages/prescription/prescript
 import { StaffLoginComponent } from './staff/staff-login/staff-login.component';
 import { StaffDashboardComponent } from './staff/staff-dashboard/staff-dashboard.component';
 import { AdminStaffListComponent } from './admin/admin-staff-list/admin-staff-list.component';
+import { NewStaffComponent } from './admin/admin-staff-list/new-staff/new-staff.component';
+import { AdminUserListComponent } from './admin/admin-user-list/admin-user-list.component';
+import { EditUserRoleDialogComponent } from './modal-dialogs/edit-user-role-dialog/edit-user-role-dialog.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +83,10 @@ import { AdminStaffListComponent } from './admin/admin-staff-list/admin-staff-li
     PrescriptionListComponent,
     StaffLoginComponent,
     StaffDashboardComponent,
-    AdminStaffListComponent
+    AdminStaffListComponent,
+    NewStaffComponent,
+    AdminUserListComponent,
+    EditUserRoleDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
