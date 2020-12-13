@@ -5,8 +5,8 @@
       <div class="d-flex flex-row align-items-center">
         <h5 class="mb-0">User List</h5>
           <form #f="ngForm" (ngSubmit)="onSearchSubmit()" style="min-width: 250px;"
-          class="d-none ml-2 d-sm-inline-block form-inline">
-            <div class="input-group shadow">
+          class="d-none ml-3 d-sm-inline-block form-inline">
+            <div class="input-group">
               <input type="text" id="search_string" name="search_string" [(ngModel)]="search_string"
                     class="form-control small" placeholder="Search User" (input)="userSearchOnInput($event)" aria-label="Search">
               <div class="input-group-append">
@@ -73,10 +73,10 @@
     <!-- Card Body -->
     <div class="card-body p-0">
      <div>
-      <div class="row py-2 mx-0" *ngFor="let item of user_list; even as evenItem" [ngClass]="{'bg-gray-100': evenItem == true}">
+      <div class="row py-2 mx-0 text-dark" *ngFor="let item of user_list; even as evenItem" [ngClass]="{'bg-gray-100': evenItem == true}">
         <div class=" col-sm-1">
-          <div class="d-flex align-items-center">
-            <div>item.id</div>
+          <div class="d-flex ml-2 align-items-center">
+            <div>{{item.id}}</div>
           </div>
         </div>
 
@@ -100,8 +100,8 @@
         <div class="col">
           <div class="d-flex flex-column">
             <div class="d-flex align-items-center" *ngFor="let role_item of item.roles" >
-              <div *ngIf="role_item != 'Staff'" class=" border-success" style="width: 20px; height: 20px; border-radius: 50%; border-width: 3px;"></div>
-              <div *ngIf="role_item != 'Staff'">{{role_item}}</div>
+              <div *ngIf="role_item != 'Staff'" class=" border-success" style="width: 18px; height: 18px; border-radius: 50%; border:3px solid;"></div>
+              <div class="ml-2" *ngIf="role_item != 'Staff'">{{role_item}}</div>
             </div>
           </div>
         </div>
@@ -143,4 +143,4 @@
 
 
 
-<app-edit-user-role-dialog #editUserRoleDialog></app-edit-user-role-dialog>
+<app-edit-user-role-dialog #editUserRoleDialog (roleChanged)="onUserRoleChanged($event)"></app-edit-user-role-dialog>

@@ -821,12 +821,11 @@ namespace HospitalManagement.Controllers
 
 
 
-
-
-
+     
 
         public async Task<IActionResult> GetUsers(string search_key)
         {
+
             bool can_search_with_id = false;
             long search_id;
             if(long.TryParse(search_key, out search_id))
@@ -838,24 +837,25 @@ namespace HospitalManagement.Controllers
             {
                 
                 
-                var roles = await _context.Roles.Join(_context.UserRoles, o => o.Id, i => i.RoleId, (o, i) => new { role = o, user_role = i }).ToListAsync();
+                var roles = await _context.Roles.ToListAsync();
 
                 if(can_search_with_id == true)
                 {
-                    var db_user = await _context.Users.GroupJoin(_context.UserRoles, o => o.Id, i => i.UserId, (o, i) => new
-                    {
-                        user = o,
-                        roles = i.ToList()
-                    }).FirstOrDefaultAsync(a => a.user.Id == search_id);
+                    var db_user = await _context.Users.FirstOrDefaultAsync(a => a.Id == search_id);
 
-                    var list_of_roles = new List<string>();
+                    var users_roles = await _context.UserRoles.Where(a => a.UserId == search_id).ToListAsync();
+
+
+
                     var user_list = new List<UserModel>();
-                    foreach(var item in db_user.roles)
+                    var user_role_list = new List<string>();
+                    var user_roles_ids = users_roles.Where(a => a.UserId == search_id);
+                    foreach (var role_id_item in user_roles_ids)
                     {
-                        var sp_role = roles.FirstOrDefault(a => a.role.Id == item.RoleId);
-                        list_of_roles.Add(sp_role.role.Name);
+                        var role_item = roles.FirstOrDefault(a => a.Id == role_id_item.RoleId);
+                        user_role_list.Add(role_item.Name);
                     }
-                    user_list.Add(ModelBindingResolver.ResolveUser(db_user.user, list_of_roles));
+                    user_list.Add(ModelBindingResolver.ResolveUser(db_user, user_role_list));
 
                     return new JsonResult(new
                     {
@@ -866,6 +866,44 @@ namespace HospitalManagement.Controllers
                 }
                 else
                 {
+                    var db_users = await  _context.Users.FromSqlRaw("EXECUTE SearchUsers {0}", search_key).ToListAsync();
+                    
+                    //var db_users = await _context.Users.Where(a => a.Name.IndexOf(search_key) > 0).Take(10).ToListAsync();
+                    
+                    //var user_ids = db_users.Select(a => a.Id).AsEnumerable();
+
+                    //var users_roles =  _context.UserRoles.AsEnumerable().Join(user_ids, o => o.UserId, i => i, (o, i) => new { u_id = i, u_role = o }).ToList();
+                    //user_ids.Join(_context.UserRoles, o => o, i => i.UserId, (o, i) => new {  }).ToList();
+                    //var users_roles = await _context.UserRoles.Where(a => user_ids.Contains(a.UserId)).ToListAsync();
+                    
+
+
+                    var user_list = new List<UserModel>();
+                    foreach(var user in db_users)
+                    {
+                        var db_roles = await _userManager.GetRolesAsync(user);
+                        //var db_roles = await _context.UserRoles.Join(_context.Roles, o => o.RoleId, i => i.Id, (o, i) => new
+                        //{
+                        //    user_role = o,
+                        //    role = i
+                        //}).Where(a => a.user_role.UserId == user.Id).ToListAsync();
+
+                        //var user_role_list =  db_roles.Select(a => a.role.Name).ToList();
+                        user_list.Add(ModelBindingResolver.ResolveUser(user, db_roles.ToList()));
+                    }
+
+
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        error = false,
+                        user_list
+                    });
+
+                    //var srole = await _context.Roles.Join(_context.UserRoles, o => o.Id, i => i.RoleId, (o, i) => new { role = o, user_role = i }).
+                    //    GroupJoin(_context.Users, o => o.user_role.UserId, i => i.Id, (o, i) => new { role = o, users = i.ToList() }).
+                    //    FirstOrDefaultAsync(a => a.role.role.Name == "Staff");
+
 
                 }
                 
@@ -882,6 +920,60 @@ namespace HospitalManagement.Controllers
         }
 
 
+
+
+
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeRole(UserModel userModel)
+        {
+            try
+            {
+                var roles = userModel.roles;
+                var user_id = userModel.id;
+                var user = await _context.Users.FirstOrDefaultAsync(a => a.Id == user_id);
+                var user_roles = await _userManager.GetRolesAsync(user);
+
+                foreach (var item in roles)
+                {
+                    if (!user_roles.Contains(item))
+                    {
+                        var role = await _roleManager.FindByNameAsync(item);
+                        if (role == null)
+                        {
+                            await _roleManager.CreateAsync(new UserRole { Name = item });
+                        }
+                        await _userManager.AddToRoleAsync(user, item);
+                    }
+                }
+
+                foreach (var item in user_roles)
+                {
+                    if (!roles.Contains(item))
+                    {
+                        await _userManager.RemoveFromRoleAsync(user, item);
+                    }
+                }
+
+                return new JsonResult(new
+                {
+                    success = true,
+                    error = false
+                });
+            }
+            catch(Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = ex.Message
+                });
+            }
+           
+        }
 
     }
 }

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { EditUserRoleDialogComponent } from 'src/app/modal-dialogs/edit-user-role-dialog/edit-user-role-dialog.component';
 import { User } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-admin-user-list',
@@ -36,13 +37,17 @@ export class AdminUserListComponent implements OnInit {
 
 
   userSearchOnInput(event_data){
-
+    if(this.search_string.length == 0){
+      this.user_list = [];
+    }
   }
 
 
 
   onSearchSubmit(){
-
+    if(this.search_string.length > 0){
+      this.getUsers();
+    }
   }
 
 
@@ -62,27 +67,61 @@ export class AdminUserListComponent implements OnInit {
 
 
   onEditUserRole(event_data, user_id){
-    this.editUserRoleDialog.showModal();
+    var user = this.user_list.find(a => a.id == user_id);
+    var _user = new User();
+    _user.id = user.id;
+    _user.name = user.name;
+    _user.roles = user.roles.slice();
+    this.editUserRoleDialog.showModal(_user);
   }
 
 
 
 
-  getUser(){
+  getUsers(){
     this.fetchingUsers = true;
     this.httpClient.get<{
       success: boolean,
       error: boolean,
-      staff_list: User[],
+      user_list: User[],
       error_msg: string
-    }>(this._baseUrl + 'api/UserManager/GetAllStaffList').subscribe(result => {
+    }>(this._baseUrl + 'api/UserManager/GetUsers', {params: { search_key: this.search_string }}).subscribe(result => {
       console.log(result);
       this.fetchingUsers = false;
       if (result.success) {
-         this.all_staff_list = result.staff_list;
-         this.filtered_staff_list = this.all_staff_list.slice();
+        this.user_list = result.user_list;
       }
     });
   }
+
+
+
+
+
+  onUserRoleChanged(role_changed_user: User){
+    this.httpClient.post<{
+      success: boolean,
+      error: boolean,
+      error_msg: string
+    }>(this._baseUrl + 'api/UserManager/ChangeRole', { id: role_changed_user.id, roles: role_changed_user.roles }).subscribe( result => {
+      if(result.success){
+        var user = this.user_list.find(a => a.id == role_changed_user.id);
+        user.roles = role_changed_user.roles.slice();
+      }
+      else{
+        Swal.fire({
+          title: 'Error!',
+          text: result.error_msg,
+          icon: 'error',
+          confirmButtonText: 'Ok'
+        });
+      }
+    },
+    error => {
+
+    })
+  }
+
+
 
 }
