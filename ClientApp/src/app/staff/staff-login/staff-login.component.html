@@ -1,0 +1,55 @@
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="d-flex justify-content-center">
+      <div style="width: 500px;" class=" card p-5 shadow">
+        <form (ngSubmit)="onSubmit()" #f="ngForm">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text"
+                   name="username"
+                   required
+                   ngModel
+                   class="form-control"
+                   id="username"
+                   placeholder="Enter username">
+            <small id="usernameError"
+                   class="text-danger" *ngIf="!usernameExist">Username doesn't exist</small>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Password"
+                   name="password"
+                   required
+                   ngModel>
+            <small id="passwordError"
+                   *ngIf="(!f.form.controls['password'].valid && f.form.controls['password'].touched) || (submitted && !f.form.controls['password'].valid)"
+                   class="text-danger">Password is required</small>
+            <small class="text-danger" *ngIf="wrongPassword">Password is wrong</small>
+          </div>
+          <div class="form-check">
+            <input type="checkbox"
+                   class="form-check-input"
+                   name="remember"
+                   [(ngModel)]="rememberMe"
+                   id="rememberMe">
+            <label class="form-check-label" for="rememberMe">Remember me</label>
+          </div>
+          <div class=" d-flex mt-3">
+            <button type="submit" [disabled]="loggingIn" class="btn btn-primary flex-fill">
+              <div class=" d-flex">
+                <div class="flex-grow-1">
+                  {{loggingIn? 'Logging In': 'Login'}}
+                </div>
+                <div class="spinner-border text-light mr-3" *ngIf="loggingIn" role="status">
+                </div>
+              </div>
+            </button>
+          </div>
+          <small class="text-danger" *ngIf="error_msg !== null && error_msg !== '' && error_msg !== undefined">{{ error_msg }}</small>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

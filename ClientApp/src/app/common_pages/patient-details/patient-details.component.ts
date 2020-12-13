@@ -210,15 +210,29 @@ export class PatientDetailsComponent implements OnInit {
 
 
   onCreatePrescriptionClicked(event_data){
-    this.router.navigate(['Prescription/CreatePrescription'], {queryParams: {patient_id: this.patient_id}});
+    this.router.navigate(['Prescription/CreatePrescription'],
+    {queryParams: {patient_id: this.patient_id, appointment_id: this.upcoming_appointment.id, prescription_view: 0}});
   }
 
 
 
 
+  onUpComingAppointmentViewPrescriptionClicked(event_data){
+    this.router.navigate(['Prescription/CreatePrescription'],
+    {queryParams: {patient_id: this.patient_id, appointment_id: this.upcoming_appointment.id, prescription_view: 1}});
+  }
+
+
 
   getUpcomingAppointmentDetails(){
 
+  }
+
+
+
+
+  pastAppointmentViewPrescription(event_data, appointment_id: number){
+    this.router.navigate(['Prescription/ViewPrescription'], {queryParams: {appointment_id: appointment_id}});
   }
 
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using HospitalManagement.Data;
+using HospitalManagement.Helper;
 using HospitalManagement.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -565,5 +566,10 @@ namespace HospitalManagement.Controllers
 
 
 
+
+
+
+
+      
     }
 }

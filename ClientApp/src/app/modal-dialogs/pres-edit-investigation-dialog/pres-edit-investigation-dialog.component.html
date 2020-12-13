@@ -25,13 +25,14 @@ aria-hidden="true">
 
                 <div #investigationsDropDown="ngbDropdown" ngbDropdown >
                   <input type="text"
+                  autocomplete="off"
                   id="investigationName"
                   (input)="onInvestigationInput($event)"
                   name="investigaiton_name"
                   [(ngModel)]="investigationName"
                   required
                   class="form-control">
-                  <div ngbDropdownMenu style="width: 100%;" >
+                  <div ngbDropdownMenu  style="width: 100%; max-height: 300px; overflow-y:auto;">
                     <a ngbDropdownItem
                     *ngFor="let investigation_tag_item of investigation_tag_list"
                     (click)="onInvestigationTagItemClicked($event, investigation_tag_item.id)">

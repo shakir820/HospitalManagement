@@ -23,6 +23,8 @@ export class AppComponent  implements OnInit{
   isDoctor:boolean = false;
   isAdmin:boolean = false;
   isPatient: boolean = false;
+  isInvestigator: boolean = false;
+
   ngOnInit(){
 
     this.userService.approvedChanged.subscribe((val)=>{
@@ -30,6 +32,10 @@ export class AppComponent  implements OnInit{
     });
 
     this.userService.roleChanged.subscribe((roles: string[])=>{
+      this.isAdmin = false;
+      this.isPatient = false;
+      this.isInvestigator = false;
+
       if(roles.length > 0){
         var adminRole = roles.find(a=>a == 'Admin');
         if(adminRole){
@@ -52,6 +58,14 @@ export class AppComponent  implements OnInit{
         }
         else{
           this.isPatient = false;
+        }
+
+        var investigatorRole = roles.find(a=>a == 'Investigator');
+        if(investigatorRole){
+          this.isInvestigator = true;
+        }
+        else{
+          this.isInvestigator = false;
         }
       }
     });

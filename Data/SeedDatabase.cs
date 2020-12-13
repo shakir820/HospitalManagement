@@ -610,6 +610,8 @@ namespace HospitalManagement.Data
                     context.Medicines.AddRange(medicines);
                     context.SaveChanges();
                 }
+                
+
             }
         }
     }

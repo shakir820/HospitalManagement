@@ -156,7 +156,14 @@ export class EditMedicineDialogComponent implements OnInit {
         this.getMedicines(this.medicineName);
 
       } else {
-
+        if(this.medicineExist){
+          this.medicineExist = false;
+        }
+      }
+    }
+    else{
+      if(this.medicineExist){
+        this.medicineExist = false;
       }
     }
   }

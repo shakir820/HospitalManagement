@@ -106,6 +106,12 @@ export class AdminLoginComponent implements OnInit {
      }
   }
 
+  onUsernameInput(event_data){
+    var un:string = this.signinForm.controls['username'].value;
+    if(un.length == 0){
+      this.usernameExist = true;
+    }
+  }
 
 
 }

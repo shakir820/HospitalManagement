@@ -215,23 +215,14 @@ namespace HospitalManagement.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<decimal>("BreakfastTime")
-                        .HasColumnType("decimal(2,2)");
-
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("CustomSchedule")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("DinnerTime")
-                        .HasColumnType("decimal(2,2)");
 
                     b.Property<long>("DoctorId")
                         .HasColumnType("bigint");
 
-                    b.Property<decimal>("LunchTime")
-                        .HasColumnType("decimal(2,2)");
+                    b.Property<string>("Duration")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("MedicineId")
                         .HasColumnType("bigint");
@@ -245,8 +236,8 @@ namespace HospitalManagement.Migrations
                     b.Property<long>("PrescriptionId")
                         .HasColumnType("bigint");
 
-                    b.Property<bool>("ThreeTimesAday")
-                        .HasColumnType("bit");
+                    b.Property<string>("Schedule")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

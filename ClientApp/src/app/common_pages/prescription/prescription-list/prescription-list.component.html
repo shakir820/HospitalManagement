@@ -1,0 +1,99 @@
+<div class="container-fluid">
+
+  <!-- Page Heading -->
+  <div class="mt-2 d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Prescription List</h1>
+  </div>
+
+
+  <div class="card shadow mb-4">
+    <div class="card-header bg-white">
+      <div class="d-flex flex-row align-items-center justify-content-between">
+        <div>
+          <form #f="ngForm" (ngSubmit)="onSearchSubmit()"
+          class="d-none shadow d-sm-inline-block form-inline">
+            <div class="input-group">
+              <input type="text" id="search_string" name="search_string" [(ngModel)]="search_string"
+                    class="form-control small" placeholder="Search doctor" (input)="doctorSearchOnInput($event)" aria-label="Search">
+              <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">
+                  <i class="fas fa-search fa-sm"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <!-- <div>
+          <div class="dropdown no-arrow">
+            <a class="dropdown-toggle" role="button" id="allAppointmentsActionOptionDropdown" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+              <i class="fas fa-ellipsis-v fa-sm fa-fw text-dark"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="allAppointmentsActionOptionDropdown">
+              <div class="dropdown-header">Action:</div>
+              <a class="dropdown-item text-primary" [routerLink]="['/DoctorList']" routerLinkActive="active" >Create New Appointment</a>
+              <a class="dropdown-item text-danger" (click)="onCancelBtnClicked($event)">Cancel All Appointments</a>
+            </div>
+          </div>
+        </div> -->
+      </div>
+       <hr>
+      <div class="row mt-3">
+        <div class="col-sm-5">
+         <div class="d-flex">
+          <a class="flex-fill text-dark" (click)="sortPrescriptionList($event, 'Doctor')">
+            <div class="d-flex">
+              <div>Doctor</div>
+              <div class="ml-3" *ngIf="sortOrderBy == 'Doctor'"><i class="fas fa-sort"></i></div>
+            </div>
+          </a>
+         </div>
+        </div>
+        <div class="col-sm-5">
+          <div class="d-flex">
+            <a class="flex-fill text-dark" (click)="sortPrescriptionList($event, 'Date')">
+              <div class="d-flex">
+                <div>Date</div>
+                <div class="ml-3" *ngIf="sortOrderBy == 'Date'"><i class="fas fa-sort"></i></div>
+              </div>
+            </a>
+           </div>
+        </div>
+        <div class="col-sm-2">
+          <!-- <div>
+           Action
+          </div> -->
+        </div>
+      </div>
+
+    </div>
+    <!-- Card Body -->
+    <div class="card-body p-0">
+
+
+     <div>
+      <div class="row py-2 mx-0" *ngFor="let item of filteredPrescriptionList; even as evenItem" [ngClass]="{'bg-gray-100': evenItem == true}">
+        <div class="col-sm-5">
+         <div class="d-flex align-items-center">
+           <div style="width: 50px; height:50px;"> <app-profile-pic-preview  [user_id]="item.doctor.id"></app-profile-pic-preview></div>
+           <div class="ml-2 name-title">{{ item.doctor.name }}</div>
+         </div>
+        </div>
+        <div class="col-sm-5">
+          <div class="d-flex">
+            <div class="name-title">{{ item.created_date | date: 'mediumDate' }}</div>
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <div class="d-flex flex-row-reverse">
+            <button class="btn btn-primary" (click)="onViewPrescriptionClicked($event, item.id)">View Prescription</button>
+          </div>
+        </div>
+      </div>
+     </div>
+
+
+
+    </div>
+  </div>
+</div>

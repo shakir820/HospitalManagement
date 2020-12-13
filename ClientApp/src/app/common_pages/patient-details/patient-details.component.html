@@ -36,8 +36,9 @@
               <div class="ml-2">{{upcoming_appointment.visiting_price}}TK.</div>
             </div>
             <div class="mt-4">
-              <button *ngIf="upcoming_appointment.consulted != true" (click)="onCreatePrescriptionClicked($event)" class="btn btn-sm btn-primary rounded-pill px-4">Create Prescription</button>
-              <button *ngIf="upcoming_appointment.consulted" class="btn btn-sm btn-primary rounded-pill px-4">View Prescription</button>
+              <button *ngIf="upcoming_appointment.consulted != true" (click)="onCreatePrescriptionClicked($event)"
+              class="btn btn-sm btn-primary rounded-pill px-4">Create Prescription</button>
+              <button *ngIf="upcoming_appointment.consulted" (click)="onUpComingAppointmentViewPrescriptionClicked($event)" class="btn btn-sm btn-primary rounded-pill px-4">View Prescription</button>
             </div>
           </div>
 
@@ -146,7 +147,7 @@
           </div>
           <div class="col-sm-12  col-md-6 col-lg-4">
             <div class=" d-flex justify-content-md-center align-items-center h-100">
-             <button class="btn btn-sm btn-outline-primary">View Prescription</button>
+             <button class="btn btn-sm btn-outline-primary" (click)="pastAppointmentViewPrescription($event, item.id)">View Prescription</button>
             </div>
           </div>
         </div>

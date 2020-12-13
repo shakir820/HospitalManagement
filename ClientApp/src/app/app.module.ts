@@ -38,6 +38,14 @@ import { PresEditInvestigationDialogComponent } from './modal-dialogs/pres-edit-
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PresEditNoteDialogComponent } from './modal-dialogs/pres-edit-note-dialog/pres-edit-note-dialog.component';
 import { TodaysPatientComponent } from './doctor_pages/todays-patient/todays-patient.component';
+import { ViewPrescriptionComponent } from './common_pages/prescription/view-prescription/view-prescription.component';
+import { PrescriptionListComponent } from './common_pages/prescription/prescription-list/prescription-list.component';
+import { StaffLoginComponent } from './staff/staff-login/staff-login.component';
+import { StaffDashboardComponent } from './staff/staff-dashboard/staff-dashboard.component';
+import { AdminStaffListComponent } from './admin/admin-staff-list/admin-staff-list.component';
+import { NewStaffComponent } from './admin/admin-staff-list/new-staff/new-staff.component';
+import { AdminUserListComponent } from './admin/admin-user-list/admin-user-list.component';
+import { EditUserRoleDialogComponent } from './modal-dialogs/edit-user-role-dialog/edit-user-role-dialog.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +78,15 @@ import { TodaysPatientComponent } from './doctor_pages/todays-patient/todays-pat
     PresEditExaminationDialogComponent,
     PresEditInvestigationDialogComponent,
     PresEditNoteDialogComponent,
-    TodaysPatientComponent
+    TodaysPatientComponent,
+    ViewPrescriptionComponent,
+    PrescriptionListComponent,
+    StaffLoginComponent,
+    StaffDashboardComponent,
+    AdminStaffListComponent,
+    NewStaffComponent,
+    AdminUserListComponent,
+    EditUserRoleDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

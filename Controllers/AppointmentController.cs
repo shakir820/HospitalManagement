@@ -433,7 +433,7 @@ namespace HospitalManagement.Controllers
                
                 var doctor_appointments = await _context.DoctorAppointments.Join(_context.Users.Include(a => a.Schedules), outter => outter.DoctorId, inner => inner.Id,
                     (outter, inner) => new { ap = outter, doc = inner }).AsNoTracking().
-                    Where(a => a.ap.PatientId == patient_id && a.ap.AppointmentDate.Date >= today.Date).ToListAsync();
+                    Where(a => a.ap.PatientId == patient_id).ToListAsync();
 
                 var appointmentList = new List<DoctorAppointmentModel>();
                 foreach(var item in doctor_appointments)
@@ -450,6 +450,8 @@ namespace HospitalManagement.Controllers
                     appointment.patient_name = item.ap.PatientName;
                     appointment.serial_no = item.ap.SerialNo;
                     appointment.start_time = item.doc.Schedules.FirstOrDefault(a => a.DayName == item.ap.AppointmentDate.DayOfWeek).StartTime;
+                    appointment.consulted = item.ap.Consulted;
+                    appointment.visiting_price = item.ap.VisitingPrice;
 
                     appointmentList.Add(appointment);
                 }
@@ -483,7 +485,7 @@ namespace HospitalManagement.Controllers
             {
               
                 var today = DateTime.Now;
-                var appointments = await _context.DoctorAppointments.Where(a => a.PatientId == userModel.id && a.AppointmentDate.Date >= today.Date).ToListAsync();
+                var appointments = await _context.DoctorAppointments.Where(a => a.PatientId == userModel.id && a.Consulted == false).ToListAsync();
                 if(appointments.Count > 0)
                 {
                     _context.DoctorAppointments.RemoveRange(appointments);
@@ -636,12 +638,6 @@ namespace HospitalManagement.Controllers
                 });
             }
         }
-
-
-
-
-
-
 
 
 
