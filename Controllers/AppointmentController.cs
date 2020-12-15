@@ -208,6 +208,7 @@ namespace HospitalManagement.Controllers
                     doctor.name = item.doct_role.doctors.Name;
                     doctor.phoneNumber = item.doct_role.doctors.PhoneNumber;
                     doctor.roles = new List<string> { "Doctor" };
+                    doctor.created_date = item.doct_role.doctors.CreatedDate;
                     doctor.state_name = item.doct_role.doctors.state_name;
                     doctor.username = item.doct_role.doctors.UserName;
                     doctor.biography = item.doct_role.doctors.Biography;
@@ -258,13 +259,12 @@ namespace HospitalManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> GetAppointmentSerialNo(DoctorAppointmentModel appointmentModel)
         {
-            //var doctor = await _context.Users.Include(a => a.Schedules).AsNoTracking().FirstOrDefaultAsync(a => a.Id == doctor_id);
-            //var patient = await _context.Users.AsNoTracking().FirstOrDefaultAsync(a => a.Id == user_id);
+          
             try
             {
                 Thread.Sleep(3000);
                 var doctor = await _context.Users.FirstOrDefaultAsync(a => a.Id == appointmentModel.doctor_id);
-                //serial no calculation
+              
                 var appointments = await _context.DoctorAppointments.AsNoTracking().Where(a => a.DoctorId == appointmentModel.doctor_id && 
                 a.AppointmentDate.Date == appointmentModel.appointment_date.Date).ToListAsync();
                 int newSerialNo = 1;
@@ -435,9 +435,23 @@ namespace HospitalManagement.Controllers
                     (outter, inner) => new { ap = outter, doc = inner }).AsNoTracking().
                     Where(a => a.ap.PatientId == patient_id).ToListAsync();
 
+                
+
+
                 var appointmentList = new List<DoctorAppointmentModel>();
                 foreach(var item in doctor_appointments)
                 {
+                    if(item.ap.AppointmentDate.Date < today.Date)
+                    {
+                        if(item.ap.Consulted == false)
+                        {
+                            var ap = await _context.DoctorAppointments.FirstOrDefaultAsync(a => a.Id == item.ap.Id);
+                            _context.DoctorAppointments.Remove(ap);
+                            await _context.SaveChangesAsync();
+                            continue;
+                        }
+                    }
+
                     var appointment = new DoctorAppointmentModel();
                     appointment.appointment_date_str = item.ap.AppointmentDate.ToString();
                     appointment.appointment_date = item.ap.AppointmentDate.Date;

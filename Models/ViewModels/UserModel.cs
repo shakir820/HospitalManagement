@@ -29,6 +29,7 @@ namespace HospitalManagement.Models
         public string bloodGroup { get; set; }
         public IFormFile profilePic { get; set; } 
         public bool isActive { get; set; }
+        public DateTime created_date { get; set; }
 
 
 

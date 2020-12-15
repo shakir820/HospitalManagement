@@ -28,7 +28,7 @@ export class User{
   public country_short_name: string;
   public state_name: string;
   public bloodGroup: string;
-
+  public created_date:Date;
 
 
 

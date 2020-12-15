@@ -62,6 +62,7 @@ namespace HospitalManagement.Controllers
                     patient.country_short_name = u.country_short_name;
                     patient.email = u.Email;
                     patient.gender = u.Gender;
+                    patient.created_date = u.CreatedDate;
                     patient.id = u.Id;
                     patient.isActive = u.IsActive;
                     patient.name = u.Name;
@@ -123,6 +124,7 @@ namespace HospitalManagement.Controllers
                     p.country_phone_code = patient.country_phone_code;
                     p.country_short_name = patient.country_short_name;
                     p.email = patient.Email;
+                    p.created_date = patient.CreatedDate;
                     p.gender = patient.Gender;
                     p.id = patient.Id;
                     p.isActive = patient.IsActive;
@@ -200,6 +202,7 @@ namespace HospitalManagement.Controllers
                     patient.roles = new List<string> { "Patient" };
                     patient.state_name = u.state_name;
                     patient.username = u.UserName;
+                    patient.created_date = u.CreatedDate;
                     patient.approved = u.Approved;
                     patient.biography = u.Biography;
                     patient.bloodGroup = u.BloodGroup;

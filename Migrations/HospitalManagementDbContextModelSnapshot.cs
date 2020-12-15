@@ -104,6 +104,9 @@ namespace HospitalManagement.Migrations
                     b.Property<string>("FileName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("InvestigationStatus")
+                        .HasColumnType("int");
+
                     b.Property<long>("InvestigationTagId")
                         .HasColumnType("bigint");
 

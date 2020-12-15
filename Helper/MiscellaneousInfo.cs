@@ -10,14 +10,22 @@ namespace HospitalManagement.Helper
     public class MiscellaneousInfo
     {
         public static int ConsultDoctorTimeDurationInMins = 10;
-        
+        public static string InvestigationDoc_Link = "api/Investigation/GetInvestigationFile?investigation_id=";
     }
 
 
     public class ModelBindingResolver
     {
+      
+
+
         public static UserModel ResolveUser(User dbUser, List<string> dbUserRoles = null)
         {
+            if(dbUser == null)
+            {
+                return null;
+            }
+
             var user = new UserModel();
             user.age = dbUser.Age;
             user.approved = dbUser.Approved;
@@ -52,6 +60,7 @@ namespace HospitalManagement.Helper
             user.new_patient_visiting_price = dbUser.NewPatientVisitingPrice;
             user.old_patient_visiting_price = dbUser.OldPatientVisitingPrice;
             user.phoneNumber = dbUser.PhoneNumber;
+            user.created_date = dbUser.CreatedDate;
             user.roles = new List<string>();
 
             if(dbUserRoles != null)
@@ -172,6 +181,25 @@ namespace HospitalManagement.Helper
 
             return prescription;
 
+        }
+
+
+        public static InvestigationDocModel ResolveInvestigationDoc(InvestigationDoc investigation, UserModel doctor = null, UserModel patient = null, UserModel investigator = null)
+        {
+            var inv = new InvestigationDocModel();
+            inv.abbreviation = investigation.Abbreviation;
+            inv.created_date = investigation.CreatedDate;
+            inv.doctor = doctor;
+            inv.file_name = investigation.FileName;
+            inv.id = investigation.Id;
+            inv.investigation_status = investigation.InvestigationStatus;
+            inv.investigation_tag_id = investigation.InvestigationTagId;
+            inv.investigator = investigator;
+            inv.name = investigation.Name;
+            inv.patient = patient;
+            inv.prescription_id = investigation.PrescriptionId;
+
+            return inv;
         }
     }
 }

@@ -171,28 +171,28 @@ export class PatientDetailsComponent implements OnInit {
         this.investigationGroupList = [];
 
         result.investigations.forEach(inv => {
-         var investigation = new InvestigationDoc();
-         investigation.abbreviation = inv.abbreviation;
-         investigation.created_date = new Date(inv.created_date);
-         investigation.doctor_id = inv.doctor_id;
-         investigation.file_location = `${this._baseUrl}api/Investigation/GetInvestigationFile?investigation_id=${inv.id}`;
-         investigation.id = inv.id;
-         investigation.investigation_tag_id = inv.investigation_tag_id;
-         investigation.investigator_id = inv.investigator_id;
-         investigation.name = inv.name;
-         investigation.patient_id = inv.patient_id;
-         investigation.prescription_id = inv.prescription_id;
+        //  var investigation = new InvestigationDoc();
+        //  investigation.abbreviation = inv.abbreviation;
+        //  investigation.created_date = new Date(inv.created_date);
+        //  investigation.doctor = inv.doctor_id;
+         inv.file_location = `${this._baseUrl}api/Investigation/GetInvestigationFile?investigation_id=${inv.id}`;
+        //  investigation.id = inv.id;
+        //  investigation.investigation_tag_id = inv.investigation_tag_id;
+        //  investigation.investigator_id = inv.investigator_id;
+        //  investigation.name = inv.name;
+        //  investigation.patient_id = inv.patient_id;
+        //  investigation.prescription_id = inv.prescription_id;
 
-         var test_item = this.investigationGroupList.find( a => a.group_name == investigation.abbreviation);
+         var test_item = this.investigationGroupList.find( a => a.group_name == inv.abbreviation);
          if(test_item != undefined || test_item != null){
-           test_item.investigations.push(investigation);
+           test_item.investigations.push(inv);
          }
          else{
            var gp = {
-             group_name: investigation.abbreviation,
+             group_name: inv.abbreviation,
              investigations: []
             };
-            gp.investigations.push(investigation);
+            gp.investigations.push(inv);
             this.investigationGroupList.push(gp);
          }
         });

@@ -46,6 +46,10 @@ import { AdminStaffListComponent } from './admin/admin-staff-list/admin-staff-li
 import { NewStaffComponent } from './admin/admin-staff-list/new-staff/new-staff.component';
 import { AdminUserListComponent } from './admin/admin-user-list/admin-user-list.component';
 import { EditUserRoleDialogComponent } from './modal-dialogs/edit-user-role-dialog/edit-user-role-dialog.component';
+import { MyInvestigationListComponent } from './common_pages/investigation/my-investigation-list/my-investigation-list.component';
+import { RequesedInvestigationListComponent } from './common_pages/investigation/requesed-investigation-list/requesed-investigation-list.component';
+import { AssignedInvestigationListComponent } from './common_pages/investigation/assigned-investigation-list/assigned-investigation-list.component';
+import { RequestedInvestigationListComponent } from './common_pages/investigation/requested-investigation-list/requested-investigation-list.component';
 
 @NgModule({
   declarations: [
@@ -86,7 +90,11 @@ import { EditUserRoleDialogComponent } from './modal-dialogs/edit-user-role-dial
     AdminStaffListComponent,
     NewStaffComponent,
     AdminUserListComponent,
-    EditUserRoleDialogComponent
+    EditUserRoleDialogComponent,
+    MyInvestigationListComponent,
+    RequesedInvestigationListComponent,
+    AssignedInvestigationListComponent,
+    RequestedInvestigationListComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

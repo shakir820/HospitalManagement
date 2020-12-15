@@ -55,13 +55,25 @@ export class AdminUserListComponent implements OnInit {
 
 
   onActivateUser(event_data, user_id){
-
+    var user = this.user_list.find(a => a.id == user_id);
+    this.httpClient.get<{success: boolean, error: boolean, error_msg: string}>
+    (this._baseUrl + 'api/admin/ActivateUser', {params: { id: user.id.toString()} }).subscribe(result => {
+      if(result.success){
+        user.isActive = true;
+      }
+    });
   }
 
 
 
   onDeactivateUser(event_data, user_id){
-
+    var user = this.user_list.find(a => a.id == user_id);
+    this.httpClient.get<{success: boolean, error: boolean, error_msg: string}>
+    (this._baseUrl + 'api/admin/DeactivateUser', {params: { id: user.id.toString()} }).subscribe(result => {
+      if(result.success){
+        user.isActive = false;
+      }
+    });
   }
 
 

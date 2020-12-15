@@ -137,7 +137,7 @@ namespace HospitalManagement.Controllers
                             investigation.DoctorId = (long)prescription.doctor.id;
                             investigation.InvestigationTagId = item.investigation_tag_id;
                             investigation.Name = item.name;
-                            investigation.PatientId = item.patient_id;
+                            investigation.PatientId = (long)item.patient.id;
                             investigation.PrescriptionId = p.Id;
 
                             _context.InvestigationDocs.Add(investigation);
@@ -329,7 +329,7 @@ namespace HospitalManagement.Controllers
                             investigation.DoctorId = (long)prescription.doctor.id;
                             investigation.InvestigationTagId = item.investigation_tag_id;
                             investigation.Name = item.name;
-                            investigation.PatientId = item.patient_id;
+                            investigation.PatientId = (long)item.patient.id;
                             investigation.PrescriptionId = p.Id;
 
                             _context.InvestigationDocs.Add(investigation);
@@ -481,18 +481,16 @@ namespace HospitalManagement.Controllers
 
                     foreach (var item in p_investigations)
                     {
-                        var investigation = new InvestigationDocModel();
-                        investigation.abbreviation = item.Abbreviation;
-                        investigation.created_date = item.CreatedDate;
-                        investigation.doctor_id = item.DoctorId;
-                        investigation.file_location = item.FileLocation;
-                        investigation.file_name = item.FileName;
-                        investigation.id = item.Id;
-                        investigation.investigation_tag_id = item.InvestigationTagId;
-                        investigation.investigator_id = item.InvestigatorId;
-                        investigation.name = item.Name;
-                        investigation.patient_id = item.PatientId;
-                        investigation.prescription_id = item.PrescriptionId;
+                        UserModel investigator = null;
+
+                        var db_investigator = await _context.Users.FirstOrDefaultAsync(a => a.Id == item.InvestigatorId);
+                        if(db_investigator != null)
+                        {
+                            investigator = ModelBindingResolver.ResolveUser(db_investigator);
+                        }
+                        
+                        var investigation = ModelBindingResolver.ResolveInvestigationDoc(item, prescription.doctor, prescription.patient, investigator);
+                        investigation.file_location = Url.Content($"~/api/Investigation/GetInvestigationFile?investigation_id={investigation.id}");
 
                         prescription.patient_investigations.Add(investigation);
                     }
@@ -578,27 +576,6 @@ namespace HospitalManagement.Controllers
         {
             try
             {
-                //var prescription = await _context.Prescriptions.Include(a => a.Notes).Include(a => a.Examinations).Include(a => a.PatientComplains).
-                //    GroupJoin(_context.InvestigationDocs, outter => outter.Id, innet => innet.PrescriptionId, (outter, inner) => new
-                //    {
-                //        pres = outter,
-                //        investigations = inner.ToList()
-                //    }).GroupJoin(_context.PrescriptionMedicines, outter => outter.pres.Id, inner => inner.PrescriptionId, (outter, inner) => new 
-                //    { 
-                //        pres = outter, 
-                //        medicine_list = inner.ToList() 
-                //    }).Join(_context.Users, outter => outter.pres.pres.DoctorId, inner => inner.Id, (outter, inner)=> new 
-                //    { 
-                //        pres = outter, 
-                //        doctor = inner
-                //    }).Join(_context.Users, outter => outter.pres.pres.pres.PatientId, inner => inner.Id, (outter, inner)=> new 
-                //    { 
-                //        pres = outter, 
-                //        patient = inner 
-                //    }).AsNoTracking().FirstOrDefaultAsync(a => a.pres.pres.pres.pres.Id == prescription_id);
-
-
-
                 var pres_patient_doctor = await _context.Prescriptions.Include(a => a.Examinations).Include(a => a.Notes).Include(a => a.PatientComplains).
                   Join(_context.Users, outter => outter.PatientId, inner => inner.Id, (outter, inner) => new { pres = outter, patient = inner }).
                   Join(_context.Users, outter => outter.pres.DoctorId, inner => inner.Id, (outter, inner) => new { pres_patient = outter, doctor = inner }).
@@ -661,21 +638,17 @@ namespace HospitalManagement.Controllers
 
                 foreach(var item in investigations)
                 {
-                    var inv = new InvestigationDocModel();
-                    inv.abbreviation = item.Abbreviation;
-                    inv.created_date = item.CreatedDate;
-                    inv.doctor_id = item.DoctorId;
-                    inv.file_location = item.FileLocation;
-                    inv.file_name = item.FileName;
-                    inv.id = item.Id;
-                    inv.investigation_tag_id = item.InvestigationTagId;
-                    inv.investigator_id = item.InvestigatorId;
-                    inv.name = item.Name;
-                    inv.patient_id = item.PatientId;
-                    inv.prescription_id = item.PrescriptionId;
-
-
-                    pres.patient_investigations.Add(inv);
+                    var db_investigator = await _context.Users.FirstOrDefaultAsync(a => a.Id == item.InvestigatorId);
+                    UserModel investigator = null;
+                    if(db_investigator != null)
+                    {
+                        investigator = ModelBindingResolver.ResolveUser(db_investigator);
+                        
+                    }
+                    var investigation = ModelBindingResolver.ResolveInvestigationDoc(item, pres.doctor, pres.patient, investigator);
+                    investigation.file_location = Url.Content($"~/api/Investigation/GetInvestigationFile?investigation_id={investigation.id}");
+                  
+                    pres.patient_investigations.Add(investigation);
                 }
 
 

@@ -7,6 +7,10 @@ import { AdminLoginComponent } from "./admin/admin-login/admin-login.component";
 import { AdminStaffListComponent } from "./admin/admin-staff-list/admin-staff-list.component";
 import { NewStaffComponent } from "./admin/admin-staff-list/new-staff/new-staff.component";
 import { AdminUserListComponent } from "./admin/admin-user-list/admin-user-list.component";
+import { AssignedInvestigationListComponent } from "./common_pages/investigation/assigned-investigation-list/assigned-investigation-list.component";
+import { MyInvestigationListComponent } from "./common_pages/investigation/my-investigation-list/my-investigation-list.component";
+import { RequesedInvestigationListComponent } from "./common_pages/investigation/requesed-investigation-list/requesed-investigation-list.component";
+import { RequestedInvestigationListComponent } from "./common_pages/investigation/requested-investigation-list/requested-investigation-list.component";
 import { PatientDetailsComponent } from "./common_pages/patient-details/patient-details.component";
 import { CreatePrescriptionComponent } from "./common_pages/prescription/create-prescription/create-prescription.component";
 import { PrescriptionListComponent } from "./common_pages/prescription/prescription-list/prescription-list.component";
@@ -56,6 +60,9 @@ export const appRoutes: Routes = [
   { path: 'admin/StaffList', component: AdminStaffListComponent, canActivate:[AdminPagesCanActivateService] },
   { path: 'admin/StaffList/CreateNewStaff', component: NewStaffComponent, canActivate: [AdminPagesCanActivateService]},
   { path: 'admin/UserList', component: AdminUserListComponent, canActivate: [AdminPagesCanActivateService]},
+  { path: 'Investigation/MyInvestigationList', component: MyInvestigationListComponent, canActivate: [UserPagesCanActivateService]},
+  { path: 'Investigation/AssignedInvestigationList', component: AssignedInvestigationListComponent, canActivate: [UserPagesCanActivateService]},
+  { path: 'Investigation/RequestedInvestigationList', component: RequestedInvestigationListComponent, canActivate: [UserPagesCanActivateService]},
   { path: '**', redirectTo: "" },
 ]
 

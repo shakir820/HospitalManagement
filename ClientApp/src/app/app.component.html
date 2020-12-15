@@ -285,6 +285,24 @@
           </div>
         </li>
 
+
+        <li class="nav-item" style="cursor: pointer;" *ngIf="isPatient || isInvestigator">
+          <a class="nav-link collapsed" data-toggle="collapse" data-target="#investigationCollapse" aria-expanded="true" aria-controls="patientCollapse">
+            <i class="fad fa-user-injured"></i>
+            <span>Investigation</span>
+          </a>
+          <div id="investigationCollapse" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+              <h6 class="collapse-header">Investigation Filter:</h6>
+              <a class="collapse-item" [routerLink]="['Investigation/MyInvestigationList']" routerLinkActive="active" *ngIf="isPatient" >My Investigations</a>
+              <a class="collapse-item" [routerLink]="['Investigation/AssignedInvestigationList']" routerLinkActive="active" *ngIf="isInvestigator">Assigned Investigations</a>
+              <a class="collapse-item" [routerLink]="['Investigation/RequestedInvestigationList']" routerLinkActive="active" *ngIf="isInvestigator">Requested Investigations</a>
+            </div>
+          </div>
+        </li>
+
+
+
         <li class="nav-item" routerLinkActive="active" *ngIf="isPatient">
           <a class="nav-link" [routerLink]="['Prescription/PrescriptionList']">
             <i class="fas fa-fw fa-prescription"></i>

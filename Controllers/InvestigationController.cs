@@ -1,4 +1,5 @@
 ﻿using HospitalManagement.Data;
+using HospitalManagement.Helper;
 using HospitalManagement.Models.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -36,57 +37,26 @@ namespace HospitalManagement.Controllers
 
             try
             {
-                var invList = await _context.InvestigationDocs.AsNoTracking().Where(a => a.PatientId == patient_id).ToListAsync();
+                var invList = await _context.InvestigationDocs.Join(_context.Users, o => o.PatientId, i => i.Id, (o, i) => new { inv = o, patient = i }).
+                    Join(_context.Users, o => o.inv.DoctorId, i => i.Id, (o, i) => new { inv_patient = o, doctor = i}).
+                    Join(_context.Users, o => o.inv_patient.inv.InvestigatorId, i => i.Id, (o, i) => new { inv_pa_doc = o, investigator = i }).
+                    AsNoTracking().Where(a => a.inv_pa_doc.inv_patient.inv.PatientId == patient_id).ToListAsync();
 
                 var investigations = new List<InvestigationDocModel>();
 
-
-
-                for (var i = 1; i < 21; i++)
+                foreach(var item in invList)
                 {
-                    var inv = new InvestigationDocModel();
-                    if(i < 10)
-                    {
-                        inv.abbreviation = "GOLD";
-                    }
-                    else
-                    {
-                        inv.abbreviation = "SILVER";
-                    }
-                    
-                    inv.created_date = DateTime.Now;
-                    inv.doctor_id = i + 10;
-                    inv.file_location = "I don't know yet";
-                    inv.file_name = "Lorem Imsum";
-                    inv.id = i;
-                    inv.investigation_tag_id = i + 2;
-                    inv.investigator_id = i + 3;
-                    inv.name = "Lorem Ipsum";
-                    inv.patient_id = 5;
-                    inv.prescription_id = i + 4;
+                    var doc = item.inv_pa_doc.doctor;
+                    var pat = item.inv_pa_doc.inv_patient.patient;
+                    var invgtr = item.investigator;
+                    var doctor = ModelBindingResolver.ResolveUser(doc);
+                    var patient = ModelBindingResolver.ResolveUser(pat);
+                    var investigator = ModelBindingResolver.ResolveUser(invgtr);
+                    var investigation = ModelBindingResolver.ResolveInvestigationDoc(item.inv_pa_doc.inv_patient.inv, doctor, patient, investigator);
+                    investigation.file_location = Url.Content($"~/{MiscellaneousInfo.InvestigationDoc_Link}{investigation.id}");
 
-                    investigations.Add(inv);
+                    investigations.Add(investigation);
                 }
-
-                //foreach ( var item in invList)
-                //{
-                //    var inv = new InvestigationDocModel();
-                //    inv.abbreviation = item.Abbreviation;
-                //    inv.created_date = item.CreatedDate;
-                //    inv.doctor_id = item.DoctorId;
-                //    inv.file_location = item.FileLocation;
-                //    inv.file_name = item.FileName;
-                //    inv.id = item.Id;
-                //    inv.investigation_tag_id = item.InvestigationTagId;
-                //    inv.investigator_id = item.InvestigatorId;
-                //    inv.name = item.Name;
-                //    inv.patient_id = item.PatientId;
-                //    inv.prescription_id = item.PrescriptionId;
-
-
-                //    investigations.Add(inv);
-                //}
-
 
                 return new JsonResult(new
                 {
@@ -162,5 +132,9 @@ namespace HospitalManagement.Controllers
             }
            
         }
+
+
+
+
     }
 }

@@ -92,6 +92,7 @@ namespace HospitalManagement.Controllers
                                     approved = user.Approved,
                                     id = user.Id,
                                     name = user.Name,
+                                    created_date = user.CreatedDate,
                                     roles = role_collection.ToList(),
                                     phoneNumber = user.PhoneNumber,
                                     state_name = user.state_name,
@@ -163,6 +164,7 @@ namespace HospitalManagement.Controllers
             newAdminUser.Name = "Admin";
             newAdminUser.UserName = "Admin";
             newAdminUser.Approved = true;
+            newAdminUser.CreatedDate = DateTime.Now;
             var createAdminResult = await _userManager.CreateAsync(newAdminUser, "admin1234");
             if (createAdminResult.Succeeded)
             {
@@ -216,6 +218,7 @@ namespace HospitalManagement.Controllers
                     doctor.gender = item.Gender;
                     doctor.id = item.Id;
                     doctor.name = item.Name;
+                    doctor.created_date = item.CreatedDate;
                     doctor.phoneNumber = item.PhoneNumber;
                     doctor.roles = new List<string> { "Doctor" };
                     doctor.state_name = item.state_name;
@@ -269,6 +272,7 @@ namespace HospitalManagement.Controllers
                     doctor.gender = item.Gender;
                     doctor.isActive = item.IsActive;
                     doctor.id = item.Id;
+                    doctor.created_date = item.CreatedDate;
                     doctor.name = item.Name;
                     doctor.phoneNumber = item.PhoneNumber;
                     doctor.roles = new List<string> { "Doctor" };
@@ -488,6 +492,7 @@ namespace HospitalManagement.Controllers
                     _doctor.country_phone_code = user.country_phone_code;
                     _doctor.country_short_name = user.country_short_name;
                     _doctor.degree_title = user.DegreeTittle;
+                    _doctor.created_date = user.CreatedDate;
                     _doctor.doctor_title = user.DoctorTitle;
                     _doctor.email = user.Email;
                     _doctor.experience = user.year_of_Experience;
