@@ -22,7 +22,7 @@ namespace HospitalManagement.Models
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         public bool IsActive { get; set; } = true;
 
-
+        public string Address { get; set; }
 
 
         //doctor's profile info

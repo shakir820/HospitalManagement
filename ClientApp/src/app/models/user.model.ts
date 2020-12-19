@@ -29,7 +29,7 @@ export class User{
   public state_name: string;
   public bloodGroup: string;
   public created_date:Date;
-
+  public address: string;
 
 
   //appointment info

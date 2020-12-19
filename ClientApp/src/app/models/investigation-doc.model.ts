@@ -9,6 +9,8 @@ export class InvestigationDoc{
   file_location: string;
   file_name: string;
   created_date: Date;
+  result_publish_date:Date;
+  sample_submit_date:Date;
   doctor: User;
   patient: User;
   investigator:User;
@@ -20,8 +22,8 @@ export class InvestigationDoc{
 
  export enum InvestigationStatus
 {
-    Completed,
-    Inprogress,
-    Pending,
-    Canceled
+    Completed = 3,
+    Inprogress = 1,
+    Pending = 0,
+    Canceled = 2
 }

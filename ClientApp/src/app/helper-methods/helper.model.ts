@@ -47,7 +47,7 @@ export class Helper {
 
 
   static converDateToTimeString(date: Date): string {
-    var date_string = date.toTimeString();
+    var date_string = (new Date(date)).toTimeString();
     var time_array = date_string.split(':');
     var time_string = `${time_array[0]}:${time_array[1]}`;
     return time_string;

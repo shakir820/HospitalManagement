@@ -125,6 +125,12 @@ namespace HospitalManagement.Migrations
                     b.Property<long>("PrescriptionId")
                         .HasColumnType("bigint");
 
+                    b.Property<DateTime>("ResultPublishDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("SampleSubmitDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.ToTable("InvestigationDocs");
@@ -412,6 +418,9 @@ namespace HospitalManagement.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Age")
                         .HasColumnType("int");

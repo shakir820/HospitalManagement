@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { NgxDropzoneModule } from 'ngx-dropzone';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -47,9 +48,10 @@ import { NewStaffComponent } from './admin/admin-staff-list/new-staff/new-staff.
 import { AdminUserListComponent } from './admin/admin-user-list/admin-user-list.component';
 import { EditUserRoleDialogComponent } from './modal-dialogs/edit-user-role-dialog/edit-user-role-dialog.component';
 import { MyInvestigationListComponent } from './common_pages/investigation/my-investigation-list/my-investigation-list.component';
-import { RequesedInvestigationListComponent } from './common_pages/investigation/requesed-investigation-list/requesed-investigation-list.component';
 import { AssignedInvestigationListComponent } from './common_pages/investigation/assigned-investigation-list/assigned-investigation-list.component';
 import { RequestedInvestigationListComponent } from './common_pages/investigation/requested-investigation-list/requested-investigation-list.component';
+import { InvestigationStatusPipe } from './pipes/investigation-status.pipe';
+import { InvestigationDetailsComponent } from './common_pages/investigation/investigation-details/investigation-details.component';
 
 @NgModule({
   declarations: [
@@ -92,9 +94,10 @@ import { RequestedInvestigationListComponent } from './common_pages/investigatio
     AdminUserListComponent,
     EditUserRoleDialogComponent,
     MyInvestigationListComponent,
-    RequesedInvestigationListComponent,
     AssignedInvestigationListComponent,
-    RequestedInvestigationListComponent
+    RequestedInvestigationListComponent,
+    InvestigationStatusPipe,
+    InvestigationDetailsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -102,8 +105,8 @@ import { RequestedInvestigationListComponent } from './common_pages/investigatio
     FormsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    NgbModule
-
+    NgbModule,
+    NgxDropzoneModule
   ],
   providers: [CookieService],
   bootstrap: [AppComponent]

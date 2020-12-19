@@ -3,6 +3,7 @@ import { WeekDay } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import Swal from 'sweetalert2';
 import { Helper } from '../helper-methods/helper.model';
 import { Language } from '../models/langauge.model';
 import { Schedule } from '../models/schedule.model';
@@ -68,6 +69,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   //#region  variables
   //variables
+  user_address: string;
   _baseUrl: string
   genders: string[] = ["Male", "Female", "Other"];
   location_service: LocationService;
@@ -75,7 +77,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   isUniqueEmailAddress: boolean = true;
   selectedGender: string = "Male";
   selectedRole: string = "Patient";
-  roles: string[] = ['Doctor', 'Patient'];
+  roles: string[] = ['Doctor', 'Patient', 'Staff'];
   email: string;
   proposedEmail: string;
   registering: boolean = false;
@@ -931,9 +933,23 @@ export class ProfileComponent implements OnInit, AfterViewInit {
             this.userService.clearUserData('/admin');
             this.userService.SaveUserCredientials();
 
+            Swal.fire({
+              icon: 'success',
+              title: 'Success!',
+              text: 'Profile data saved',
+              confirmButtonText: 'Ok'
+            });
+
           }
           else {
             this.error_msg = result.error_msg;
+
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: result.error_msg,
+              confirmButtonText: 'Ok'
+            });
           }
         }, error => {
           console.error(error);

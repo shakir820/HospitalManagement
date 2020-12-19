@@ -271,7 +271,7 @@
           </a>
         </li>
 
-        <li class="nav-item" style="cursor: pointer;" *ngIf="isDoctor">
+        <li class="nav-item" style="cursor: pointer;" *ngIf="isDoctor && userService.user.approved">
           <a class="nav-link collapsed" data-toggle="collapse" data-target="#patientCollapse" aria-expanded="true" aria-controls="patientCollapse">
             <i class="fad fa-user-injured"></i>
             <span>Patients</span>

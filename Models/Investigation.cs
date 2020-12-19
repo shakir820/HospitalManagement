@@ -18,6 +18,8 @@ namespace HospitalManagement.Models
         public string FileLocation { get; set; }
         public string FileName { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public DateTime ResultPublishDate { get; set; }
+        public DateTime SampleSubmitDate { get; set; }
         public DateTime ModifiedDate { get; set; }
         public InvestigationStatus InvestigationStatus { get; set; } = InvestigationStatus.Pending;
     }
@@ -26,10 +28,10 @@ namespace HospitalManagement.Models
 
     public enum InvestigationStatus
     {
-        Completed,
-        Inprogress,
-        Pending,
-        Canceled
+        Completed = 3,
+        Inprogress = 1,
+        Pending = 0,
+        Canceled = 2
     }
 
 
