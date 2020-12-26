@@ -7,6 +7,7 @@ export class InvestigationDoc{
   name: string;
   abbreviation:string;
   file_location: string;
+  file_link: string;
   file_name: string;
   created_date: Date;
   result_publish_date:Date;
@@ -14,7 +15,8 @@ export class InvestigationDoc{
   doctor: User;
   patient: User;
   investigator:User;
-  investigation_status: InvestigationStatus
+  investigation_status: InvestigationStatus;
+  content_type: string;
 }
 
 

@@ -32,7 +32,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     this.proposedUsername = this.userService.user.username;
     this.selectedGender = this.userService.user.gender;
     this.selectedRole = this.userService.user.roles[0];
-
+    this.user_address = this.userService.user.address;
     if (this.selectedRole == 'Doctor') {
       this.showDoctorInfoForm = true;
     }
@@ -716,6 +716,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
         }
 
         formData.append('age', this.profileForm.controls['age'].value);
+        formData.append('address', this.user_address);
 
         if (this.proposedUsername != this.userName) {
           formData.append('username', this.proposedUsername);

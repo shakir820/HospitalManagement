@@ -14,4 +14,5 @@ export class DoctorAppointment{
   end_time:Date;
   consulted: boolean;
   visiting_price: number;
+  is_new_patient: boolean;
 }

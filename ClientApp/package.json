@@ -26,6 +26,7 @@
     "@nguniversal/module-map-ngfactory-loader": "8.1.1",
     "@swimlane/ngx-datatable": "^18.0.0",
     "@types/jquery": "^3.5.4",
+    "apexcharts": "^3.23.0",
     "aspnet-prerendering": "^3.0.1",
     "bootstrap": "^4.5.3",
     "core-js": "^3.3.3",

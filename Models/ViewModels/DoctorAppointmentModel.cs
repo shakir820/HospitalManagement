@@ -12,6 +12,7 @@ namespace HospitalManagement.Models.ViewModels
         public long doctor_id { get; set; }
         public long serial_no { get; set; }
         public string patient_name { get; set; }
+        public bool is_new_patient { get; set; } = true;
         public string doctor_name { get; set; }
         public bool consulted { get; set; }
         public decimal visiting_price { get; set; }

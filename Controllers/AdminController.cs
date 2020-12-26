@@ -116,6 +116,7 @@ namespace HospitalManagement.Controllers
                         {
                             error = true,
                             success = false,
+                            wrong_password = true,
                             error_msg = "Login failed"
                         });
                     }
@@ -575,6 +576,80 @@ namespace HospitalManagement.Controllers
 
 
 
+
+        public async Task<IActionResult> GetAdminSummary()
+        {
+            try
+            {
+                long total_patient = 0;
+                long total_doctor = 0;
+                long total_staff = 0;
+                long total_pending_doctor = 0;
+                int total_pending_investigation = 0;
+                int total_completed_investigation = 0;
+                int total_inprogress_investigation = 0;
+
+                var today = DateTime.Now;
+                var this_month = new DateTime(today.Year, today.Month, today.Day);
+
+
+                var patient_role = await _context.Roles.FirstOrDefaultAsync(a => a.Name == "Patient");
+                if (patient_role != null)
+                {
+                    total_patient = await  _context.UserRoles.Where(a => a.RoleId == patient_role.Id).CountAsync();
+                }
+
+                var doctor_role = await _context.Roles.FirstOrDefaultAsync(a => a.Name == "Doctor");
+
+                if(doctor_role != null)
+                {
+                    total_doctor = await _context.UserRoles.Where(a => a.RoleId == doctor_role.Id).CountAsync();
+                    total_pending_doctor = await _context.Users.Join(_context.UserRoles, o => o.Id, i => i.UserId, (o, i) => new 
+                    { 
+                        user = o, 
+                        user_role = i 
+                    }).Where(a => a.user_role.RoleId == doctor_role.Id && a.user.Approved == false).CountAsync();
+                }
+
+                var staff_role = await _context.Roles.FirstOrDefaultAsync(a => a.Name == "Staff");
+
+                if(staff_role != null)
+                {
+                    total_staff = await _context.UserRoles.Where(a => a.RoleId == staff_role.Id).CountAsync();
+                }
+
+                total_completed_investigation = await _context.InvestigationDocs.Where(a => a.InvestigationStatus == InvestigationStatus.Completed && a.CreatedDate >= this_month).CountAsync();
+                total_inprogress_investigation = await _context.InvestigationDocs.Where(a => a.InvestigationStatus == InvestigationStatus.Inprogress && a.CreatedDate >= this_month).CountAsync();
+                total_pending_investigation = await _context.InvestigationDocs.Where(a => a.InvestigationStatus == InvestigationStatus.Pending && a.CreatedDate >= this_month).CountAsync();
+
+
+
+                return new JsonResult(new
+                {
+                    success = true,
+                    error = false,
+                    total_completed_investigation,
+                    total_inprogress_investigation,
+                    total_pending_investigation,
+                    total_pending_doctor,
+                    total_patient,
+                    total_doctor,
+                    total_staff
+                });
+
+
+
+            }
+            catch(Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = ex.Message
+                });
+            }
+        }
       
     }
 }

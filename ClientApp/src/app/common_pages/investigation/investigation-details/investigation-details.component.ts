@@ -31,6 +31,9 @@ export class InvestigationDetailsComponent implements OnInit {
   canAssignToMe: boolean = false;
   canView:boolean = false;
   assigningToMe: boolean = false;
+  unassigning: boolean = false;
+  savingInvestigation: boolean = false;
+  fileIsRequiredError: boolean = false;
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -103,10 +106,6 @@ export class InvestigationDetailsComponent implements OnInit {
   onAssignToMeClicked(){
     this.assigningToMe = true;
 
-    var formdata = new FormData()
-    formdata.append('investigator_id', this.userService.user.id.toString());
-    formdata.append('investigation_id', this.investigation_id.toString());
-
     var inv = new InvestigationDoc();
     inv.id = this.investigation_id;
     inv.investigator = new User();
@@ -145,6 +144,98 @@ export class InvestigationDetailsComponent implements OnInit {
       }
     });
   }
+
+
+
+
+
+  onUnassignClicked(){
+    if(this.investigation.investigation_status == InvestigationStatus.Inprogress){
+      this.unassigning = true;
+
+      this.httpClient.post<{
+        success : boolean,
+        error: boolean,
+        error_msg: string
+      }>(this._baseUrl + 'api/Investigation/UnassignInvestigation', { id: this.investigation.id }).subscribe(result =>{
+        this.unassigning = false;
+
+        if(result.success){
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Unassigned'
+          });
+          this.investigation.investigation_status = InvestigationStatus.Pending;
+          this.investigation.investigator = undefined;
+          this.canView = false;
+          this.canEdit = false;
+          this.canAssignToMe = true;
+        }
+        else{
+          Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: result.error_msg
+          });
+        }
+      });
+    }
+  }
+
+
+
+
+
+
+  onFileSubmit(){
+    if(this.investigationFile == undefined){
+      this.fileIsRequiredError = true;
+      return;
+    }
+
+    this.savingInvestigation = true;
+
+    var formData = new FormData();
+    formData.append('id', this.investigation.id.toString());
+    formData.append('investigation_file', this.investigationFile, this.investigationFile.name);
+
+
+
+    this.httpClient.post<{
+      success: boolean,
+      error: boolean,
+      error_msg: string,
+      investigation: InvestigationDoc
+    }>(this._baseUrl + 'api/investigation/UploadInvestigationFile', formData, { headers: { 'enctype': 'multipart/form-data' } }).subscribe(result =>{
+      this.savingInvestigation = false;
+      if(result.success){
+        this.investigation = result.investigation;
+
+        // this.canEdit = false;
+        // this.canView = true;
+        // this.canAssignToMe = false;
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Document saved'
+        });
+
+      }
+      else{
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: result.error_msg
+        });
+
+      }
+    });
+
+  }
+
+
 
 
 

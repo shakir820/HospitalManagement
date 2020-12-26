@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using HospitalManagement.Data;
+using HospitalManagement.Helper;
 using HospitalManagement.Models;
 using HospitalManagement.Models.ViewModels;
 using Microsoft.AspNetCore.Hosting;
@@ -654,6 +655,104 @@ namespace HospitalManagement.Controllers
         }
 
 
+
+
+
+
+        public async Task<IActionResult> GetTodayAppointmentsByDoctor(long doctor_id)
+        {
+            try
+            {
+                var today = DateTime.Now;
+                var db_app_patients = await _context.DoctorAppointments.Join(_context.Users, o => o.PatientId, i => i.Id, (o, i) => new
+                {
+                    appointment = o,
+                    patient = i
+                }).AsNoTracking().Where(a => a.appointment.AppointmentDate.Date == today.Date & a.appointment.DoctorId == doctor_id).ToListAsync();
+
+                var db_doctor = await _context.Users.Include(a => a.Schedules).AsNoTracking().FirstOrDefaultAsync(a => a.Id == doctor_id);
+
+                var appointment_list = new List<DoctorAppointmentModel>();
+
+                foreach(var app_item in db_app_patients)
+                {
+                    var appointment = ModelBindingResolver.ResovleAppointment(app_item.appointment, ModelBindingResolver.ResolveUser(db_doctor));
+
+                    if(appointment.visiting_price == db_doctor.OldPatientVisitingPrice)
+                    {
+                        appointment.is_new_patient = false;
+                    }
+                    else
+                    {
+                        appointment.is_new_patient = true;
+                    }
+
+                    appointment_list.Add(appointment);
+                    
+                }
+
+                Thread.Sleep(3000);
+
+                return new JsonResult(new
+                {
+                    success = true,
+                    error = false,
+                    appointment_list
+                });
+            }
+            catch(Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = ex.Message
+                });
+            }
+        }
+
+
+
+
+
+
+
+        public async Task<IActionResult> GetUpcomingAppointmentsByPatient(long patient_id)
+        {
+            try
+            {
+                var today = DateTime.Now;
+                var db_apps = await _context.DoctorAppointments.Join(_context.Users.Include(a => a.Schedules), o => o.DoctorId, i => i.Id, (o, i) => new
+                {
+                    app = o,
+                    doc = i
+                }).AsNoTracking().Where(a => a.app.PatientId == patient_id && a.app.AppointmentDate.Date == today.Date).ToListAsync();
+
+                var appointment_list = new List<DoctorAppointmentModel>();
+                foreach(var item in db_apps)
+                {
+                    var appointment = ModelBindingResolver.ResovleAppointment(item.app, ModelBindingResolver.ResolveUser(item.doc));
+                    appointment_list.Add(appointment);
+                }
+
+                return new JsonResult(new
+                {
+                    success = true,
+                    error = false,
+                    appointment_list
+                });
+
+            }
+            catch(Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = ex.Message
+                });
+            }
+        }
 
 
 

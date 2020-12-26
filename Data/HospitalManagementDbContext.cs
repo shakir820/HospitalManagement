@@ -1,4 +1,5 @@
 ﻿using HospitalManagement.Models;
+using HospitalManagement.Models.ViewModels;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -33,6 +34,7 @@ namespace HospitalManagement.Data
         public DbSet<PrescriptionNote> PrescriptionNotes { get; set; }
         public DbSet<PrescriptionPatientComplain> PrescriptionPatientComplains { get; set; }
         public DbSet<PrescriptionPatientExamination> PrescriptionPatientExaminations { get; set; }
+        public DbSet<PatientDocument> PatientDocuments { get; set; }
        
 
     }

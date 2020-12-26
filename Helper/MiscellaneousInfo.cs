@@ -11,6 +11,9 @@ namespace HospitalManagement.Helper
     {
         public static int ConsultDoctorTimeDurationInMins = 10;
         public static string InvestigationDoc_Link = "api/Investigation/GetInvestigationFile?investigation_id=";
+        public static string PatientDoc_Link = "api/PatientDocument/GetPatientDocumentFile?document_id=";
+        public static string PatientDoc_Folder_Path = "FileData/PatientDocument";
+        public static string InvestigationDoc_Folder_Path = "FileData/InvestigationDocument";
     }
 
 
@@ -30,6 +33,7 @@ namespace HospitalManagement.Helper
             user.age = dbUser.Age;
             user.approved = dbUser.Approved;
             user.biography = dbUser.Biography;
+            user.address = dbUser.Address;
             user.bloodGroup = dbUser.BloodGroup;
             user.bmdc_certifcate = dbUser.BMDC_certifcate;
             user.city_name = dbUser.city_name;
@@ -198,8 +202,24 @@ namespace HospitalManagement.Helper
             inv.name = investigation.Name;
             inv.patient = patient;
             inv.prescription_id = investigation.PrescriptionId;
-
+            inv.result_publish_date = investigation.ResultPublishDate;
+            inv.sample_submit_date = investigation.SampleSubmitDate;
+            inv.content_type = investigation.ContentType;
+            inv.file_location = investigation.FileLocation;
+            
+            
             return inv;
+        }
+
+
+        public static PatientDocumentModel ResolvePatientDocument(PatientDocument patientDocument)
+        {
+            var pd = new PatientDocumentModel();
+            pd.created_date = patientDocument.CreatedDate;
+            pd.id = patientDocument.Id;
+            pd.name = patientDocument.Name;
+
+            return pd;
         }
     }
 }

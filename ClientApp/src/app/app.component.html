@@ -47,7 +47,7 @@
 
 
       <!-- Nav Item - Alerts -->
-      <li *ngIf="userService.isLoggedIn" class="nav-item dropdown no-arrow mx-1">
+      <li *ngIf="false" class="nav-item dropdown no-arrow mx-1">
         <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fas fa-bell fa-fw"></i>
           <!-- Counter - Alerts -->
@@ -96,7 +96,7 @@
       </li>
 
       <!-- Nav Item - Messages -->
-      <li *ngIf="userService.isLoggedIn" class="nav-item dropdown no-arrow mx-1">
+      <li *ngIf="false" class="nav-item dropdown no-arrow mx-1">
         <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fas fa-envelope fa-fw"></i>
           <!-- Counter - Messages -->
@@ -174,11 +174,11 @@
           <div class=" dropdown-item-text font-weight-bold">
             <i class="fad fa-sm fa-fw fa-id-card  text-gray-400 mr-2"></i><span>{{ userService.user.id }}</span>
           </div>
-          <a class="dropdown-item" [routerLink]="['profile']" routerLinkActive="active">
+          <a class="dropdown-item" [routerLink]="['profile']">
             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
             Profile
           </a>
-          <a class="dropdown-item" href="#">
+          <a class="dropdown-item" (click)="onSettingsClicked($event)">
             <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
             Settings
           </a>
@@ -310,6 +310,14 @@
           </a>
         </li>
 
+
+        <li class="nav-item" routerLinkActive="active" *ngIf="isPatient">
+          <a class="nav-link" [routerLink]="['Document/PatientDocumentList']">
+            <i class="fad fa-fw fa-files-medical"></i>
+            <span>Documents</span>
+          </a>
+        </li>
+
         <!-- <li class="nav-item" routerLinkActive="active" *ngIf="isDoctor">
           <a class="nav-link" [routerLink]="['PatientList']">
             <i class="fas fa-fw fa-calendar-check"></i>
@@ -332,6 +340,15 @@
 
 
     <div class="flex-fill" style="margin-top:80px;">
+
+      <!-- alert -->
+      <div class="m-3" *ngIf="isDoctor && userService.isLoggedIn">
+        <div class="alert alert-danger" *ngIf="!userService.user.approved" role="alert">
+          Completer your profile to get verified by the Admin
+        </div>
+      </div>
+
+
       <router-outlet (activate)="onActivate($event)"></router-outlet>
       <!--<div id="content-wrapper">-->
 

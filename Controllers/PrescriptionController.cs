@@ -2,6 +2,7 @@
 using HospitalManagement.Helper;
 using HospitalManagement.Models;
 using HospitalManagement.Models.ViewModels;
+using HospitalManagement.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -25,15 +26,18 @@ namespace HospitalManagement.Controllers
         RoleManager<UserRole> _roleManager;
         SignInManager<User> _signInManager;
         IWebHostEnvironment _webHostEnvironment;
+        EmailService _emailService;
 
 
         public PrescriptionController(
             HospitalManagementDbContext context,
+            EmailService emailService,
             UserManager<User> userManager,
             RoleManager<UserRole> roleManager,
             SignInManager<User> signInManager,
             IWebHostEnvironment webHostEnvironment)
         {
+            _emailService = emailService;
             _context = context;
             _userManager = userManager;
             _roleManager = roleManager;
@@ -51,14 +55,6 @@ namespace HospitalManagement.Controllers
         {
 
             PrescriptionModel prescription = JsonConvert.DeserializeObject<PrescriptionModel>(pres.json_data);
-
-            //Thread.Sleep(3000);
-            //return new JsonResult(new
-            //{
-            //    success = false,
-            //    error = true,
-            //    error_msg = "The prescription is already created! You cannot create new prescription on this appointment"
-            //});
 
             using (var transsaction = await _context.Database.BeginTransactionAsync())
             {
@@ -137,7 +133,7 @@ namespace HospitalManagement.Controllers
                             investigation.DoctorId = (long)prescription.doctor.id;
                             investigation.InvestigationTagId = item.investigation_tag_id;
                             investigation.Name = item.name;
-                            investigation.PatientId = (long)item.patient.id;
+                            investigation.PatientId = (long)prescription.patient.id;
                             investigation.PrescriptionId = p.Id;
 
                             _context.InvestigationDocs.Add(investigation);
@@ -167,8 +163,23 @@ namespace HospitalManagement.Controllers
                     appointment.Consulted = true;
                     await _context.SaveChangesAsync();
 
+                    var db_patient = await _context.Users.AsNoTracking().FirstOrDefaultAsync(a => a.Id == prescription.patient.id);
+                    var db_doc = await _context.Users.AsNoTracking().FirstOrDefaultAsync(a => a.Id == prescription.doctor.id);
+
+                    string em_sub = "Prescription";
+                    string address = "shakir.sha95@gmail.com";
+                    string em_body = $"Dear {db_patient.Name}, \n {db_doc.Name} has prescribed you a new prescription. You can check that now from your account.";
+                    _emailService.SendEmailAsync(em_sub, em_body, new List<string> { address });
+
+
 
                     await transsaction.CommitAsync();
+
+                    
+
+                    // send email
+                   
+
 
                     return new JsonResult(new
                     {
@@ -490,7 +501,7 @@ namespace HospitalManagement.Controllers
                         }
                         
                         var investigation = ModelBindingResolver.ResolveInvestigationDoc(item, prescription.doctor, prescription.patient, investigator);
-                        investigation.file_location = Url.Content($"~/api/Investigation/GetInvestigationFile?investigation_id={investigation.id}");
+                        investigation.file_link = Url.Content($"~/{MiscellaneousInfo.InvestigationDoc_Link}{investigation.id}"); 
 
                         prescription.patient_investigations.Add(investigation);
                     }

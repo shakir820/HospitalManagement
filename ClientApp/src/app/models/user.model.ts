@@ -17,6 +17,7 @@ export class User{
   public age:number;
   public gender:string;
   public password:string;
+  public new_password: string;
   public roles:string[] = [];
   public role:string;
   public profile_pic: string | ArrayBuffer;

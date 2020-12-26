@@ -52,6 +52,9 @@ import { AssignedInvestigationListComponent } from './common_pages/investigation
 import { RequestedInvestigationListComponent } from './common_pages/investigation/requested-investigation-list/requested-investigation-list.component';
 import { InvestigationStatusPipe } from './pipes/investigation-status.pipe';
 import { InvestigationDetailsComponent } from './common_pages/investigation/investigation-details/investigation-details.component';
+import { PatientDocumentListComponent } from './patient_pages/patient-document-list/patient-document-list.component';
+import { SettingPageComponent } from './common_pages/setting-page/setting-page.component';
+import { AdminSettingsPageComponent } from './admin/admin-settings-page/admin-settings-page.component';
 
 @NgModule({
   declarations: [
@@ -97,7 +100,10 @@ import { InvestigationDetailsComponent } from './common_pages/investigation/inve
     AssignedInvestigationListComponent,
     RequestedInvestigationListComponent,
     InvestigationStatusPipe,
-    InvestigationDetailsComponent
+    InvestigationDetailsComponent,
+    PatientDocumentListComponent,
+    SettingPageComponent,
+    AdminSettingsPageComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

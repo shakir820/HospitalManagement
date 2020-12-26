@@ -1,1 +1,187 @@
-<p>admin-dashboard works!</p>
+<div class="container-fluid">
+
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class=" d-flex justify-content-between">
+        <h4>Admin Dashboard</h4>
+        <div class=" small font-weight-bold">{{ todayTime | date: 'mediumDate' }}</div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="row mt-4" >
+    <div class="col-sm-12 col-md-6">
+      <div>
+        <h1 class=" text-primary">Welcome {{ userService.user.name }}!</h1>
+        <!-- <div>
+          <p> You have <span class=" font-weight-bold">{{todayAppointments.length}} appointments</span> today</p>
+          <p>Remember to check patient's document before you give treatment</p>
+        </div> -->
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-6">
+      <img src="/assets/admin_dashboard.png" class=" ml-5" style="object-fit: cover; height: 400px; width: 400px;">
+    </div>
+  </div>
+
+
+
+
+  <div class=" row mt-5">
+    <div class=" col-sm-12 col-md-6 col-lg-4">
+      <div class=" card shadow border-0">
+        <div class=" card-body">
+          <div class=" text-dark font-weight-bold">User Summary</div>
+
+          <div class=" d-flex flex-column">
+            <div class="d-flex justify-content-between mt-3">
+              <div class=" d-flex">
+               <div class="align-self-stretch bg-gray-400" style="width: 4px; border-radius: 2px;"></div>
+               <div class="ml-2 d-flex flex-column">
+                 <div class=" text-primary font-weight-bold" style="font-size: 22px;">{{total_patient}}</div>
+                 <small>Total Patients</small>
+               </div>
+              </div>
+              <div>
+               <i class="fad fa-user-injured fa-2x"></i>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between mt-3">
+              <div class=" d-flex">
+               <div class="align-self-stretch bg-gray-400" style="width: 4px; border-radius: 2px;"></div>
+               <div class="ml-2 d-flex flex-column">
+                 <div class=" text-primary font-weight-bold" style="font-size: 22px;">{{total_staff}}</div>
+                 <small>Total Staffs</small>
+               </div>
+              </div>
+              <div>
+               <i class="fad fa-clipboard-user fa-2x"></i>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between mt-3">
+              <div class=" d-flex">
+               <div class="align-self-stretch bg-gray-400" style="width: 4px; border-radius: 2px;"></div>
+               <div class="ml-2 d-flex flex-column">
+                 <div class=" text-primary font-weight-bold" style="font-size: 22px;">{{total_doctor}}</div>
+                 <small>Total Doctors</small>
+               </div>
+              </div>
+              <div>
+               <i class="fad fa-user-md fa-2x"></i>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-12 col-md-6 col-lg-4">
+      <div class=" card shadow border-0">
+        <div class=" card-body">
+          <div class=" text-dark font-weight-bold">Investigation Summary</div>
+          <div class="small font-weight-bold">This month</div>
+
+          <div class=" d-flex flex-column">
+            <div class="d-flex justify-content-between mt-3">
+              <div class=" d-flex">
+               <div class="align-self-stretch bg-gray-400" style="width: 4px; border-radius: 2px;"></div>
+               <div class="ml-2 d-flex flex-column">
+                 <div class=" text-warning font-weight-bold" style="font-size: 22px;">{{pending_investigation}}</div>
+                 <small>Pending </small>
+               </div>
+              </div>
+              <div>
+               <i class="fad fa-vial text-warning fa-2x"></i>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between mt-3">
+              <div class=" d-flex">
+               <div class="align-self-stretch bg-gray-400" style="width: 4px; border-radius: 2px;"></div>
+               <div class="ml-2 d-flex flex-column">
+                 <div class=" text-primary font-weight-bold" style="font-size: 22px;">{{inprogress_investigation}}</div>
+                 <small>In Progress</small>
+               </div>
+              </div>
+              <div>
+               <i class="fad fa-vial text-primary fa-2x"></i>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between mt-3">
+              <div class=" d-flex">
+               <div class="align-self-stretch bg-gray-400" style="width: 4px; border-radius: 2px;"></div>
+               <div class="ml-2 d-flex flex-column">
+                 <div class=" text-success font-weight-bold" style="font-size: 22px;">{{completed_investigation}}</div>
+                 <small>Completed</small>
+               </div>
+              </div>
+              <div>
+               <i class="fad fa-vial text-success fa-2x"></i>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class=" col-sm-12 col-md-6 col-lg-4">
+      <div class=" card shadow border-0">
+        <div class=" card-body">
+          <div class=" text-dark font-weight-bold">Doctor</div>
+
+          <div class=" d-flex flex-column">
+            <div class="d-flex justify-content-between mt-3">
+              <div class=" d-flex">
+               <div class="align-self-stretch bg-gray-400" style="width: 4px; border-radius: 2px;"></div>
+               <div class="ml-2 d-flex flex-column">
+                 <div class=" text-primary font-weight-bold" style="font-size: 22px;">{{total_doctor}}</div>
+                 <small>Total Doctors </small>
+               </div>
+              </div>
+              <div>
+               <i class="fad fa-user-md text-primary fa-2x"></i>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between mt-3">
+              <div class=" d-flex">
+               <div class="align-self-stretch bg-gray-400" style="width: 4px; border-radius: 2px;"></div>
+               <div class="ml-2 d-flex flex-column">
+                 <div class=" text-warning font-weight-bold" style="font-size: 22px;">{{total_pending_doctor}}</div>
+                 <small>Pending Doctors</small>
+               </div>
+              </div>
+              <div>
+               <i class="fad fa-user-md text-warning fa-2x"></i>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between mt-3">
+              <div class=" d-flex">
+               <div class="align-self-stretch bg-gray-400" style="width: 4px; border-radius: 2px;"></div>
+               <div class="ml-2 d-flex flex-column">
+                 <div class=" text-success font-weight-bold" style="font-size: 22px;">{{total_doctor - total_pending_doctor}}</div>
+                 <small>Approved Doctors</small>
+               </div>
+              </div>
+              <div>
+               <i class="fad fa-user-md text-success fa-2x"></i>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+</div>

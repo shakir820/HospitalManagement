@@ -1,4 +1,5 @@
 ﻿using HospitalManagement.Data;
+using HospitalManagement.Helper;
 using HospitalManagement.Models;
 using HospitalManagement.Models.ViewModels;
 using Microsoft.AspNetCore.Hosting;
@@ -116,20 +117,9 @@ namespace HospitalManagement.Controllers
                 var patient = await _context.Users.AsNoTracking().FirstOrDefaultAsync(a => a.Id == patient_id && a.IsActive == true);
                 if(patient != null)
                 {
-                    var p = new UserModel();
-                    p.age = patient.Age;
-                    p.bloodGroup = patient.BloodGroup;
-                    p.city_name = patient.city_name;
-                    p.country_name = patient.country_name;
-                    p.country_phone_code = patient.country_phone_code;
-                    p.country_short_name = patient.country_short_name;
-                    p.email = patient.Email;
-                    p.created_date = patient.CreatedDate;
-                    p.gender = patient.Gender;
-                    p.id = patient.Id;
-                    p.isActive = patient.IsActive;
-                    p.name = patient.Name;
-                    p.phoneNumber = patient.PhoneNumber;
+                    var p = ModelBindingResolver.ResolveUser(patient);
+                   
+
                     var u_roles = await _context.UserRoles.Join(_context.Roles, outter => outter.RoleId, inner => inner.Id, (outter, inner) => new 
                     { ur = outter, role = inner }).AsNoTracking().Where(a => a.ur.UserId == patient.Id).ToListAsync();
                     p.roles = new List<string>();
@@ -137,9 +127,7 @@ namespace HospitalManagement.Controllers
                     {
                         p.roles.Add(role.role.Name);
                     }
-                    p.state_name = patient.state_name;
-                    p.username = patient.UserName;
-
+                   
                     return new JsonResult(new
                     {
                         success = true,
@@ -246,6 +234,43 @@ namespace HospitalManagement.Controllers
             }
         }
 
+
+
+
+
+
+        public async Task<IActionResult> GetAllDoctors()
+        {
+            try
+            {
+                var doctors = await _userManager.GetUsersInRoleAsync("Doctor");
+                
+                doctors = doctors.ToList();
+
+                var doctor_list = new List<UserModel>();
+                foreach(var item in doctors)
+                {
+                    doctor_list.Add(ModelBindingResolver.ResolveUser(item));
+                }
+
+
+                return new JsonResult(new
+                {
+                    success = true,
+                    error = false,
+                    doctor_list
+                });
+            }
+            catch(Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = ex.Message
+                });
+            }
+        }
 
 
        

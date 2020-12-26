@@ -3,9 +3,10 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { sortBy } from 'sort-by-typescript';
-import { InvestigationDoc } from 'src/app/models/investigation-doc.model';
+import { InvestigationDoc, InvestigationStatus } from 'src/app/models/investigation-doc.model';
 import { User } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-requested-investigation-list',
@@ -240,7 +241,41 @@ export class RequestedInvestigationListComponent implements OnInit {
 
 
   onInvestigationAssignedToMeClicked(event_data, investigation_id: number){
+    var inv = new InvestigationDoc();
+    inv.id = investigation_id;
+    inv.investigator = new User();
+    inv.investigator.id = this.userService.user.id;
 
+    var inv_str = JSON.stringify(inv);
+
+    this.httpClient.post<{
+      success: boolean,
+      error: boolean,
+      error_msg: string
+    }>(this._baseUrl + 'api/Investigation/AssignInvestigationToInvestigator', {json_data: inv_str}).subscribe(result => {
+      console.log(result);
+      if(result.success){
+
+        var inv = this.all_Investigation_List.find(a => a.id == investigation_id);
+        inv.investigation_status = InvestigationStatus.Inprogress;
+        inv.investigator = this.userService.user;
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Assigned successful',
+          confirmButtonText: 'Ok'
+        });
+
+      }
+      else{
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: result.error_msg,
+          confirmButtonText: 'Ok'
+        });
+      }
+    });
   }
 
 }

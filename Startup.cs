@@ -1,5 +1,6 @@
 using HospitalManagement.Data;
 using HospitalManagement.Models;
+using HospitalManagement.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -67,7 +68,8 @@ namespace HospitalManagement
                 
             });
 
-           
+
+            services.AddScoped<EmailService>();
 
 
             services.AddAuthorization();

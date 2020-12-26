@@ -97,6 +97,19 @@ export class AppComponent  implements OnInit{
 
 
 
+  onSettingsClicked(event_data){
+
+    if(this.isAdmin){
+      this.router.navigate(['/admin/SettingsPage']);
+    }
+    else{
+      this.router.navigate(['/SettingsPage']);
+    }
+
+
+  }
+
+
 
 
   onLogout(){

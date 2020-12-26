@@ -18,7 +18,7 @@ export class InvestigationStatusPipe implements PipeTransform {
         break;
 
         case InvestigationStatus.Inprogress:
-        inv_status = 'Inprogress';
+        inv_status = 'In progress';
         break;
 
         case InvestigationStatus.Pending:
