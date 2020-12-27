@@ -17,11 +17,23 @@ namespace HospitalManagement.Models
         public string Abbreviation { get; set; }
         public string FileLocation { get; set; }
         public string FileName { get; set; }
+        public string ContentType { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public DateTime ResultPublishDate { get; set; }
+        public DateTime SampleSubmitDate { get; set; }
         public DateTime ModifiedDate { get; set; }
-       
+        public InvestigationStatus InvestigationStatus { get; set; } = InvestigationStatus.Pending;
     }
 
+
+
+    public enum InvestigationStatus
+    {
+        Completed = 3,
+        Inprogress = 1,
+        Pending = 0,
+        Canceled = 2
+    }
 
 
     public class InvestigationTag

@@ -10,18 +10,30 @@ namespace HospitalManagement.Helper
     public class MiscellaneousInfo
     {
         public static int ConsultDoctorTimeDurationInMins = 10;
-        
+        public static string InvestigationDoc_Link = "api/Investigation/GetInvestigationFile?investigation_id=";
+        public static string PatientDoc_Link = "api/PatientDocument/GetPatientDocumentFile?document_id=";
+        public static string PatientDoc_Folder_Path = "FileData/PatientDocument";
+        public static string InvestigationDoc_Folder_Path = "FileData/InvestigationDocument";
     }
 
 
     public class ModelBindingResolver
     {
+      
+
+
         public static UserModel ResolveUser(User dbUser, List<string> dbUserRoles = null)
         {
+            if(dbUser == null)
+            {
+                return null;
+            }
+
             var user = new UserModel();
             user.age = dbUser.Age;
             user.approved = dbUser.Approved;
             user.biography = dbUser.Biography;
+            user.address = dbUser.Address;
             user.bloodGroup = dbUser.BloodGroup;
             user.bmdc_certifcate = dbUser.BMDC_certifcate;
             user.city_name = dbUser.city_name;
@@ -52,6 +64,7 @@ namespace HospitalManagement.Helper
             user.new_patient_visiting_price = dbUser.NewPatientVisitingPrice;
             user.old_patient_visiting_price = dbUser.OldPatientVisitingPrice;
             user.phoneNumber = dbUser.PhoneNumber;
+            user.created_date = dbUser.CreatedDate;
             user.roles = new List<string>();
 
             if(dbUserRoles != null)
@@ -172,6 +185,41 @@ namespace HospitalManagement.Helper
 
             return prescription;
 
+        }
+
+
+        public static InvestigationDocModel ResolveInvestigationDoc(InvestigationDoc investigation, UserModel doctor = null, UserModel patient = null, UserModel investigator = null)
+        {
+            var inv = new InvestigationDocModel();
+            inv.abbreviation = investigation.Abbreviation;
+            inv.created_date = investigation.CreatedDate;
+            inv.doctor = doctor;
+            inv.file_name = investigation.FileName;
+            inv.id = investigation.Id;
+            inv.investigation_status = investigation.InvestigationStatus;
+            inv.investigation_tag_id = investigation.InvestigationTagId;
+            inv.investigator = investigator;
+            inv.name = investigation.Name;
+            inv.patient = patient;
+            inv.prescription_id = investigation.PrescriptionId;
+            inv.result_publish_date = investigation.ResultPublishDate;
+            inv.sample_submit_date = investigation.SampleSubmitDate;
+            inv.content_type = investigation.ContentType;
+            inv.file_location = investigation.FileLocation;
+            
+            
+            return inv;
+        }
+
+
+        public static PatientDocumentModel ResolvePatientDocument(PatientDocument patientDocument)
+        {
+            var pd = new PatientDocumentModel();
+            pd.created_date = patientDocument.CreatedDate;
+            pd.id = patientDocument.Id;
+            pd.name = patientDocument.Name;
+
+            return pd;
         }
     }
 }

@@ -7,6 +7,7 @@ import { DoctorAppointment } from 'src/app/models/doctor-appointment.model';
 import { Language } from 'src/app/models/langauge.model';
 import { User } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user.service';
+import Swal from 'sweetalert2';
 import { Schedule } from '../../models/schedule.model';
 
 @Component({
@@ -147,25 +148,26 @@ export class DoctorAppointmentComponent implements OnInit {
           this.can_create_appointment = result.can_create_new_appointment;
           this.existedAppointments = [];
           if (result.appointments != undefined && result.appointments.length > 0) {
-            Helper.resolveAppointments(result.appointments, this.existedAppointments);
+            // Helper.resolveAppointments(result.appointments, this.existedAppointments);
+            this.existedAppointments = result.appointments;
           }
 
-          if (this.existedAppointments.length > 0) {
-            this.existedAppointments.forEach(val => {
-              var week_day = val.appointment_date.getDay();
-              var schedules_obj = result.schedules.find(schedule_val => {
-                if (schedule_val.day_name == week_day) {
-                  return schedule_val;
-                }
-              });
+          // if (this.existedAppointments.length > 0) {
+          //   this.existedAppointments.forEach(val => {
+          //     var week_day = val.appointment_date.getDay();
+          //     var schedules_obj = result.schedules.find(schedule_val => {
+          //       if (schedule_val.day_name == week_day) {
+          //         return schedule_val;
+          //       }
+          //     });
 
-              if (schedules_obj != null) {
-                val.start_time = new Date(schedules_obj.start_time);
-                val.end_time = new Date(schedules_obj.end_time);
-              }
+          //     if (schedules_obj != null) {
+          //       val.start_time = new Date(schedules_obj.start_time);
+          //       val.end_time = new Date(schedules_obj.end_time);
+          //     }
 
-            });
-          }
+          //   });
+          // }
 
         }
       });
@@ -226,20 +228,22 @@ export class DoctorAppointmentComponent implements OnInit {
           this.existedAppointments.push(ap);
 
           if (result.appointments != undefined) {
-            result.appointments.forEach(r_ap => {
-              var appointment = new DoctorAppointment();
-              appointment.appointment_date = new Date(r_ap.appointment_date);
-              appointment.created_date = new Date(r_ap.created_date);
-              appointment.doctor_id = r_ap.doctor_id;
-              appointment.doctor_name = r_ap.doctor_name;
-              appointment.start_time = new Date(r_ap.start_time);
-              appointment.end_time = new Date(r_ap.end_time);
-              appointment.id = r_ap.id;
-              appointment.patient_id = r_ap.patient_id;
-              appointment.patient_name = r_ap.patient_name;
-              appointment.serial_no = r_ap.serial_no;
-              this.userAppointments.push(appointment);
-            });
+            // result.appointments.forEach(r_ap => {
+            //   var appointment = new DoctorAppointment();
+            //   appointment.appointment_date = new Date(r_ap.appointment_date);
+            //   appointment.created_date = new Date(r_ap.created_date);
+            //   appointment.doctor_id = r_ap.doctor_id;
+            //   appointment.doctor_name = r_ap.doctor_name;
+            //   appointment.start_time = new Date(r_ap.start_time);
+            //   appointment.end_time = new Date(r_ap.end_time);
+            //   appointment.id = r_ap.id;
+            //   appointment.patient_id = r_ap.patient_id;
+            //   appointment.patient_name = r_ap.patient_name;
+            //   appointment.serial_no = r_ap.serial_no;
+            //   this.userAppointments.push(appointment);
+
+            // });
+            this.userAppointments = result.appointments;
           }
           this.isEnableConfirmBtn = true;
 
@@ -280,10 +284,21 @@ export class DoctorAppointmentComponent implements OnInit {
           if (result.success) {
             this.isEnableConfirmBtn = false;
             this.isScheduleConfirmed = true;
+
+            Swal.fire({
+              icon: 'success',
+              title: 'Success!',
+              text: 'Appointment confirmed'
+            });
           }
           else {
             this.isEnableConfirmBtn = true;
             this.error_msg = result.error_msg;
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text:  result.error_msg
+            });
           }
         });
     }

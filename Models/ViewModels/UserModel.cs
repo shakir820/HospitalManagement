@@ -15,6 +15,7 @@ namespace HospitalManagement.Models
         public string name { get; set; }
         public string username { get; set; }
         public string password { get; set; }
+        public string new_password { get; set; }
         public string email { get; set; }
         public string phoneNumber { get; set; }
         public string gender { get; set; }
@@ -29,6 +30,8 @@ namespace HospitalManagement.Models
         public string bloodGroup { get; set; }
         public IFormFile profilePic { get; set; } 
         public bool isActive { get; set; }
+        public string address { get; set; }
+        public DateTime created_date { get; set; }
 
 
 

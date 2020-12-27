@@ -17,6 +17,7 @@ export class User{
   public age:number;
   public gender:string;
   public password:string;
+  public new_password: string;
   public roles:string[] = [];
   public role:string;
   public profile_pic: string | ArrayBuffer;
@@ -28,8 +29,8 @@ export class User{
   public country_short_name: string;
   public state_name: string;
   public bloodGroup: string;
-
-
+  public created_date:Date;
+  public address: string;
 
 
   //appointment info

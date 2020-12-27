@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using HospitalManagement.Data;
+using HospitalManagement.Helper;
 using HospitalManagement.Models;
 using HospitalManagement.Models.ViewModels;
 using Microsoft.AspNetCore.Hosting;
@@ -49,11 +50,11 @@ namespace HospitalManagement.Controllers
             try
             {
                 var doctor = await _context.Users.Include(a => a.Schedules).AsNoTracking().FirstOrDefaultAsync(a => a.Id == doctor_id && a.Approved == true && a.IsActive == true);
-                Thread.Sleep(3000);
+               
                 if (doctor != null)
                 {
                     var today = DateTime.Now; //today is Sunday
-                    var doctor_appointments = await _context.DoctorAppointments.AsNoTracking().Where(a => a.DoctorId == doctor_id).ToListAsync();
+                    var doctor_appointments = await _context.DoctorAppointments.AsNoTracking().Where(a => a.DoctorId == doctor_id && a.AppointmentDate >= today).ToListAsync();
                     var doctor_schedules = doctor.Schedules;
 
                     var availableDates = new List<DateTime>();
@@ -109,36 +110,13 @@ namespace HospitalManagement.Controllers
                         canCreateNewAppointment = false;
                         foreach(var item in future_appointments)
                         {
-                            var appointment = new DoctorAppointmentModel();
-                            appointment.appointment_date = item.AppointmentDate;
-                            appointment.created_date = item.CreatedDate;
-                            appointment.doctor_id = item.DoctorId;
-                            appointment.id = item.Id;
-                            appointment.modified_date = item.ModifiedDate;
-                            appointment.patient_id = item.PatientId;
-                            appointment.patient_name = item.PatientName;
-                            appointment.serial_no = item.SerialNo;
-                            appointment.doctor_name = doctor.Name;
-                            appointment.visiting_price = item.VisitingPrice;
-                            appointment.consulted = item.Consulted;
-
+                           
+                            var appointment = ModelBindingResolver.ResovleAppointment(item, ModelBindingResolver.ResolveUser(doctor));
                             appointments.Add(appointment);
                         }
                     }
 
-                    //appointments.Add(new DoctorAppointmentModel
-                    //{
-                    //    appointment_date = new DateTime(2020, 11, 16),
-                    //    created_date = new DateTime(2020, 11, 1),
-                    //    doctor_id = 2,
-                    //    doctor_name = "Dr. Aura Tabassum",
-                    //    id = 4,
-                    //    patient_id = 6,
-                    //    patient_name = "Saima Rahman",
-                    //    serial_no = 25
-                    //});
-
-                    //Thread.Sleep(3000);
+                   
 
                     return new JsonResult(new
                     {
@@ -208,6 +186,7 @@ namespace HospitalManagement.Controllers
                     doctor.name = item.doct_role.doctors.Name;
                     doctor.phoneNumber = item.doct_role.doctors.PhoneNumber;
                     doctor.roles = new List<string> { "Doctor" };
+                    doctor.created_date = item.doct_role.doctors.CreatedDate;
                     doctor.state_name = item.doct_role.doctors.state_name;
                     doctor.username = item.doct_role.doctors.UserName;
                     doctor.biography = item.doct_role.doctors.Biography;
@@ -258,13 +237,12 @@ namespace HospitalManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> GetAppointmentSerialNo(DoctorAppointmentModel appointmentModel)
         {
-            //var doctor = await _context.Users.Include(a => a.Schedules).AsNoTracking().FirstOrDefaultAsync(a => a.Id == doctor_id);
-            //var patient = await _context.Users.AsNoTracking().FirstOrDefaultAsync(a => a.Id == user_id);
+          
             try
             {
-                Thread.Sleep(3000);
+               
                 var doctor = await _context.Users.FirstOrDefaultAsync(a => a.Id == appointmentModel.doctor_id);
-                //serial no calculation
+              
                 var appointments = await _context.DoctorAppointments.AsNoTracking().Where(a => a.DoctorId == appointmentModel.doctor_id && 
                 a.AppointmentDate.Date == appointmentModel.appointment_date.Date).ToListAsync();
                 int newSerialNo = 1;
@@ -298,26 +276,7 @@ namespace HospitalManagement.Controllers
                 var pa = new List<DoctorAppointmentModel>();
                 foreach(var item in patient_appointments)
                 {
-                    var appointment = new DoctorAppointmentModel
-                    {
-                        appointment_date = item.app_doc.appointment.AppointmentDate,
-                        created_date = item.app_doc.appointment.CreatedDate,
-                        doctor_id = item.app_doc.doctor.Id,
-                        doctor_name = item.app_doc.doctor.Name,
-                        id = item.app_doc.appointment.Id,
-                        patient_id = appointmentModel.patient_id,
-                        patient_name = item.patient.Name,
-                        serial_no = item.app_doc.appointment.SerialNo,
-                        visiting_price = item.app_doc.appointment.VisitingPrice
-                    };
-
-                    var sch = item.app_doc.doctor.Schedules;
-                    var sch_day = sch.FirstOrDefault(a => a.DayName == appointment.appointment_date.DayOfWeek);
-                    if(sch_day != null)
-                    {
-                        appointment.start_time = sch_day.StartTime;
-                        appointment.end_time = sch_day.EndTime;
-                    }
+                    var appointment = ModelBindingResolver.ResovleAppointment(item.app_doc.appointment, ModelBindingResolver.ResolveUser(item.app_doc.doctor));
                     
                     pa.Add(appointment);
                 }
@@ -357,8 +316,7 @@ namespace HospitalManagement.Controllers
             {
                 try
                 {
-                    //var doctor = await _context.Users.FirstOrDefaultAsync(a => a.Id == doctorAppointment.doctor_id);
-                    //Thread.Sleep(3000);
+                  
                     var today = DateTime.Now;
                     var doctor_appointment = new DoctorAppointment();
                     doctor_appointment.AppointmentDate = DateTime.Parse(doctorAppointment.appointment_date_str);
@@ -435,9 +393,23 @@ namespace HospitalManagement.Controllers
                     (outter, inner) => new { ap = outter, doc = inner }).AsNoTracking().
                     Where(a => a.ap.PatientId == patient_id).ToListAsync();
 
+                
+
+
                 var appointmentList = new List<DoctorAppointmentModel>();
                 foreach(var item in doctor_appointments)
                 {
+                    if(item.ap.AppointmentDate.Date < today.Date)
+                    {
+                        if(item.ap.Consulted == false)
+                        {
+                            var ap = await _context.DoctorAppointments.FirstOrDefaultAsync(a => a.Id == item.ap.Id);
+                            _context.DoctorAppointments.Remove(ap);
+                            await _context.SaveChangesAsync();
+                            continue;
+                        }
+                    }
+
                     var appointment = new DoctorAppointmentModel();
                     appointment.appointment_date_str = item.ap.AppointmentDate.ToString();
                     appointment.appointment_date = item.ap.AppointmentDate.Date;
@@ -640,6 +612,103 @@ namespace HospitalManagement.Controllers
         }
 
 
+
+
+
+
+        public async Task<IActionResult> GetTodayAppointmentsByDoctor(long doctor_id)
+        {
+            try
+            {
+                var today = DateTime.Now;
+                var db_app_patients = await _context.DoctorAppointments.Join(_context.Users, o => o.PatientId, i => i.Id, (o, i) => new
+                {
+                    appointment = o,
+                    patient = i
+                }).AsNoTracking().Where(a => a.appointment.AppointmentDate.Date == today.Date & a.appointment.DoctorId == doctor_id).ToListAsync();
+
+                var db_doctor = await _context.Users.Include(a => a.Schedules).AsNoTracking().FirstOrDefaultAsync(a => a.Id == doctor_id);
+
+                var appointment_list = new List<DoctorAppointmentModel>();
+
+                foreach(var app_item in db_app_patients)
+                {
+                    var appointment = ModelBindingResolver.ResovleAppointment(app_item.appointment, ModelBindingResolver.ResolveUser(db_doctor));
+
+                    if(appointment.visiting_price == db_doctor.OldPatientVisitingPrice)
+                    {
+                        appointment.is_new_patient = false;
+                    }
+                    else
+                    {
+                        appointment.is_new_patient = true;
+                    }
+
+                    appointment_list.Add(appointment);
+                    
+                }
+
+              
+                return new JsonResult(new
+                {
+                    success = true,
+                    error = false,
+                    appointment_list
+                });
+            }
+            catch(Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = ex.Message
+                });
+            }
+        }
+
+
+
+
+
+
+
+        public async Task<IActionResult> GetUpcomingAppointmentsByPatient(long patient_id)
+        {
+            try
+            {
+                var today = DateTime.Now;
+                var db_apps = await _context.DoctorAppointments.Join(_context.Users.Include(a => a.Schedules), o => o.DoctorId, i => i.Id, (o, i) => new
+                {
+                    app = o,
+                    doc = i
+                }).AsNoTracking().Where(a => a.app.PatientId == patient_id && a.app.AppointmentDate.Date >= today.Date).ToListAsync();
+
+                var appointment_list = new List<DoctorAppointmentModel>();
+                foreach(var item in db_apps)
+                {
+                    var appointment = ModelBindingResolver.ResovleAppointment(item.app, ModelBindingResolver.ResolveUser(item.doc));
+                    appointment_list.Add(appointment);
+                }
+
+                return new JsonResult(new
+                {
+                    success = true,
+                    error = false,
+                    appointment_list
+                });
+
+            }
+            catch(Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = ex.Message
+                });
+            }
+        }
 
 
 

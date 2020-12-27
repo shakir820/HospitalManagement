@@ -67,9 +67,14 @@
 
 
 
-        <div *ngIf="filteredPatients == undefined || filteredPatients.length == 0" class="m-auto align-items-center d-flex flex-column">
+        <div *ngIf="(filteredPatients == undefined || filteredPatients.length == 0) && !searchPatientIcon" class="m-auto align-items-center d-flex flex-column">
           <i class="fad fa-5x fa-user-injured"></i>
           <h2 class="font-weight-bold mt-4">No Patient Found</h2>
+        </div>
+
+        <div *ngIf="searchPatientIcon" class="m-auto align-items-center d-flex flex-column">
+          <i class="fad fa-5x fa-search"></i>
+          <h2 class="font-weight-bold mt-4">Search Patient</h2>
         </div>
 
         <!-- <div *ngIf="filteredPatients == undefined || filteredPatients.length == 0" class="m-auto align-items-center d-flex flex-column">

@@ -1,65 +1,417 @@
 <div class="container-fluid">
 
 
-  <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-  </div>
-
   <div class="row">
+    <div class="col-sm-12">
+      <div class=" d-flex justify-content-between">
+        <h4>Dashboard</h4>
+        <div class=" small font-weight-bold">{{ todayTime | date: 'mediumDate' }}</div>
+      </div>
+    </div>
+  </div>
 
 
-    <div class="col-xl-3 col-md-6 mb-4">
-      <div class="card border-left-primary shadow h-100 py-2">
-        <div class="card-body">
-          <div class="row no-gutters align-items-center">
-            <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">TOTAL SPENTS</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800"> 40,000 TK.</div>
-            </div>
-            <div class="col-auto">
-              <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-            </div>
-          </div>
+
+  <div class="row mt-4"  *ngIf="isDoctor">
+    <div class="col-sm-12 col-md-6">
+      <div>
+        <h1 class=" text-primary">Welcome {{ userService.user.name }}!</h1>
+        <div >
+          <p> You have <span class=" font-weight-bold">{{todayAppointments.length}} appointments</span> today</p>
+          <p>Remember to check patient's document before you give treatment</p>
         </div>
       </div>
     </div>
+    <div class="col-sm-12 col-md-6">
+      <img src="/assets/stethoscope.png" class=" ml-5" style="object-fit: cover; height: 200px; width: 200px;">
+    </div>
+  </div>
 
 
-    <div class="col-xl-3 col-md-6 mb-4">
-      <div class="card border-left-success shadow h-100 py-2">
-        <div class="card-body">
-          <div class="row no-gutters align-items-center">
-            <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">DOCTOR APPOINTMENTS</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">20</div>
-            </div>
-            <div class="col-auto">
-              <i class="fas fa-calendar fa-2x text-gray-300"></i>
-            </div>
-          </div>
+
+
+
+  <div class="row mt-4" *ngIf="isPatient">
+    <div class="col-sm-12 col-md-6">
+      <div>
+        <h1 class=" text-primary">Welcome {{ userService.user.name }}!</h1>
+        <div >
+          <p> You have <span class=" font-weight-bold">{{upcomingAppointments.length}} upcoming appointments</span></p>
+          <p>Remember to upload all your documents before you get treatment</p>
         </div>
       </div>
+    </div>
+    <div class="col-sm-12 col-md-6">
+      <img src="/assets/7774.jpg" class=" ml-5" style="object-fit: cover; width: 500px;">
+    </div>
+  </div>
+
+
+
+  <div class="row mt-4" *ngIf="isInvestigator && !isDoctor && !isPatient">
+    <div class="col-sm-12 col-md-6">
+      <div>
+        <h1 class=" text-primary">Welcome {{ userService.user.name }}!</h1>
+        <div >
+          <p> You have <span class=" font-weight-bold">{{upcomingAppointments.length}} remaining investigations!</span></p>
+          <p>Remember to upload the correct document before you submit.</p>
+        </div>
+      </div>
+    </div>
+    <div class=" col-sm-12 col-md-6">
+      <img src="/assets/clip-medical-doctor.png" class=" ml-5" style="object-fit: cover; width: 500px;">
+    </div>
+  </div>
+
+
+
+
+
+
+  <div class="row mt-4" *ngIf="!isInvestigator && !isPatient && !isDoctor">
+    <div class="col-sm-12 col-md-6">
+      <div>
+        <h1 class=" text-primary">Welcome {{ userService.user.name }}!</h1>
+        <div >
+          <p>Please be patient. Admin will assign you appropriate tasks!</p>
+          <p>You can contact Admin if you need anything.</p>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-sm-12 col-md-6">
+      <img src="/assets/clip-medical-doctor.png" class=" ml-5" style="object-fit: cover; width: 600px;">
+    </div>
+  </div>
+
+
+
+
+  <div class="row mt-5">
+    <div class="col-sm-12 col-md-6 col-lg-4">
+      <div class=" card shadow" *ngIf="isDoctor">
+        <div class=" card-body"  >
+         <div class=" font-weight-bold">
+           Today's Appointments
+         </div>
+         <div style="height: 350px; overflow-y: auto;">
+           <div class="mt-4 d-flex flex-column" *ngIf="todayAppointments.length > 0">
+             <div class=" d-flex my-2 justify-content-between" *ngFor="let item of todayAppointments">
+               <div class=" d-flex">
+                 <div style="width: 45px; height: 45px;">
+                   <app-profile-pic-preview [user_id]="item.patient_id"></app-profile-pic-preview>
+                 </div>
+                 <div class="ml-2 d-flex flex-column">
+                   <div class=" font-weight-bold text-dark">{{ item.patient_name }}</div>
+                   <small [ngClass]="{'text-primary': item.is_new_patient == true}">{{ item.is_new_patient == true? 'New Patient': 'Old Patient' }}</small>
+                 </div>
+             </div>
+             <div class=" d-flex flex-column">
+               <div class=" font-weight-bold">{{item.serial_no}}</div>
+               <small>Serial</small>
+             </div>
+           </div>
+         </div>
+
+         <div *ngIf="todayAppointments.length == 0 && fethingAppointments == false"
+         style="height: 100%;" class=" d-flex flex-column justify-content-center align-items-center">
+           <div>
+             <i class="fad fa-5x fa-user-injured"></i>
+           </div>
+           <div class="mt-3 font-weight-bold">You have no appointments today</div>
+         </div>
+         <div style="height: 100%;" *ngIf="fethingAppointments"  class="d-flex flex-column justify-content-center align-items-center">
+           <div class="spinner-border text-primary" role="status">
+             <span class="visually-hidden"></span>
+           </div>
+         </div>
+         </div>
+
+        </div>
+       </div>
+
+
+       <div class=" card shadow border-0" *ngIf="isPatient">
+        <div class=" card-body"  >
+         <div class=" font-weight-bold">
+           Upcoming Appointments
+         </div>
+         <div style="height: 350px; overflow-y: auto;">
+           <div class="mt-4 d-flex flex-column" *ngIf="upcomingAppointments.length > 0">
+             <div class=" d-flex my-2 justify-content-between" *ngFor="let item of upcomingAppointments">
+               <div class=" d-flex">
+                 <div style="width: 45px; height: 45px;">
+                   <app-profile-pic-preview [user_id]="item.doctor_id"></app-profile-pic-preview>
+                 </div>
+                 <div class="ml-2 d-flex flex-column">
+                   <div class=" font-weight-bold text-dark">{{ item.doctor_name }}</div>
+                   <small>{{ item.appointment_date | date: 'mediumDate' }} ({{item.start_time | date: 'shortTime'}} - {{item.end_time | date: 'shortTime'}})</small>
+                 </div>
+             </div>
+             <div class="ml-3 d-flex flex-column">
+               <div class=" font-weight-bold">{{item.serial_no}}</div>
+               <small>Serial</small>
+             </div>
+           </div>
+         </div>
+
+         <div *ngIf="upcomingAppointments.length == 0 && fethingAppointments == false"
+         style="height: 100%;" class=" d-flex flex-column justify-content-center align-items-center">
+           <div>
+             <i class="fad fa-5x fa-user-injured"></i>
+           </div>
+           <div class="mt-3 font-weight-bold">You have no upcoming appointments</div>
+         </div>
+         <div style="height: 100%;" *ngIf="fethingAppointments"  class="d-flex flex-column justify-content-center align-items-center">
+           <div class="spinner-border text-primary" role="status">
+             <span class="visually-hidden"></span>
+           </div>
+         </div>
+         </div>
+
+        </div>
+       </div>
+    </div>
+
+
+    <div class="col-sm-12 col-md-6 col-lg-4">
+      <div class="ml-5 card shadow" style="height: 100%;" *ngIf="isDoctor">
+        <div class=" card-body">
+         <div class=" font-weight-bold">Patient</div>
+         <div class="mt-4 d-flex justify-content-between">
+           <div class="d-flex">
+             <div class="align-self-stretch bg-gray-400" style="width: 4px; border-radius: 2px;"></div>
+             <div class="ml-2 d-flex flex-column">
+               <div class=" font-weight-bold text-primary" style="font-size: 24px;">{{ total_patient_count  }}</div>
+               <div class=" small font-weight-bold"> Total Patients </div>
+             </div>
+           </div>
+           <div><i class="fad fa-2x fa-users-medical"></i></div>
+         </div>
+         <div class="mt-4 d-flex justify-content-between">
+           <div class="d-flex">
+             <div class="align-self-stretch bg-gray-400" style="width: 4px; border-radius: 2px;"></div>
+             <div class="ml-2 d-flex flex-column">
+               <div class=" font-weight-bold text-primary" style="font-size: 24px;">{{ patient_served_count  }}</div>
+               <div class=" font-weight-bold small"> Total Paitnets Served </div>
+             </div>
+           </div>
+           <div><i class="fad fa-2x fa-users-medical"></i></div>
+         </div>
+        </div>
+       </div>
+
+
+       <div class="ml-3 border-0 card shadow"  *ngIf="isPatient">
+        <div class=" d-flex flex-column card-body">
+         <div class=" font-weight-bold">
+           Doctor
+         </div>
+
+         <div class="flex-fill d-flex flex-column justify-content-center align-items-center" >
+           <div style="margin-top: 30px;" class="card border-0 align-self-center">
+             <div class="m-auto" style="position:relative; width: 90px; height: 90px;">
+               <div *ngIf="doctors.length > 1" style="width: 90px; height: 90px;left: 20px; top: -10px; position:absolute;"> <app-profile-pic-preview [user_id]="doctors[1].id"></app-profile-pic-preview></div>
+               <div style="width: 90px; height: 90px; position:absolute; "> <app-profile-pic-preview [user_id]="doctors[0].id"></app-profile-pic-preview></div>
+             </div>
+           </div>
+           <div class="text-primary mx-auto mt-3 font-weight-bold" style="font-size: 22px;" *ngIf="doctors.length > 1">
+             {{doctors.length - 1}} +
+           </div>
+           <div class="text-primary mx-auto font-weight-bold" style="font-size: 22px;" *ngIf="doctors.length == 1">
+             {{doctors.length}}
+           </div>
+           <div class="mt-2 mx-auto font-weight-bold">
+             {{ doctors.length > 1? 'Doctors are': 'Doctor is'}} waiting for you!
+           </div>
+           <button (click)="onGetAppointmentBtnClicked($event)" class="mx-auto align-self-center btn btn-primary mt-5">
+             <div class=" d-flex justify-content-center align-items-center">
+               <div><i class="fad fa-calendar-day"></i></div>
+               <div class=" ml-2">Get Appointment</div>
+             </div>
+           </button>
+         </div>
+
+        </div>
+      </div>
+
     </div>
 
 
 
+    <div class="col-sm-12 col-md-6 col-lg-4">
+      <div class="ml-3 card border-0 shadow" *ngIf="isPatient">
+        <div class=" d-flex flex-column card-body">
+         <div class=" font-weight-bold">
+           Summary
+         </div>
 
-    <div class="col-xl-3 col-md-6 mb-4">
-      <div class="card border-left-warning shadow h-100 py-2">
-        <div class="card-body">
-          <div class="row no-gutters align-items-center">
-            <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">PENDING TESTS</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+         <div class="d-flex justify-content-between mt-3">
+           <div class=" d-flex">
+            <div class="align-self-stretch bg-gray-400" style="width: 4px; border-radius: 2px;"></div>
+            <div class="ml-2 d-flex flex-column">
+              <div class=" text-primary font-weight-bold" style="font-size: 22px;">{{patient_total_documents}}</div>
+              <small>Total Documents</small>
             </div>
-            <div class="col-auto">
-              <i class="fas fa-vial fa-2x text-gray-300"></i>
-            </div>
+           </div>
+           <div>
+            <i class="fad fa-file-alt fa-2x"></i>
+           </div>
+         </div>
+
+
+         <div class="d-flex justify-content-between mt-3">
+          <div class=" d-flex">
+           <div class="align-self-stretch bg-gray-400" style="width: 4px; border-radius: 2px;"></div>
+           <div class="ml-2 d-flex flex-column">
+             <div class=" text-primary font-weight-bold" style="font-size: 22px;">{{total_appointments}}</div>
+             <small>Total Appointments</small>
+           </div>
           </div>
+          <div>
+            <i class="fad fa-2x fa-calendar-day"></i>
+          </div>
+        </div>
+
+
+
+        <div class="d-flex justify-content-between mt-3">
+          <div class=" d-flex">
+           <div class="align-self-stretch bg-gray-400" style="width: 4px; border-radius: 2px;"></div>
+           <div class="ml-2 d-flex flex-column">
+             <div class=" text-primary font-weight-bold" style="font-size: 22px;">{{total_investigations}}</div>
+             <small>Total Investigations</small>
+           </div>
+          </div>
+          <div>
+            <i class="fad fa-2x fa-vial"></i>
+          </div>
+        </div>
+
         </div>
       </div>
     </div>
   </div>
+
+
+
+
+
+
+
+    <!-- <div *ngIf="isDoctor" class="card ml-4 align-self-stretch shadow" style="width: 300px;">
+      <div class="d-flex flex-column card-body">
+        <div class=" font-weight-bold">Profile</div>
+        <div class=" d-flex flex-column justify-content-center align-items-center">
+          <div style="width: 120px; height: 120px;"><app-profile-pic-preview [user_id]="userService.user.id"></app-profile-pic-preview></div>
+          <div class="mt-3 text-dark font-weight-bold" style="font-size: 20px;">{{ userService.user.name }} <span class="ml-2">({{userService.user.id}})</span></div>
+          <div class="d-flex mt-2 flex-wrap justify-content-center">
+            <div class="small" *ngFor="let item of userService.user.specialities; index as i">{{item.specialityName}}<span class="mr-1" *ngIf="i < (userService.user.specialities.length - 1)">,</span></div>
+          </div>
+        </div>
+
+        <div class="mt-5">
+          <div class="row">
+            <div class="col-sm-6 d-flex  flex-column">
+              <div class=" font-weight-bold text-dark">{{ userService.user.age }}</div>
+              <div class="font-weight-bold small">Age</div>
+            </div>
+            <div class=" col-sm-5 d-flex flex-column">
+              <div class=" font-weight-bold text-dark">{{ userService.user.gender }}</div>
+              <small class=" font-weight-bold">Gender</small>
+            </div>
+          </div>
+          <div class=" row mt-3">
+            <div class="col-sm-6 d-flex flex-column">
+              <div class=" font-weight-bold text-dark">{{ userService.user.experience }} years</div>
+              <small class="font-weight-bold">Experience</small>
+            </div>
+            <div *ngIf="userService.user.types_of != undefined" class="col-sm-6 d-flex flex-column">
+              <div class="text-dark font-weight-bold">{{ userService.user.types_of }}</div>
+              <small class=" font-weight-bold">Type of </small>
+            </div>
+          </div>
+          <div class=" row mt-3">
+            <div class="col-sm-6 d-flex flex-column">
+              <div class=" font-weight-bold text-dark">{{ userService.user.new_patient_visiting_price }} TK</div>
+              <small class="font-weight-bold">New Patient Price</small>
+            </div>
+            <div class="col-sm-6 d-flex flex-column">
+              <div class="text-dark font-weight-bold">{{ userService.user.old_patient_visiting_price }} TK</div>
+              <small class=" font-weight-bold">Old Patient Price </small>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-5" *ngIf="userService.user.schedules != undefined && userService.user.schedules.length > 0">
+          <div class=" font-weight-bold">Schedules</div>
+          <div  *ngFor="let item of userService.user.schedules">
+            <div class="mt-2 d-flex">
+              <div class="align-self-stretch bg-gray-400" style="width: 4px; border-radius: 2px;"></div>
+              <div class="ml-2 d-flex flex-column">
+                <div class=" font-weight-bold" style="font-size: 20px;">{{ item.day_name | weekDay }}</div>
+                <div class=" font-weight-bold text-primary small"> {{item.start_time | date: 'shortTime'}} - {{item.end_time | date: 'shortTime' }} </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center align-items-end flex-fill">
+          <button (click)="onViewProfileClicked($event)" class="btn-sm btn btn-primary rounded">View/Edit Profile</button>
+        </div>
+
+      </div>
+    </div> -->
+
+
+
+
+    <!-- <div *ngIf="isInvestigator" class="card ml-4 align-self-stretch shadow" style="width: 300px;">
+      <div class="d-flex flex-column card-body">
+        <div class=" font-weight-bold">Investigations</div>
+
+        <div class="d-flex justify-content-between mt-3">
+          <div class=" d-flex">
+           <div class="align-self-stretch bg-gray-400" style="width: 4px; border-radius: 2px;"></div>
+           <div class="ml-2 d-flex flex-column">
+             <div class=" text-primary font-weight-bold" style="font-size: 22px;">{{total_investigations}}</div>
+             <small>Total Investigations</small>
+           </div>
+          </div>
+          <div>
+            <i class="fad fa-vial fa-2x text-primary"></i>
+          </div>
+        </div>
+
+
+        <div class="d-flex justify-content-between mt-3">
+          <div class=" d-flex">
+           <div class="align-self-stretch bg-gray-400" style="width: 4px; border-radius: 2px;"></div>
+           <div class="ml-2 d-flex flex-column">
+             <div class=" text-primary font-weight-bold" style="font-size: 22px;">{{pending_investigations}}</div>
+             <small>Pending Investigations</small>
+           </div>
+          </div>
+          <div>
+            <i class="fad fa-vial fa-2x text-warning"></i>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between mt-3">
+          <div class=" d-flex">
+           <div class="align-self-stretch bg-gray-400" style="width: 4px; border-radius: 2px;"></div>
+           <div class="ml-2 d-flex flex-column">
+             <div class=" text-primary font-weight-bold" style="font-size: 22px;">{{completed_investigations}}</div>
+             <small>Completed Investigations by Me</small>
+           </div>
+          </div>
+          <div>
+            <i class="fad fa-vial fa-2x text-success"></i>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
 
 
 </div>

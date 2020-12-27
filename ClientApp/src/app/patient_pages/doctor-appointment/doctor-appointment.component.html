@@ -16,14 +16,14 @@
                                    [user_id]="doctor_id"></app-profile-pic-preview>
         </div>
         <div class=" d-flex flex-column align-items-start">
-          <div class="border-left-success pl-2 mb-2">
-            <h6 class="font-weight-bold mb-0 text-success">{{doctor.new_patient_visiting_price}} TK.</h6>
+          <div class="border-left-primary pl-2 mb-2">
+            <h6 class="font-weight-bold mb-0 text-primary">{{doctor.new_patient_visiting_price}} TK.</h6>
             <div>
               <small class="text-muted"> New Patient</small>
             </div>
           </div>
-          <div class="border-left-success pl-2 mb-2">
-            <h6 class="font-weight-bold mb-0 text-success">{{doctor.old_patient_visiting_price}} TK.</h6>
+          <div class="border-left-primary pl-2 mb-2">
+            <h6 class="font-weight-bold mb-0 text-primary">{{doctor.old_patient_visiting_price}} TK.</h6>
             <div>
               <small class="text-muted"> Old Patient</small>
             </div>
@@ -37,7 +37,7 @@
           <h6 class=" text-gray-800 font-weight-bold">{{doctor.name}}</h6>
         </div>
         <div class="d-flex flex-wrap" *ngIf="doctor.specialities.length > 0">
-          <small class="mr-2 text-success font-weight-bold" *ngFor="let item of doctor.specialities">{{item.specialityName}}</small>
+          <small class="mr-2 text-primary font-weight-bold" *ngFor="let item of doctor.specialities">{{item.specialityName}}</small>
         </div>
         <div>
           <small class="text-muted">{{doctor.degree_title}}</small>
@@ -56,8 +56,8 @@
         <h5 class="font-weight-bold">I am available on</h5>
 
         <div class="mt-3 flex-column d-flex">
-          <div class="border-left-success pl-2 mb-2" *ngFor="let schedule_item of doctor.schedules">
-            <h6 class="font-weight-bold mb-0 text-success">{{schedule_item.day_name | weekDay}}</h6>
+          <div class="border-left-primary pl-2 mb-2" *ngFor="let schedule_item of doctor.schedules">
+            <h6 class="font-weight-bold mb-0 text-primary">{{schedule_item.day_name | weekDay}}</h6>
             <div>
               <small class="text-muted">  {{schedule_item.start_time | date: 'shortTime' }} - {{schedule_item.end_time | date: 'shortTime' }}</small>
             </div>
@@ -76,7 +76,7 @@
           </div>
         </div>
         <div *ngIf="fetchingScheduleInfo || gettingAppointmentSerialNo" class="d-flex my-5 justify-content-center align-items-center">
-          <div class="spinner-border text-success" role="status">
+          <div class="spinner-border text-primary" role="status">
             <span class="sr-only">Loading...</span>
           </div>
           <span class="ml-3">{{gettingAppointmentSerialNo == true?'Reserving...': 'Checking...'}}</span>
@@ -90,7 +90,7 @@
                                          [user_id]="item.doctor_id"></app-profile-pic-preview>
               </div>
               <div>
-                <h6 class="mb-0 text-gray-800 font-weight-bold">{{item.doctor_name}} <span class="text-success">(#{{item.serial_no}})</span></h6>
+                <h6 class="mb-0 text-gray-800 font-weight-bold">{{item.doctor_name}} <span class="text-primary">(#{{item.serial_no}})</span></h6>
                 <p class="mb-0">{{item.appointment_date | date: 'mediumDate'}}</p>
                 <p class="small mb-0">{{item.start_time | date: 'shortTime'}} - {{item.end_time | date: 'shortTime'}}</p>
                 <p class="small mb-0">Visiting price: {{item.visiting_price}} TK</p>
@@ -114,7 +114,7 @@
                                            [user_id]="item.doctor_id"></app-profile-pic-preview>
                 </div>
                 <div>
-                  <h6 class="mb-0 text-gray-800 font-weight-bold">{{item.doctor_name}} <span class="text-success">(#{{item.serial_no}})</span></h6>
+                  <h6 class="mb-0 text-gray-800 font-weight-bold">{{item.doctor_name}} <span class="text-primary">(#{{item.serial_no}})</span></h6>
                   <p class="mb-0">{{item.appointment_date | date: 'mediumDate'}}</p>
                   <p class="small mb-0">{{item.start_time | date: 'shortTime'}} - {{item.end_time | date: 'shortTime'}}</p>
                   <p class="small mb-0">Visiting price: {{item.visiting_price}} TK</p>
@@ -128,7 +128,7 @@
         <div>
           <button [disabled]="!isEnableConfirmBtn"
                   (click)="onConfirmBtnClicked()"
-                  class="btn btn-success shadow mt-3" style="width: 100%;">
+                  class="btn btn-primary shadow mt-3" style="width: 100%;">
             <div class="d-flex flex-row justify-content-center align-items-center">
               <div class=" font-weight-bold">{{isScheduleConfirmed == true? 'Confirmed': 'Confirm'}}</div>
               <div *ngIf="confirmingSchedule" class="spinner-border spinner-border-sm text-light ml-3" role="status">

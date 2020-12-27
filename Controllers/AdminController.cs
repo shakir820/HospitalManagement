@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -67,6 +68,7 @@ namespace HospitalManagement.Controllers
                 }
                 if(userModel.username != null)
                 {
+                    
                     var signInResult = await _signInManager.PasswordSignInAsync(userModel.username, userModel.password, true, false);
                     if (signInResult.Succeeded)
                     {
@@ -74,29 +76,12 @@ namespace HospitalManagement.Controllers
                         if(user != null)
                         {
                             var role_collection = await _userManager.GetRolesAsync(user);
+                            var um = ModelBindingResolver.ResolveUser(user, role_collection.ToList());
                             return new JsonResult(new
                             {
                                 success = true,
                                 error = false,
-                                user = new UserModel
-                                {
-                                    age = user.Age,
-                                    bloodGroup = user.BloodGroup,
-                                    bmdc_certifcate = user.BMDC_certifcate,
-                                    city_name = user.city_name,
-                                    country_name = user.country_name,
-                                    country_phone_code = user.country_phone_code,
-                                    country_short_name = user.country_short_name,
-                                    email = user.Email,
-                                    gender = user.Gender,
-                                    approved = user.Approved,
-                                    id = user.Id,
-                                    name = user.Name,
-                                    roles = role_collection.ToList(),
-                                    phoneNumber = user.PhoneNumber,
-                                    state_name = user.state_name,
-                                    username = user.UserName
-                                }
+                                user = um
                             });
                         }
                         else
@@ -115,6 +100,7 @@ namespace HospitalManagement.Controllers
                         {
                             error = true,
                             success = false,
+                            wrong_password = true,
                             error_msg = "Login failed"
                         });
                     }
@@ -163,6 +149,7 @@ namespace HospitalManagement.Controllers
             newAdminUser.Name = "Admin";
             newAdminUser.UserName = "Admin";
             newAdminUser.Approved = true;
+            newAdminUser.CreatedDate = DateTime.Now;
             var createAdminResult = await _userManager.CreateAsync(newAdminUser, "admin1234");
             if (createAdminResult.Succeeded)
             {
@@ -216,6 +203,7 @@ namespace HospitalManagement.Controllers
                     doctor.gender = item.Gender;
                     doctor.id = item.Id;
                     doctor.name = item.Name;
+                    doctor.created_date = item.CreatedDate;
                     doctor.phoneNumber = item.PhoneNumber;
                     doctor.roles = new List<string> { "Doctor" };
                     doctor.state_name = item.state_name;
@@ -269,6 +257,7 @@ namespace HospitalManagement.Controllers
                     doctor.gender = item.Gender;
                     doctor.isActive = item.IsActive;
                     doctor.id = item.Id;
+                    doctor.created_date = item.CreatedDate;
                     doctor.name = item.Name;
                     doctor.phoneNumber = item.PhoneNumber;
                     doctor.roles = new List<string> { "Doctor" };
@@ -488,6 +477,7 @@ namespace HospitalManagement.Controllers
                     _doctor.country_phone_code = user.country_phone_code;
                     _doctor.country_short_name = user.country_short_name;
                     _doctor.degree_title = user.DegreeTittle;
+                    _doctor.created_date = user.CreatedDate;
                     _doctor.doctor_title = user.DoctorTitle;
                     _doctor.email = user.Email;
                     _doctor.experience = user.year_of_Experience;
@@ -570,6 +560,151 @@ namespace HospitalManagement.Controllers
 
 
 
-      
+
+        public async Task<IActionResult> GetAdminSummary()
+        {
+            try
+            {
+                long total_patient = 0;
+                long total_doctor = 0;
+                long total_staff = 0;
+                long total_pending_doctor = 0;
+                int total_pending_investigation = 0;
+                int total_completed_investigation = 0;
+                int total_inprogress_investigation = 0;
+
+                var today = DateTime.Now;
+                var this_month = new DateTime(today.Year, today.Month, today.Day);
+
+
+                var patient_role = await _context.Roles.FirstOrDefaultAsync(a => a.Name == "Patient");
+                if (patient_role != null)
+                {
+                    total_patient = await  _context.UserRoles.Where(a => a.RoleId == patient_role.Id).CountAsync();
+                }
+
+                var doctor_role = await _context.Roles.FirstOrDefaultAsync(a => a.Name == "Doctor");
+
+                if(doctor_role != null)
+                {
+                    total_doctor = await _context.UserRoles.Where(a => a.RoleId == doctor_role.Id).CountAsync();
+                    total_pending_doctor = await _context.Users.Join(_context.UserRoles, o => o.Id, i => i.UserId, (o, i) => new 
+                    { 
+                        user = o, 
+                        user_role = i 
+                    }).Where(a => a.user_role.RoleId == doctor_role.Id && a.user.Approved == false).CountAsync();
+                }
+
+                var staff_role = await _context.Roles.FirstOrDefaultAsync(a => a.Name == "Staff");
+
+                if(staff_role != null)
+                {
+                    total_staff = await _context.UserRoles.Where(a => a.RoleId == staff_role.Id).CountAsync();
+                }
+
+                total_completed_investigation = await _context.InvestigationDocs.Where(a => a.InvestigationStatus == InvestigationStatus.Completed && a.CreatedDate >= this_month).CountAsync();
+                total_inprogress_investigation = await _context.InvestigationDocs.Where(a => a.InvestigationStatus == InvestigationStatus.Inprogress && a.CreatedDate >= this_month).CountAsync();
+                total_pending_investigation = await _context.InvestigationDocs.Where(a => a.InvestigationStatus == InvestigationStatus.Pending && a.CreatedDate >= this_month).CountAsync();
+
+
+
+                return new JsonResult(new
+                {
+                    success = true,
+                    error = false,
+                    total_completed_investigation,
+                    total_inprogress_investigation,
+                    total_pending_investigation,
+                    total_pending_doctor,
+                    total_patient,
+                    total_doctor,
+                    total_staff
+                });
+
+
+
+            }
+            catch(Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = ex.Message
+                });
+            }
+        }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateAdminProfile([FromForm] UserModel admin_user)
+        {
+            using(var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    var db_user = await _context.Users.FirstOrDefaultAsync(a => a.Id == admin_user.id);
+
+                    if(db_user == null)
+                    {
+                        return new JsonResult(new
+                        {
+                            success = false,
+                            error = true,
+                            error_msg = "Admin user not found"
+                        });
+                    }
+
+                    if (admin_user.username != null)
+                    {
+                        if (db_user.UserName != admin_user.username)
+                        {
+                            db_user.UserName = admin_user.username;
+                        }
+                    }
+
+
+                    if (admin_user.profilePic != null)
+                    {
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            await admin_user.profilePic.CopyToAsync(memoryStream);
+                            db_user.ProfilePic = memoryStream.ToArray();
+                        }
+                    }
+
+
+
+                    db_user.Name = admin_user.name;
+
+                    await _userManager.UpdateAsync(db_user);
+
+                    await transaction.CommitAsync();
+
+                    admin_user = ModelBindingResolver.ResolveUser(db_user);
+
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        error = false,
+                        user = admin_user
+                    });
+                }
+                catch(Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        error = true,
+                        error_msg = ex.Message
+                    });
+                }
+            }
+           
+        }
+
+
     }
 }

@@ -92,6 +92,9 @@ namespace HospitalManagement.Migrations
                     b.Property<string>("Abbreviation")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ContentType")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -103,6 +106,9 @@ namespace HospitalManagement.Migrations
 
                     b.Property<string>("FileName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("InvestigationStatus")
+                        .HasColumnType("int");
 
                     b.Property<long>("InvestigationTagId")
                         .HasColumnType("bigint");
@@ -121,6 +127,12 @@ namespace HospitalManagement.Migrations
 
                     b.Property<long>("PrescriptionId")
                         .HasColumnType("bigint");
+
+                    b.Property<DateTime>("ResultPublishDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("SampleSubmitDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -410,6 +422,9 @@ namespace HospitalManagement.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("Age")
                         .HasColumnType("int");
 
@@ -557,6 +572,33 @@ namespace HospitalManagement.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+                });
+
+            modelBuilder.Entity("HospitalManagement.Models.ViewModels.PatientDocument", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ContentType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DocumentLocation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("PatientId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PatientDocuments");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<long>", b =>

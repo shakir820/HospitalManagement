@@ -24,6 +24,7 @@ export class EditUserRoleDialogComponent implements OnInit {
   onFormSubmit(){
     if(this.investigatorRole){
       if(!this.user.roles.includes('Investigator')){
+        this.user.roles.push('Staff');
         this.user.roles.push('Investigator');
       }
     }
@@ -31,6 +32,10 @@ export class EditUserRoleDialogComponent implements OnInit {
       if(this.user.roles.includes('Investigator')){
         var inve_index = this.user.roles.findIndex(a => a == 'Investigator');
         this.user.roles.splice(inve_index, 1);
+        var s_index = this.user.roles.findIndex(a => a == 'Staff');
+        if(s_index != undefined || s_index != -1){
+          this.user.roles.splice(s_index, 1);
+        }
       }
     }
 

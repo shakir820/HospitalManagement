@@ -47,7 +47,7 @@
 
 
       <!-- Nav Item - Alerts -->
-      <li *ngIf="userService.isLoggedIn" class="nav-item dropdown no-arrow mx-1">
+      <li *ngIf="false" class="nav-item dropdown no-arrow mx-1">
         <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fas fa-bell fa-fw"></i>
           <!-- Counter - Alerts -->
@@ -96,7 +96,7 @@
       </li>
 
       <!-- Nav Item - Messages -->
-      <li *ngIf="userService.isLoggedIn" class="nav-item dropdown no-arrow mx-1">
+      <li *ngIf="false" class="nav-item dropdown no-arrow mx-1">
         <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fas fa-envelope fa-fw"></i>
           <!-- Counter - Messages -->
@@ -174,11 +174,15 @@
           <div class=" dropdown-item-text font-weight-bold">
             <i class="fad fa-sm fa-fw fa-id-card  text-gray-400 mr-2"></i><span>{{ userService.user.id }}</span>
           </div>
-          <a class="dropdown-item" [routerLink]="['profile']" routerLinkActive="active">
+          <a class="dropdown-item" [routerLink]="['profile']" *ngIf="!isAdmin">
             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
             Profile
           </a>
-          <a class="dropdown-item" href="#">
+          <a class="dropdown-item" [routerLink]="['admin/Profile']" *ngIf="isAdmin">
+            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+            Profile
+          </a>
+          <a class="dropdown-item" (click)="onSettingsClicked($event)">
             <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
             Settings
           </a>
@@ -271,7 +275,7 @@
           </a>
         </li>
 
-        <li class="nav-item" style="cursor: pointer;" *ngIf="isDoctor">
+        <li class="nav-item" style="cursor: pointer;" *ngIf="isDoctor && userService.user.approved">
           <a class="nav-link collapsed" data-toggle="collapse" data-target="#patientCollapse" aria-expanded="true" aria-controls="patientCollapse">
             <i class="fad fa-user-injured"></i>
             <span>Patients</span>
@@ -285,10 +289,36 @@
           </div>
         </li>
 
+
+        <li class="nav-item" style="cursor: pointer;" *ngIf="isPatient || isInvestigator">
+          <a class="nav-link collapsed" data-toggle="collapse" data-target="#investigationCollapse" aria-expanded="true" aria-controls="patientCollapse">
+            <i class="fad fa-vial"></i>
+            <span>Investigation</span>
+          </a>
+          <div id="investigationCollapse" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+              <h6 class="collapse-header">Investigation Filter:</h6>
+              <a class="collapse-item" [routerLink]="['Investigation/MyInvestigationList']" routerLinkActive="active" *ngIf="isPatient" >My Investigations</a>
+              <a class="collapse-item" [routerLink]="['Investigation/AssignedInvestigationList']" routerLinkActive="active" *ngIf="isInvestigator">Assigned Investigations</a>
+              <a class="collapse-item" [routerLink]="['Investigation/RequestedInvestigationList']" routerLinkActive="active" *ngIf="isInvestigator">Requested Investigations</a>
+            </div>
+          </div>
+        </li>
+
+
+
         <li class="nav-item" routerLinkActive="active" *ngIf="isPatient">
           <a class="nav-link" [routerLink]="['Prescription/PrescriptionList']">
             <i class="fas fa-fw fa-prescription"></i>
             <span>Prescriptions</span>
+          </a>
+        </li>
+
+
+        <li class="nav-item" routerLinkActive="active" *ngIf="isPatient">
+          <a class="nav-link" [routerLink]="['Document/PatientDocumentList']">
+            <i class="fad fa-fw fa-files-medical"></i>
+            <span>Documents</span>
           </a>
         </li>
 
@@ -314,6 +344,15 @@
 
 
     <div class="flex-fill" style="margin-top:80px;">
+
+      <!-- alert -->
+      <div class="m-3" *ngIf="isDoctor && userService.isLoggedIn">
+        <div class="alert alert-danger" *ngIf="!userService.user.approved" role="alert">
+          Completer your profile to get verified by the Admin
+        </div>
+      </div>
+
+
       <router-outlet (activate)="onActivate($event)"></router-outlet>
       <!--<div id="content-wrapper">-->
 

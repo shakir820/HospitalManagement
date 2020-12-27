@@ -28,7 +28,7 @@ export class RegistrationComponent implements OnInit {
   isUniqueEmailAddress: boolean = true;
   selectedGender: string = "Male";
   selectedRole: string = "Patient";
-  roles: string[] = ['Doctor', 'Patient'];
+  roles: string[] = ['Doctor', 'Patient', 'Staff'];
   email: string;
   registering: boolean = false;
   //errorList: string[] = [];

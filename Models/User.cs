@@ -19,10 +19,10 @@ namespace HospitalManagement.Models
         public string city_name { get; set; }
         public string BloodGroup { get; set; }
         public byte[] ProfilePic { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
         public bool IsActive { get; set; } = true;
 
-
+        public string Address { get; set; }
 
 
         //doctor's profile info

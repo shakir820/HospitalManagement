@@ -4,13 +4,20 @@ import { AdminDashboardComponent } from "./admin/admin-dashboard/admin-dashboard
 import { AdminDoctorDetailsComponent } from "./admin/admin-doctor-details/admin-doctor-details.component";
 import { AdminDoctorListComponent } from "./admin/admin-doctor-list/admin-doctor-list.component";
 import { AdminLoginComponent } from "./admin/admin-login/admin-login.component";
+import { AdminProfileComponent } from "./admin/admin-profile/admin-profile.component";
+import { AdminSettingsPageComponent } from "./admin/admin-settings-page/admin-settings-page.component";
 import { AdminStaffListComponent } from "./admin/admin-staff-list/admin-staff-list.component";
 import { NewStaffComponent } from "./admin/admin-staff-list/new-staff/new-staff.component";
 import { AdminUserListComponent } from "./admin/admin-user-list/admin-user-list.component";
+import { AssignedInvestigationListComponent } from "./common_pages/investigation/assigned-investigation-list/assigned-investigation-list.component";
+import { InvestigationDetailsComponent } from "./common_pages/investigation/investigation-details/investigation-details.component";
+import { MyInvestigationListComponent } from "./common_pages/investigation/my-investigation-list/my-investigation-list.component";
+import { RequestedInvestigationListComponent } from "./common_pages/investigation/requested-investigation-list/requested-investigation-list.component";
 import { PatientDetailsComponent } from "./common_pages/patient-details/patient-details.component";
 import { CreatePrescriptionComponent } from "./common_pages/prescription/create-prescription/create-prescription.component";
 import { PrescriptionListComponent } from "./common_pages/prescription/prescription-list/prescription-list.component";
 import { ViewPrescriptionComponent } from "./common_pages/prescription/view-prescription/view-prescription.component";
+import { SettingPageComponent } from "./common_pages/setting-page/setting-page.component";
 import { CounterComponent } from "./counter/counter.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
 import { PatientListComponent } from "./doctor_pages/patient-list/patient-list.component";
@@ -21,6 +28,7 @@ import { LoginComponent } from "./login/login.component";
 import { AppointmentListComponent } from "./patient_pages/appointment-list/appointment-list.component";
 import { DoctorAppointmentComponent } from "./patient_pages/doctor-appointment/doctor-appointment.component";
 import { DoctorListComponent } from "./patient_pages/doctor-list/doctor-list.component";
+import { PatientDocumentListComponent } from "./patient_pages/patient-document-list/patient-document-list.component";
 import { ProfileComponent } from "./profile/profile.component";
 import { RegistrationComponent } from "./registration/registration.component";
 import { AdminLoginCanActivateService } from "./services/authGuard/admin-login-can-activate.service";
@@ -56,6 +64,14 @@ export const appRoutes: Routes = [
   { path: 'admin/StaffList', component: AdminStaffListComponent, canActivate:[AdminPagesCanActivateService] },
   { path: 'admin/StaffList/CreateNewStaff', component: NewStaffComponent, canActivate: [AdminPagesCanActivateService]},
   { path: 'admin/UserList', component: AdminUserListComponent, canActivate: [AdminPagesCanActivateService]},
+  { path: 'admin/Profile', component: AdminProfileComponent, canActivate: [AdminPagesCanActivateService]},
+  { path: 'admin/SettingsPage', component: AdminSettingsPageComponent, canActivate: [AdminPagesCanActivateService]},
+  { path: 'Investigation/MyInvestigationList', component: MyInvestigationListComponent, canActivate: [UserPagesCanActivateService]},
+  { path: 'Investigation/AssignedInvestigationList', component: AssignedInvestigationListComponent, canActivate: [UserPagesCanActivateService]},
+  { path: 'Investigation/RequestedInvestigationList', component: RequestedInvestigationListComponent, canActivate: [UserPagesCanActivateService]},
+  { path: 'Investigation/InvestigationDetails', component:InvestigationDetailsComponent, canActivate: [UserPagesCanActivateService]},
+  { path: 'Document/PatientDocumentList', component: PatientDocumentListComponent, canActivate: [UserPagesCanActivateService]},
+  { path: 'SettingsPage', component: SettingPageComponent, canActivate: [UserPagesCanActivateService] },
   { path: '**', redirectTo: "" },
 ]
 

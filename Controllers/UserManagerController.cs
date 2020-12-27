@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using HospitalManagement.Data;
 using HospitalManagement.Helper;
 using HospitalManagement.Models;
+using HospitalManagement.Models.ViewModels;
+using HospitalManagement.Services;
 using HospitalManagement.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -29,15 +31,17 @@ namespace HospitalManagement.Controllers
         RoleManager<UserRole> _roleManager;
         SignInManager<User> _signInManager;
         IWebHostEnvironment _webHostEnvironment;
-
+        EmailService _emailService;
 
         public UserManagerController(
             HospitalManagementDbContext context,
             UserManager<User> userManager,
             RoleManager<UserRole> roleManager,
             SignInManager<User> signInManager,
-            IWebHostEnvironment webHostEnvironment)
+            IWebHostEnvironment webHostEnvironment,
+            EmailService emailService)
         {
+            _emailService = emailService;
             _context = context;
             _userManager = userManager;
             _roleManager = roleManager;
@@ -206,6 +210,138 @@ namespace HospitalManagement.Controllers
 
 
         [HttpPost]
+        public async Task<IActionResult> CreateNewUser2(PostMethodRawData post_data)
+        {
+
+            using (var transation = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    var userModel = JsonConvert.DeserializeObject<UserModel>(post_data.json_data);
+                    var user = new User();
+                    user.Email = userModel.email;
+                    user.Name = userModel.name;
+                    user.Age = userModel.age;
+                    user.Gender = userModel.gender;
+                    user.UserName = userModel.email;
+                    var result = await _userManager.CreateAsync(user, userModel.password);
+                    if (result.Succeeded)
+                    {
+                        var dbRole = await _roleManager.FindByNameAsync(userModel.role);
+                        if (dbRole == null)
+                        {
+                            var newRole = new UserRole { Name = userModel.role };
+                            var roleCreatedResult = await _roleManager.CreateAsync(newRole);
+                            if (roleCreatedResult.Succeeded)
+                            {
+                                var roleResult = await _userManager.AddToRoleAsync(user, newRole.Name);
+                                if (roleResult.Succeeded)
+                                {
+                                    await transation.CommitAsync();
+                                    userModel.id = user.Id;
+                                    userModel.roles = new List<string> { userModel.role };
+                                    userModel.username = user.UserName;
+                                    userModel.approved = false;
+
+                                    
+                                    return new JsonResult(new 
+                                    {
+                                        success = true,
+                                        error = false,
+                                        user = userModel
+                                    });
+                                }
+                                else
+                                {
+                                    await transation.RollbackAsync();
+                                
+
+                                    return new JsonResult(new 
+                                    {
+                                        success = false,
+                                        error_msg = "Cannot add User role",
+                                        error = true,
+                                        
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                await transation.RollbackAsync();
+                              
+                                return new JsonResult(new 
+                                {
+                                    success = false,
+                                    error_msg = "Cannot create User role",
+                                    error = true,
+                                   
+                                });
+                            }
+                        }
+                        else
+                        {
+                            var roleResult = await _userManager.AddToRoleAsync(user, dbRole.Name);
+                            if (roleResult.Succeeded)
+                            {
+                                await transation.CommitAsync();
+
+                                userModel.id = user.Id;
+                                userModel.roles = new List<string> { userModel.role };
+                                userModel.username = user.UserName;
+                                userModel.approved = false;
+
+                                return new JsonResult(new 
+                                {
+                                    success = true,
+                                    error = false,
+                                    user = userModel
+                                });
+                            }
+                            else
+                            {
+                                await transation.RollbackAsync();
+                            
+                                return new JsonResult(new 
+                                {
+                                    success = false,
+                                    error_msg = "Cannot add role to User",
+                                    error = true,
+                                   
+                                });
+                            }
+                        }
+                    }
+                    else
+                    {
+                        await transation.RollbackAsync();
+                    
+                        return new JsonResult(new 
+                        {
+                            success = false,
+                            error = true,
+                            error_msg = "Something went wrong"
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await transation.RollbackAsync();
+                    return new JsonResult(new 
+                    {
+                        success = false,
+                        error = true,
+                        error_msg = "Something went wrong"
+                    });
+                }
+            }
+
+        }
+
+
+
+
+
+        [HttpPost]
         public async Task<IActionResult> SigninUserAsync(UserModel userModel)
         {
             try
@@ -344,6 +480,96 @@ namespace HospitalManagement.Controllers
 
 
 
+        [HttpPost]
+        public async Task<IActionResult> SigninUser2(UserModel userModel)
+        {
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(userModel.email);
+                if (user != null)
+                {
+                    var canSignin = await _signInManager.CanSignInAsync(user);
+
+                    if (canSignin)
+                    {
+
+                        var signInResult = await _signInManager.CheckPasswordSignInAsync(user, userModel.password, false);
+                        if (signInResult.Succeeded)
+                        {
+                            var roleCollection = await _userManager.GetRolesAsync(user);
+
+                            user = await _context.Users.Include(a => a.Languages).Include(a => a.Specialities).Include(a => a.Schedules).
+                                AsNoTracking().FirstOrDefaultAsync(a => a.Id == user.Id);
+
+                            var userModel1 = ModelBindingResolver.ResolveUser(user, roleCollection.ToList());
+
+                            //string em_sub = "Login";
+                            //string address = "shakir.sha95@gmail.com";
+                            //string em_body = "Dear Shakir, \n You have just logged in";
+
+                            //_emailService.SendEmail(em_sub, em_body, new List<string> { address });
+
+
+                            return new JsonResult(new ViewModels.SignInResult
+                            {
+                                success = true,
+                                user = userModel1
+                            });
+                        }
+                        else
+                        {
+                            return new JsonResult(new ViewModels.SignInResult
+                            {
+                                success = false,
+                                wrong_password = true,
+                                error = false,
+                                msg = "Password is wrong"
+
+                            });
+                        }
+
+                    }
+                    else
+                    {
+                        return new JsonResult(new ViewModels.SignInResult
+                        {
+                            success = false,
+                            msg = "User cannot signin",
+                            error = false
+                        });
+                    }
+                }
+                else
+                {
+                    return new JsonResult(new ViewModels.SignInResult
+                    {
+                        success = false,
+                        msg = "Email doesn't exist",
+                        error = false,
+                        emailExist = false
+                    });
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new ViewModels.SignInResult
+                {
+                    error_msg = ex.Message,
+                    error = true,
+                    success = false
+                });
+            }
+        }
+
+
+
+
+
+
+
+
 
 
         public async Task<IActionResult> getUserById(long id)
@@ -444,7 +670,53 @@ namespace HospitalManagement.Controllers
 
 
 
+        public async Task<IActionResult> getUserById2(long id)
+        {
+            try
+            {
+                var user = await _context.Users.Include(a => a.Languages).Include(a => a.Specialities).Include(a => a.Schedules).AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
+                if (user != null)
+                {
+                    var userRoleIds = await _context.UserRoles.Where(a => a.UserId == user.Id).ToListAsync();
+                    var roleCollection = new List<string>();
+                    foreach (var identityRole in userRoleIds)
+                    {
+                        var user_role = await _context.Roles.FirstOrDefaultAsync(a => a.Id == identityRole.RoleId);
+                        if (user_role != null)
+                        {
+                            roleCollection.Add(user_role.Name);
+                        }
+                    }
 
+                    var usr = ModelBindingResolver.ResolveUser(user, roleCollection);
+
+                    return new JsonResult(new ViewModels.SignInResult
+                    {
+                        success = true,
+                        user = usr
+
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new ViewModels.SignInResult
+                    {
+                        success = false,
+                        msg = "User doesn't exist",
+                        error = false
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new ViewModels.SignInResult
+                {
+                    error_msg = ex.Message,
+                    error = true,
+                    success = false
+                });
+            }
+        }
 
 
         public async Task<IActionResult> CheckForUniqueUsername(string username)
@@ -532,6 +804,7 @@ namespace HospitalManagement.Controllers
                         user.country_name = userModel.country_name;
                         user.country_phone_code = userModel.country_phone_code;
                         user.country_short_name = userModel.country_short_name;
+                        user.Address = userModel.address;
                         user.Gender = userModel.gender;
                         user.EmailConfirmed = true;
                         user.Name = userModel.name;
@@ -973,6 +1246,112 @@ namespace HospitalManagement.Controllers
                 });
             }
            
+        }
+
+
+
+
+        public async Task<IActionResult> GetPatientInfoByDoctor(long doctor_id)
+        {
+            try
+            {
+                var p_role = await _context.Roles.AsNoTracking().FirstOrDefaultAsync(a => a.Name == "Patient");
+                var total_patient_count = await _context.UserRoles.Where(a => a.RoleId == p_role.Id).CountAsync();
+                var patient_served_count = await _context.DoctorAppointments.Where(a => a.DoctorId == doctor_id & a.Consulted == true).CountAsync();
+
+                return new JsonResult(new
+                {
+                    success = true,
+                    error = false,
+                    total_patient_count,
+                    patient_served_count
+                });
+            }
+            catch(Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = ex.Message
+                });
+            }
+        }
+
+
+
+        public async Task<IActionResult> GetPatientSummaryInfo(long patient_id)
+        {
+            try
+            {
+                var total_appointments = await _context.DoctorAppointments.Where(a => a.PatientId == patient_id).CountAsync();
+                var total_investigations = await _context.InvestigationDocs.Where(a => a.PatientId == patient_id && a.InvestigationStatus == InvestigationStatus.Completed).CountAsync();
+                var total_documents = await _context.PatientDocuments.Where(a => a.PatientId == patient_id).CountAsync();
+                return new JsonResult(new
+                {
+                    success = true,
+                    error = false,
+                    total_appointments,
+                    total_investigations,
+                    total_documents
+                });
+            }
+            catch(Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = ex.Message
+                });
+            }
+        }
+
+
+
+
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword( PostMethodRawData post_data)
+        {
+            try
+            {
+                var userModel = JsonConvert.DeserializeObject<UserModel>(post_data.json_data);
+                var db_user = await _context.Users.FirstOrDefaultAsync(a => a.Id == userModel.id);
+                var pass_change_result = await _userManager.ChangePasswordAsync(db_user, userModel.password, userModel.new_password);
+
+                if (pass_change_result.Succeeded)
+                {
+
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        error = false
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        error = false,
+                        old_password_incorrect = true
+                    });
+                }
+            }
+            catch(Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = ex.Message
+                });
+            }
+            
+        
         }
 
     }

@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { NgxDropzoneModule } from 'ngx-dropzone';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -46,6 +47,15 @@ import { AdminStaffListComponent } from './admin/admin-staff-list/admin-staff-li
 import { NewStaffComponent } from './admin/admin-staff-list/new-staff/new-staff.component';
 import { AdminUserListComponent } from './admin/admin-user-list/admin-user-list.component';
 import { EditUserRoleDialogComponent } from './modal-dialogs/edit-user-role-dialog/edit-user-role-dialog.component';
+import { MyInvestigationListComponent } from './common_pages/investigation/my-investigation-list/my-investigation-list.component';
+import { AssignedInvestigationListComponent } from './common_pages/investigation/assigned-investigation-list/assigned-investigation-list.component';
+import { RequestedInvestigationListComponent } from './common_pages/investigation/requested-investigation-list/requested-investigation-list.component';
+import { InvestigationStatusPipe } from './pipes/investigation-status.pipe';
+import { InvestigationDetailsComponent } from './common_pages/investigation/investigation-details/investigation-details.component';
+import { PatientDocumentListComponent } from './patient_pages/patient-document-list/patient-document-list.component';
+import { SettingPageComponent } from './common_pages/setting-page/setting-page.component';
+import { AdminSettingsPageComponent } from './admin/admin-settings-page/admin-settings-page.component';
+import { AdminProfileComponent } from './admin/admin-profile/admin-profile.component';
 
 @NgModule({
   declarations: [
@@ -86,7 +96,16 @@ import { EditUserRoleDialogComponent } from './modal-dialogs/edit-user-role-dial
     AdminStaffListComponent,
     NewStaffComponent,
     AdminUserListComponent,
-    EditUserRoleDialogComponent
+    EditUserRoleDialogComponent,
+    MyInvestigationListComponent,
+    AssignedInvestigationListComponent,
+    RequestedInvestigationListComponent,
+    InvestigationStatusPipe,
+    InvestigationDetailsComponent,
+    PatientDocumentListComponent,
+    SettingPageComponent,
+    AdminSettingsPageComponent,
+    AdminProfileComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -94,8 +113,8 @@ import { EditUserRoleDialogComponent } from './modal-dialogs/edit-user-role-dial
     FormsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    NgbModule
-
+    NgbModule,
+    NgxDropzoneModule
   ],
   providers: [CookieService],
   bootstrap: [AppComponent]

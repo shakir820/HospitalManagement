@@ -26,12 +26,13 @@
             <label for="password">Password</label>
             <input type="password" class="form-control" id="password" placeholder="Password"
                    name="password"
+                   (input)="onPasswordInput($event)"
                    required
                    ngModel>
             <small id="passwordError"
                    *ngIf="(!f.form.controls['password'].valid && f.form.controls['password'].touched) || (submitted && !f.form.controls['password'].valid)"
                    class="text-danger">Password is required</small>
-            <small class="text-danger" *ngIf="wrongPassword">Password is wrong</small>
+            <small class="text-danger" *ngIf="wrongPassword">Username or password is wrong</small>
           </div>
           <div class="form-check">
             <input type="checkbox"
@@ -52,7 +53,7 @@
               </div>
             </button>
           </div>
-          <small class="text-danger" *ngIf="error_msg !== null && error_msg !== '' && error_msg !== undefined">{{ error_msg }}</small>
+          <small class="text-danger" *ngIf="error_msg != undefined && error_msg != '' && error_msg != null">{{ error_msg }}</small>
         </form>
        </div>
       </div>
