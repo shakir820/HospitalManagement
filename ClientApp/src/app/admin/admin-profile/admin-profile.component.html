@@ -1,0 +1,109 @@
+<div class="mt-4 container-fluid">
+
+  <div class=" card shadow border-0">
+    <div class=" card-body">
+      <form #f="ngForm" (ngSubmit)="onFormSubmit()">
+        <div class=" font-weight-bold text-dark">
+          Admin Profile
+        </div>
+        <div class="row mt-4">
+          <div class=" col-sm-12 col-md-6">
+            <div class=" d-flex flex-column align-items-center">
+              <div>
+                <div class="avatar-upload">
+                  <div class="avatar-edit">
+                    <input class="photo-input" type='file'
+                           ngModel
+                           name="profile_pic"
+                           #imageInput (change)="onImageChange($event)" id="imageUpload" accept=".png, .jpg, .jpeg" />
+                    <label id="imageInputLabel" for="imageUpload">
+                      <div class="d-flex justify-content-center" style="height: 100%;">
+                        <i class=" fa fas fa-pencil text-center align-self-center"></i>
+                      </div>
+                    </label>
+                  </div>
+                  <div class="avatar-preview">
+                    <div id="imagePreview" class="avatar-preview-inner-div" #imagePreview>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="align-items-center d-flex">
+                <div  class="border-primary" style="width: 18px; height: 18px; border-radius: 50%; border:3px solid;"></div>
+                <div class="ml-2 font-weight-bold text-primary">Admin</div>
+              </div>
+            </div>
+          </div>
+          <div class=" col-sm-12 col-md-6">
+            <div class="mt-sm-5 row">
+              <div class=" col-sm-4">
+                <div class=" font-weight-bold">Id</div>
+              </div>
+              <div class=" col-sm-6">
+                <div class="text-dark">{{userService.user.id}}</div>
+              </div>
+            </div>
+
+            <div class="mt-4 row">
+              <div class=" col-sm-4">
+                <div class=" font-weight-bold">Username</div>
+              </div>
+              <div class=" col-sm-6">
+                <div class="form-group ">
+                  <div class="align-items-center d-flex">
+                    <input class="form-control" [(ngModel)]="proposedUsername"
+                    name="username"
+                    id="username"
+                    (input)="onUsernameInput($event)"
+                    (change)="onUsernameChanged($event)"
+                    required type="text">
+                    <div *ngIf="checkingUsername" class="ml-2">
+                      <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden"></span>
+                      </div>
+                    </div>
+                    <div *ngIf="!checkingUsername && unique_username && f.form.controls['username'].valid" class="ml-2">
+                      <i class="fad text-success fa-thumbs-up"></i>
+                    </div>
+                  </div>
+                  <small *ngIf="!f.form.controls['username'].valid && f.form.controls['username'].touched" class=" text-danger">Username is required</small>
+                  <small *ngIf="!unique_username" class=" text-danger">Username is already taken</small>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="mt-4 row">
+              <div class=" col-sm-4">
+                <div class=" font-weight-bold">Name</div>
+              </div>
+              <div class=" col-sm-6">
+                <div class="form-group ">
+                  <input type="text" required name="user_name" id="user_name" class="form-control" [(ngModel)]="user_name">
+                  <small *ngIf="(!f.form.controls['user_name'].valid && f.form.controls['user_name'].touched)" class="text-danger">Name is required</small>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 d-flex flex-row-reverse">
+          <button [disabled]="checkingUsername || savingProfileData" type="submit" style="width: 200px;" class=" btn btn-primary">
+            <div class=" d-flex align-items-center">
+              <div class="flex-grow-1 ml-3 mr-3">
+                {{savingProfileData? 'Saving': 'Save'}}
+              </div>
+              <div *ngIf="savingProfileData" class="align-self-center d-flex">
+                <div class="spinner-border align-self-center spinner-border-sm text-light" role="status">
+                </div>
+              </div>
+            </div>
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>

@@ -174,7 +174,11 @@
           <div class=" dropdown-item-text font-weight-bold">
             <i class="fad fa-sm fa-fw fa-id-card  text-gray-400 mr-2"></i><span>{{ userService.user.id }}</span>
           </div>
-          <a class="dropdown-item" [routerLink]="['profile']">
+          <a class="dropdown-item" [routerLink]="['profile']" *ngIf="!isAdmin">
+            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+            Profile
+          </a>
+          <a class="dropdown-item" [routerLink]="['admin/Profile']" *ngIf="isAdmin">
             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
             Profile
           </a>
@@ -288,7 +292,7 @@
 
         <li class="nav-item" style="cursor: pointer;" *ngIf="isPatient || isInvestigator">
           <a class="nav-link collapsed" data-toggle="collapse" data-target="#investigationCollapse" aria-expanded="true" aria-controls="patientCollapse">
-            <i class="fad fa-user-injured"></i>
+            <i class="fad fa-vial"></i>
             <span>Investigation</span>
           </a>
           <div id="investigationCollapse" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">

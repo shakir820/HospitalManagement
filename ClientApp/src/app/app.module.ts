@@ -55,6 +55,7 @@ import { InvestigationDetailsComponent } from './common_pages/investigation/inve
 import { PatientDocumentListComponent } from './patient_pages/patient-document-list/patient-document-list.component';
 import { SettingPageComponent } from './common_pages/setting-page/setting-page.component';
 import { AdminSettingsPageComponent } from './admin/admin-settings-page/admin-settings-page.component';
+import { AdminProfileComponent } from './admin/admin-profile/admin-profile.component';
 
 @NgModule({
   declarations: [
@@ -103,7 +104,8 @@ import { AdminSettingsPageComponent } from './admin/admin-settings-page/admin-se
     InvestigationDetailsComponent,
     PatientDocumentListComponent,
     SettingPageComponent,
-    AdminSettingsPageComponent
+    AdminSettingsPageComponent,
+    AdminProfileComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

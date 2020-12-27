@@ -35,10 +35,12 @@ export class PatientListComponent implements OnInit {
   filteredPatients: User[];
   sortByAscending: boolean = true;
   @ViewChild('f') searchForm: NgForm;
+  searchPatientIcon:boolean = true;
 
 
 
   ngOnInit(): void {
+
   }
 
 
@@ -46,6 +48,7 @@ export class PatientListComponent implements OnInit {
   onSearchSubmit() {
     if (this.search_string != undefined && this.search_string != '' && this.search_string != null) {
       this.getPatients(this.search_string);
+      this.searchPatientIcon = false;
     }
   }
 

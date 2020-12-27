@@ -50,11 +50,11 @@ namespace HospitalManagement.Controllers
             try
             {
                 var doctor = await _context.Users.Include(a => a.Schedules).AsNoTracking().FirstOrDefaultAsync(a => a.Id == doctor_id && a.Approved == true && a.IsActive == true);
-                Thread.Sleep(3000);
+               
                 if (doctor != null)
                 {
                     var today = DateTime.Now; //today is Sunday
-                    var doctor_appointments = await _context.DoctorAppointments.AsNoTracking().Where(a => a.DoctorId == doctor_id).ToListAsync();
+                    var doctor_appointments = await _context.DoctorAppointments.AsNoTracking().Where(a => a.DoctorId == doctor_id && a.AppointmentDate >= today).ToListAsync();
                     var doctor_schedules = doctor.Schedules;
 
                     var availableDates = new List<DateTime>();
@@ -110,36 +110,13 @@ namespace HospitalManagement.Controllers
                         canCreateNewAppointment = false;
                         foreach(var item in future_appointments)
                         {
-                            var appointment = new DoctorAppointmentModel();
-                            appointment.appointment_date = item.AppointmentDate;
-                            appointment.created_date = item.CreatedDate;
-                            appointment.doctor_id = item.DoctorId;
-                            appointment.id = item.Id;
-                            appointment.modified_date = item.ModifiedDate;
-                            appointment.patient_id = item.PatientId;
-                            appointment.patient_name = item.PatientName;
-                            appointment.serial_no = item.SerialNo;
-                            appointment.doctor_name = doctor.Name;
-                            appointment.visiting_price = item.VisitingPrice;
-                            appointment.consulted = item.Consulted;
-
+                           
+                            var appointment = ModelBindingResolver.ResovleAppointment(item, ModelBindingResolver.ResolveUser(doctor));
                             appointments.Add(appointment);
                         }
                     }
 
-                    //appointments.Add(new DoctorAppointmentModel
-                    //{
-                    //    appointment_date = new DateTime(2020, 11, 16),
-                    //    created_date = new DateTime(2020, 11, 1),
-                    //    doctor_id = 2,
-                    //    doctor_name = "Dr. Aura Tabassum",
-                    //    id = 4,
-                    //    patient_id = 6,
-                    //    patient_name = "Saima Rahman",
-                    //    serial_no = 25
-                    //});
-
-                    //Thread.Sleep(3000);
+                   
 
                     return new JsonResult(new
                     {
@@ -263,7 +240,7 @@ namespace HospitalManagement.Controllers
           
             try
             {
-                Thread.Sleep(3000);
+               
                 var doctor = await _context.Users.FirstOrDefaultAsync(a => a.Id == appointmentModel.doctor_id);
               
                 var appointments = await _context.DoctorAppointments.AsNoTracking().Where(a => a.DoctorId == appointmentModel.doctor_id && 
@@ -299,26 +276,7 @@ namespace HospitalManagement.Controllers
                 var pa = new List<DoctorAppointmentModel>();
                 foreach(var item in patient_appointments)
                 {
-                    var appointment = new DoctorAppointmentModel
-                    {
-                        appointment_date = item.app_doc.appointment.AppointmentDate,
-                        created_date = item.app_doc.appointment.CreatedDate,
-                        doctor_id = item.app_doc.doctor.Id,
-                        doctor_name = item.app_doc.doctor.Name,
-                        id = item.app_doc.appointment.Id,
-                        patient_id = appointmentModel.patient_id,
-                        patient_name = item.patient.Name,
-                        serial_no = item.app_doc.appointment.SerialNo,
-                        visiting_price = item.app_doc.appointment.VisitingPrice
-                    };
-
-                    var sch = item.app_doc.doctor.Schedules;
-                    var sch_day = sch.FirstOrDefault(a => a.DayName == appointment.appointment_date.DayOfWeek);
-                    if(sch_day != null)
-                    {
-                        appointment.start_time = sch_day.StartTime;
-                        appointment.end_time = sch_day.EndTime;
-                    }
+                    var appointment = ModelBindingResolver.ResovleAppointment(item.app_doc.appointment, ModelBindingResolver.ResolveUser(item.app_doc.doctor));
                     
                     pa.Add(appointment);
                 }
@@ -358,8 +316,7 @@ namespace HospitalManagement.Controllers
             {
                 try
                 {
-                    //var doctor = await _context.Users.FirstOrDefaultAsync(a => a.Id == doctorAppointment.doctor_id);
-                    //Thread.Sleep(3000);
+                  
                     var today = DateTime.Now;
                     var doctor_appointment = new DoctorAppointment();
                     doctor_appointment.AppointmentDate = DateTime.Parse(doctorAppointment.appointment_date_str);
@@ -691,8 +648,7 @@ namespace HospitalManagement.Controllers
                     
                 }
 
-                Thread.Sleep(3000);
-
+              
                 return new JsonResult(new
                 {
                     success = true,
@@ -726,7 +682,7 @@ namespace HospitalManagement.Controllers
                 {
                     app = o,
                     doc = i
-                }).AsNoTracking().Where(a => a.app.PatientId == patient_id && a.app.AppointmentDate.Date == today.Date).ToListAsync();
+                }).AsNoTracking().Where(a => a.app.PatientId == patient_id && a.app.AppointmentDate.Date >= today.Date).ToListAsync();
 
                 var appointment_list = new List<DoctorAppointmentModel>();
                 foreach(var item in db_apps)

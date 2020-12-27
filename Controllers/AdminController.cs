@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -67,6 +68,7 @@ namespace HospitalManagement.Controllers
                 }
                 if(userModel.username != null)
                 {
+                    
                     var signInResult = await _signInManager.PasswordSignInAsync(userModel.username, userModel.password, true, false);
                     if (signInResult.Succeeded)
                     {
@@ -74,30 +76,12 @@ namespace HospitalManagement.Controllers
                         if(user != null)
                         {
                             var role_collection = await _userManager.GetRolesAsync(user);
+                            var um = ModelBindingResolver.ResolveUser(user, role_collection.ToList());
                             return new JsonResult(new
                             {
                                 success = true,
                                 error = false,
-                                user = new UserModel
-                                {
-                                    age = user.Age,
-                                    bloodGroup = user.BloodGroup,
-                                    bmdc_certifcate = user.BMDC_certifcate,
-                                    city_name = user.city_name,
-                                    country_name = user.country_name,
-                                    country_phone_code = user.country_phone_code,
-                                    country_short_name = user.country_short_name,
-                                    email = user.Email,
-                                    gender = user.Gender,
-                                    approved = user.Approved,
-                                    id = user.Id,
-                                    name = user.Name,
-                                    created_date = user.CreatedDate,
-                                    roles = role_collection.ToList(),
-                                    phoneNumber = user.PhoneNumber,
-                                    state_name = user.state_name,
-                                    username = user.UserName
-                                }
+                                user = um
                             });
                         }
                         else
@@ -650,6 +634,77 @@ namespace HospitalManagement.Controllers
                 });
             }
         }
-      
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateAdminProfile([FromForm] UserModel admin_user)
+        {
+            using(var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    var db_user = await _context.Users.FirstOrDefaultAsync(a => a.Id == admin_user.id);
+
+                    if(db_user == null)
+                    {
+                        return new JsonResult(new
+                        {
+                            success = false,
+                            error = true,
+                            error_msg = "Admin user not found"
+                        });
+                    }
+
+                    if (admin_user.username != null)
+                    {
+                        if (db_user.UserName != admin_user.username)
+                        {
+                            db_user.UserName = admin_user.username;
+                        }
+                    }
+
+
+                    if (admin_user.profilePic != null)
+                    {
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            await admin_user.profilePic.CopyToAsync(memoryStream);
+                            db_user.ProfilePic = memoryStream.ToArray();
+                        }
+                    }
+
+
+
+                    db_user.Name = admin_user.name;
+
+                    await _userManager.UpdateAsync(db_user);
+
+                    await transaction.CommitAsync();
+
+                    admin_user = ModelBindingResolver.ResolveUser(db_user);
+
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        error = false,
+                        user = admin_user
+                    });
+                }
+                catch(Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        error = true,
+                        error_msg = ex.Message
+                    });
+                }
+            }
+           
+        }
+
+
     }
 }

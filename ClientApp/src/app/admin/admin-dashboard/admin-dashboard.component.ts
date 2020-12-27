@@ -11,7 +11,7 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class AdminDashboardComponent implements OnInit {
 
-  constructor(private userService: UserService,
+  constructor(public userService: UserService,
     private httpClient: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     this._baseUrl = baseUrl;
   }
@@ -25,6 +25,7 @@ export class AdminDashboardComponent implements OnInit {
   pending_investigation: number;
   total_pending_doctor: number;
   fetchingSummary: boolean;
+
 
   todayTime: Date = new Date(Date.now());
 

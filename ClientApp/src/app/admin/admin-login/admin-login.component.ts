@@ -49,34 +49,19 @@ export class AdminLoginComponent implements OnInit {
       this.submitted = false;
       this.loggingIn = true;
 
-      this.httpClient.post<{success: boolean, error: boolean, error_msg: string,
-      user: {name: string, username: string, age: number, bloodGroup: string, city_name: string, country_name: string, country_phone_code: number,
-        country_short_name: string, email: string, approved: boolean, gender: string, id: number, roles: string[], phoneNumber: string, state_name: string }
+      this.httpClient.post<{
+        success: boolean,
+        error: boolean,
+        error_msg: string,
+        wrong_password: boolean,
+        user: User
       }>(this._baseUrl + 'api/Admin/Login', {username: this.signinForm.controls['username'].value, password: this.signinForm.controls['password'].value}).subscribe(result => {
       this.loggingIn = false;
       console.log(result);
-      if(result.error){
-        this.error_msg = result.error_msg;
-      }
-      else if(result.success){
-        this.userService.user = new User();
-        this.userService.user.username = result.user.username;
-        this.userService.user.email = result.user.email;
-        this.userService.user.id = result.user.id;
-        this.userService.user.age = result.user.age;
-        this.userService.user.bloodGroup = result.user.bloodGroup;
-        this.userService.user.city_name = result.user.city_name;
-        this.userService.user.country_name = result.user.country_name;
-        this.userService.user.country_phone_code = result.user.country_phone_code;
-        this.userService.user.country_short_name = result.user.country_short_name;
-        this.userService.user.gender = result.user.gender;
-        this.userService.user.name = result.user.name;
-        this.userService.user.phoneNumber = result.user.phoneNumber;
-        this.userService.user.roles = [];
-        result.user.roles.forEach(val => {
-          this.userService.user.roles.push(val);
-        });
-        this.userService.user.state_name = result.user.state_name;
+
+      if(result.success){
+        this.userService.user = result.user;
+
         this.userService.isLoggedIn = true;
         this.userService.fetchProfilePic(this.userService.user.id);
         this.userService.clearUserData('/admin');
@@ -84,6 +69,13 @@ export class AdminLoginComponent implements OnInit {
         this.userService.SaveUserCredientials();
         this.userService.roleChanged.emit(this.userService.user.roles);
         this.router.navigate(['admin/dashboard']);
+      }
+
+      else if(result.wrong_password){
+        this.wrongPassword = true;
+      }
+      else{
+        this.error_msg = result.error_msg;
       }
     });
 
@@ -107,11 +99,17 @@ export class AdminLoginComponent implements OnInit {
   }
 
   onUsernameInput(event_data){
-    var un:string = this.signinForm.controls['username'].value;
-    if(un.length == 0){
+    if(this.usernameExist == false){
       this.usernameExist = true;
     }
   }
 
+
+
+  onPasswordInput(event_data){
+    if(this.wrongPassword == true){
+      this.wrongPassword = false;
+    }
+  }
 
 }

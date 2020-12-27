@@ -11,7 +11,7 @@
       <div class="d-flex flex-row align-items-center justify-content-between">
         <div>
           <form #f="ngForm" (ngSubmit)="onSearchSubmit()"
-          class="d-none shadow d-sm-inline-block form-inline">
+          class="d-none d-sm-inline-block form-inline">
             <div class="input-group">
               <input type="text" id="search_string" name="search_string" [(ngModel)]="search_string"
                     class="form-control small" placeholder="Search doctor" (input)="appointmentSearchOnInput($event)" aria-label="Search">
