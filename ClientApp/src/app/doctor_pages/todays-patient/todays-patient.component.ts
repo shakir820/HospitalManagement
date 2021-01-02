@@ -54,7 +54,7 @@ export class TodaysPatientComponent implements OnInit {
 
 
 
-  sortOrderChanged(event_data, sort_order){
+  sortOrderChanged(event_data, sort_order) {
     this.sortBy = sort_order;
     this.sortDoctorList();
   }
@@ -66,8 +66,8 @@ export class TodaysPatientComponent implements OnInit {
 
 
 
-  sortDoctorList(){
-    if(this.sortBy == 'Name'){
+  sortDoctorList() {
+    if (this.sortBy == 'Name') {
       if (this.sortByAscending) {
         this.filteredPatients.sort(sortBy('name'));
       }
@@ -75,7 +75,7 @@ export class TodaysPatientComponent implements OnInit {
         this.filteredPatients.sort(sortBy('-name'));
       }
     }
-    else{
+    else {
       if (this.sortByAscending) {
         this.filteredPatients.sort(sortBy('appointment.serial_no'));
       }

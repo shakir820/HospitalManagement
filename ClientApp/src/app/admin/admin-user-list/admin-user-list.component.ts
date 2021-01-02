@@ -22,7 +22,7 @@ export class AdminUserListComponent implements OnInit {
 
 
 
-  @ViewChild('f') searchForm:NgForm;
+  @ViewChild('f') searchForm: NgForm;
   search_string: string;
   user_list: User[];
   @ViewChild('editUserRoleDialog') editUserRoleDialog: EditUserRoleDialogComponent;
@@ -36,16 +36,16 @@ export class AdminUserListComponent implements OnInit {
 
 
 
-  userSearchOnInput(event_data){
-    if(this.search_string.length == 0){
+  userSearchOnInput(event_data) {
+    if (this.search_string.length == 0) {
       this.user_list = [];
     }
   }
 
 
 
-  onSearchSubmit(){
-    if(this.search_string.length > 0){
+  onSearchSubmit() {
+    if (this.search_string.length > 0) {
       this.getUsers();
     }
   }
@@ -54,31 +54,31 @@ export class AdminUserListComponent implements OnInit {
 
 
 
-  onActivateUser(event_data, user_id){
+  onActivateUser(event_data, user_id) {
     var user = this.user_list.find(a => a.id == user_id);
-    this.httpClient.get<{success: boolean, error: boolean, error_msg: string}>
-    (this._baseUrl + 'api/admin/ActivateUser', {params: { id: user.id.toString()} }).subscribe(result => {
-      if(result.success){
-        user.isActive = true;
-      }
-    });
+    this.httpClient.get<{ success: boolean, error: boolean, error_msg: string }>
+      (this._baseUrl + 'api/admin/ActivateUser', { params: { id: user.id.toString() } }).subscribe(result => {
+        if (result.success) {
+          user.isActive = true;
+        }
+      });
   }
 
 
 
-  onDeactivateUser(event_data, user_id){
+  onDeactivateUser(event_data, user_id) {
     var user = this.user_list.find(a => a.id == user_id);
-    this.httpClient.get<{success: boolean, error: boolean, error_msg: string}>
-    (this._baseUrl + 'api/admin/DeactivateUser', {params: { id: user.id.toString()} }).subscribe(result => {
-      if(result.success){
-        user.isActive = false;
-      }
-    });
+    this.httpClient.get<{ success: boolean, error: boolean, error_msg: string }>
+      (this._baseUrl + 'api/admin/DeactivateUser', { params: { id: user.id.toString() } }).subscribe(result => {
+        if (result.success) {
+          user.isActive = false;
+        }
+      });
   }
 
 
 
-  onEditUserRole(event_data, user_id){
+  onEditUserRole(event_data, user_id) {
     var user = this.user_list.find(a => a.id == user_id);
     var _user = new User();
     _user.id = user.id;
@@ -90,14 +90,14 @@ export class AdminUserListComponent implements OnInit {
 
 
 
-  getUsers(){
+  getUsers() {
     this.fetchingUsers = true;
     this.httpClient.get<{
       success: boolean,
       error: boolean,
       user_list: User[],
       error_msg: string
-    }>(this._baseUrl + 'api/UserManager/GetUsers', {params: { search_key: this.search_string }}).subscribe(result => {
+    }>(this._baseUrl + 'api/UserManager/GetUsers', { params: { search_key: this.search_string } }).subscribe(result => {
       console.log(result);
       this.fetchingUsers = false;
       if (result.success) {
@@ -110,17 +110,17 @@ export class AdminUserListComponent implements OnInit {
 
 
 
-  onUserRoleChanged(role_changed_user: User){
+  onUserRoleChanged(role_changed_user: User) {
     this.httpClient.post<{
       success: boolean,
       error: boolean,
       error_msg: string
-    }>(this._baseUrl + 'api/UserManager/ChangeRole', { id: role_changed_user.id, roles: role_changed_user.roles }).subscribe( result => {
-      if(result.success){
+    }>(this._baseUrl + 'api/UserManager/ChangeRole', { id: role_changed_user.id, roles: role_changed_user.roles }).subscribe(result => {
+      if (result.success) {
         var user = this.user_list.find(a => a.id == role_changed_user.id);
         user.roles = role_changed_user.roles.slice();
       }
-      else{
+      else {
         Swal.fire({
           title: 'Error!',
           text: result.error_msg,
@@ -129,9 +129,16 @@ export class AdminUserListComponent implements OnInit {
         });
       }
     },
-    error => {
+      error => {
 
-    })
+      });
+  }
+
+
+
+
+  onUserClicked(event_data, u_id:number){
+    this.router.navigate(['admin/UserDetails'], {queryParams: {user_id: u_id}});
   }
 
 

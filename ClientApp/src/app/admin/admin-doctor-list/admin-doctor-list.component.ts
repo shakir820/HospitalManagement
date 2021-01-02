@@ -28,20 +28,20 @@ export class AdminDoctorListComponent implements OnInit {
 
   _baseUrl: string;
   fetchingDoctorList: boolean = false;
-  sortBy:string = 'ascending';
-  allDoctorList:User[] = [];
+  sortBy: string = 'ascending';
+  allDoctorList: User[] = [];
   doctorList: User[] = [];
-  filerBy:string = 'All';
+  filerBy: string = 'All';
 
 
 
 
 
-  onSearchSubmit(){
-    var search_key:string = this.searchForm.controls['search_string'].value;
+  onSearchSubmit() {
+    var search_key: string = this.searchForm.controls['search_string'].value;
 
     var filtered_doc_list = [];
-    switch(this.filerBy){
+    switch (this.filerBy) {
       case 'Pending':
         filtered_doc_list = this.allDoctorList.filter(a => a.approved == false)
         break;
@@ -56,18 +56,18 @@ export class AdminDoctorListComponent implements OnInit {
         break;
     }
 
-    filtered_doc_list = filtered_doc_list.filter((val:User) => {
+    filtered_doc_list = filtered_doc_list.filter((val: User) => {
       var search_param = search_key.toUpperCase();
       if (val.name.toUpperCase().includes(search_param) || val.doctor_title.toUpperCase().includes(search_param)) {
         return val;
       }
     });
 
-    if(this.sortBy == 'ascending'){
+    if (this.sortBy == 'ascending') {
       //this.sortBy = 'descending'
       filtered_doc_list = filtered_doc_list.sort(sortBy('-name'));
     }
-    else{
+    else {
       filtered_doc_list = filtered_doc_list.sort(sortBy('name'));
     }
 
@@ -104,58 +104,58 @@ export class AdminDoctorListComponent implements OnInit {
 
 
 
-  showAllDoctorList(event_data){
+  showAllDoctorList(event_data) {
     this.filerBy = 'All';
     this.doctorList = this.allDoctorList.slice();
-    var searchInput =  <HTMLInputElement>document.getElementById('search_string');
+    var searchInput = <HTMLInputElement>document.getElementById('search_string');
     searchInput.value = '';
   }
 
 
-  showPendingDoctorList(event_data){
+  showPendingDoctorList(event_data) {
     this.filerBy = 'Pending';
     this.doctorList = this.allDoctorList.filter((val) => {
-      if(val.approved == false){
+      if (val.approved == false) {
         return val;
       }
     });
-    var searchInput =  <HTMLInputElement>document.getElementById('search_string');
+    var searchInput = <HTMLInputElement>document.getElementById('search_string');
     searchInput.value = '';
   }
 
 
-  showActiveDoctorList(event_data){
+  showActiveDoctorList(event_data) {
     this.filerBy = 'Active';
     this.doctorList = this.allDoctorList.filter((val) => {
-      if(val.isActive == true){
+      if (val.isActive == true) {
         return val;
       }
     });
-    var searchInput =  <HTMLInputElement>document.getElementById('search_string');
+    var searchInput = <HTMLInputElement>document.getElementById('search_string');
     searchInput.value = '';
   }
 
 
 
-  showInactiveDoctorList(event_data){
+  showInactiveDoctorList(event_data) {
     this.filerBy = 'Inactive';
     this.doctorList = this.allDoctorList.filter((val) => {
-      if(val.isActive == false){
+      if (val.isActive == false) {
         return val;
       }
     });
-    var searchInput =  <HTMLInputElement>document.getElementById('search_string');
+    var searchInput = <HTMLInputElement>document.getElementById('search_string');
     searchInput.value = '';
   }
 
 
 
-  toggleDoctorListSort(event_data){
-    if(this.sortBy == 'ascending'){
+  toggleDoctorListSort(event_data) {
+    if (this.sortBy == 'ascending') {
       this.sortBy = 'descending'
       this.doctorList = this.doctorList.sort(sortBy('-name'));
     }
-    else{
+    else {
       this.sortBy = 'ascending'
       this.doctorList = this.doctorList.sort(sortBy('name'));
     }
@@ -166,55 +166,55 @@ export class AdminDoctorListComponent implements OnInit {
 
 
   // action methods
-  approveDoctor(event_data, id:number){
+  approveDoctor(event_data, id: number) {
     var doctor = this.doctorList.find(a => a.id == id);
-    this.httpClient.get<{success: boolean, error: boolean, error_msg: string}>
-    (this._baseUrl + 'api/admin/ApproveDoctor', {params: { id: doctor.id.toString()} }).subscribe(result => {
-      if(result.success){
-        doctor.approved = true;
-      }
-    });
+    this.httpClient.get<{ success: boolean, error: boolean, error_msg: string }>
+      (this._baseUrl + 'api/admin/ApproveDoctor', { params: { id: doctor.id.toString() } }).subscribe(result => {
+        if (result.success) {
+          doctor.approved = true;
+        }
+      });
   }
 
 
-  unApproveDoctor(event_data, id:number){
+  unApproveDoctor(event_data, id: number) {
     var doctor = this.doctorList.find(a => a.id == id);
-    this.httpClient.get<{success: boolean, error: boolean, error_msg: string}>
-    (this._baseUrl + 'api/admin/UnapproveDoctor', {params: { id: doctor.id.toString()} }).subscribe(result => {
-      if(result.success){
-        doctor.approved = false;
-      }
-    });
+    this.httpClient.get<{ success: boolean, error: boolean, error_msg: string }>
+      (this._baseUrl + 'api/admin/UnapproveDoctor', { params: { id: doctor.id.toString() } }).subscribe(result => {
+        if (result.success) {
+          doctor.approved = false;
+        }
+      });
   }
 
 
-  activeDoctor(event_data, id: number){
+  activeDoctor(event_data, id: number) {
     var doctor = this.doctorList.find(a => a.id == id);
-    this.httpClient.get<{success: boolean, error: boolean, error_msg: string}>
-    (this._baseUrl + 'api/admin/ActivateUser', {params: { id: doctor.id.toString()} }).subscribe(result => {
-      if(result.success){
-        doctor.isActive = true;
-      }
-    });
+    this.httpClient.get<{ success: boolean, error: boolean, error_msg: string }>
+      (this._baseUrl + 'api/admin/ActivateUser', { params: { id: doctor.id.toString() } }).subscribe(result => {
+        if (result.success) {
+          doctor.isActive = true;
+        }
+      });
   }
 
-  inActiveDoctor(event_data, id: number){
+  inActiveDoctor(event_data, id: number) {
     var doctor = this.doctorList.find(a => a.id == id);
-    this.httpClient.get<{success: boolean, error: boolean, error_msg: string}>
-    (this._baseUrl + 'api/admin/DeactivateUser', {params: { id: doctor.id.toString()} }).subscribe(result => {
-      if(result.success){
-        doctor.isActive = false;
-      }
-    });
+    this.httpClient.get<{ success: boolean, error: boolean, error_msg: string }>
+      (this._baseUrl + 'api/admin/DeactivateUser', { params: { id: doctor.id.toString() } }).subscribe(result => {
+        if (result.success) {
+          doctor.isActive = false;
+        }
+      });
   }
 
 
 
 
 
-  viewDoctorDetails(event_data, doctor_id:number){
-    console.log('doctor id before navigate: '  + doctor_id);
-    this.router.navigate(['admin/doctorList/DoctorDetails'], {queryParams: {id: doctor_id}});
+  viewDoctorDetails(event_data, doctor_id: number) {
+    console.log('doctor id before navigate: ' + doctor_id);
+    this.router.navigate(['admin/doctorList/DoctorDetails'], { queryParams: { id: doctor_id } });
   }
 
 }

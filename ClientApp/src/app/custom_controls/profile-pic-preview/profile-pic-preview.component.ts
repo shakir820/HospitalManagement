@@ -8,9 +8,9 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class ProfilePicPreviewComponent implements OnInit {
 
-  constructor( @Inject('BASE_URL') baseUrl: string) {
+  constructor(@Inject('BASE_URL') baseUrl: string) {
     this._baseUrl = baseUrl;
-   }
+  }
 
   ngOnInit(): void {
   }
@@ -20,7 +20,7 @@ export class ProfilePicPreviewComponent implements OnInit {
   _userId;
 
 
-  @Input() set user_id(val: number){
+  @Input() set user_id(val: number) {
     this._userId = val;
     console.log(this._userId);
     this.ShowProfileImage();

@@ -9,6 +9,8 @@ import { AdminSettingsPageComponent } from "./admin/admin-settings-page/admin-se
 import { AdminStaffListComponent } from "./admin/admin-staff-list/admin-staff-list.component";
 import { NewStaffComponent } from "./admin/admin-staff-list/new-staff/new-staff.component";
 import { AdminUserListComponent } from "./admin/admin-user-list/admin-user-list.component";
+import { DoctorAppointmentListComponent } from "./admin/doctor-appointment-list/doctor-appointment-list.component";
+import { UserDetailsComponent } from "./admin/user-details/user-details.component";
 import { AssignedInvestigationListComponent } from "./common_pages/investigation/assigned-investigation-list/assigned-investigation-list.component";
 import { InvestigationDetailsComponent } from "./common_pages/investigation/investigation-details/investigation-details.component";
 import { MyInvestigationListComponent } from "./common_pages/investigation/my-investigation-list/my-investigation-list.component";
@@ -41,12 +43,12 @@ import { StaffDashboardComponent } from "./staff/staff-dashboard/staff-dashboard
 
 export const appRoutes: Routes = [
 
-  { path: "", component: HomeComponent, pathMatch: "full"},
-  { path: 'login', component: LoginComponent , canActivate:[LoginPageCanActivateService]},
-  { path: "register", component: RegistrationComponent , canActivate:[LoginPageCanActivateService]},
+  { path: "", component: HomeComponent, pathMatch: "full" },
+  { path: 'login', component: LoginComponent, canActivate: [LoginPageCanActivateService] },
+  { path: "register", component: RegistrationComponent, canActivate: [LoginPageCanActivateService] },
   { path: "dashboard", component: DashboardComponent, canActivate: [UserPagesCanActivateService] },
   { path: "profile", component: ProfileComponent, canActivate: [UserPagesCanActivateService] },
-  { path: 'admin', component: AdminLoginComponent, canActivate:[AdminLoginCanActivateService] },
+  { path: 'admin', component: AdminLoginComponent, canActivate: [AdminLoginCanActivateService] },
   { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [AdminPagesCanActivateService] },
   { path: 'staff/dashboard', component: StaffDashboardComponent, canActivate: [StaffPagesCanActivateService] },
   { path: 'admin/doctorList', component: AdminDoctorListComponent, canActivate: [AdminPagesCanActivateService] },
@@ -61,26 +63,28 @@ export const appRoutes: Routes = [
   { path: 'Prescription/CreatePrescription', component: CreatePrescriptionComponent, canActivate: [UserPagesCanActivateService] },
   { path: 'Prescription/ViewPrescription', component: ViewPrescriptionComponent, canActivate: [UserPagesCanActivateService] },
   { path: 'Prescription/PrescriptionList', component: PrescriptionListComponent, canActivate: [UserPagesCanActivateService] },
-  { path: 'admin/StaffList', component: AdminStaffListComponent, canActivate:[AdminPagesCanActivateService] },
-  { path: 'admin/StaffList/CreateNewStaff', component: NewStaffComponent, canActivate: [AdminPagesCanActivateService]},
-  { path: 'admin/UserList', component: AdminUserListComponent, canActivate: [AdminPagesCanActivateService]},
-  { path: 'admin/Profile', component: AdminProfileComponent, canActivate: [AdminPagesCanActivateService]},
-  { path: 'admin/SettingsPage', component: AdminSettingsPageComponent, canActivate: [AdminPagesCanActivateService]},
-  { path: 'Investigation/MyInvestigationList', component: MyInvestigationListComponent, canActivate: [UserPagesCanActivateService]},
-  { path: 'Investigation/AssignedInvestigationList', component: AssignedInvestigationListComponent, canActivate: [UserPagesCanActivateService]},
-  { path: 'Investigation/RequestedInvestigationList', component: RequestedInvestigationListComponent, canActivate: [UserPagesCanActivateService]},
-  { path: 'Investigation/InvestigationDetails', component:InvestigationDetailsComponent, canActivate: [UserPagesCanActivateService]},
-  { path: 'Document/PatientDocumentList', component: PatientDocumentListComponent, canActivate: [UserPagesCanActivateService]},
+  { path: 'admin/StaffList', component: AdminStaffListComponent, canActivate: [AdminPagesCanActivateService] },
+  { path: 'admin/StaffList/CreateNewStaff', component: NewStaffComponent, canActivate: [AdminPagesCanActivateService] },
+  { path: 'admin/UserList', component: AdminUserListComponent, canActivate: [AdminPagesCanActivateService] },
+  { path: 'admin/Profile', component: AdminProfileComponent, canActivate: [AdminPagesCanActivateService] },
+  { path: 'admin/SettingsPage', component: AdminSettingsPageComponent, canActivate: [AdminPagesCanActivateService] },
+  { path: 'admin/UserDetails', component: UserDetailsComponent, canActivate: [AdminPagesCanActivateService] },
+  { path: 'admin/DoctorAppointmentList', component: DoctorAppointmentListComponent, canActivate: [AdminPagesCanActivateService] },
+  { path: 'Investigation/MyInvestigationList', component: MyInvestigationListComponent, canActivate: [UserPagesCanActivateService] },
+  { path: 'Investigation/AssignedInvestigationList', component: AssignedInvestigationListComponent, canActivate: [UserPagesCanActivateService] },
+  { path: 'Investigation/RequestedInvestigationList', component: RequestedInvestigationListComponent, canActivate: [UserPagesCanActivateService] },
+  { path: 'Investigation/InvestigationDetails', component: InvestigationDetailsComponent, canActivate: [UserPagesCanActivateService] },
+  { path: 'Document/PatientDocumentList', component: PatientDocumentListComponent, canActivate: [UserPagesCanActivateService] },
   { path: 'SettingsPage', component: SettingPageComponent, canActivate: [UserPagesCanActivateService] },
   { path: '**', redirectTo: "" },
 ]
 
 @NgModule({
-  imports:[
+  imports: [
     RouterModule.forRoot(appRoutes),
   ],
-  exports:[RouterModule]
+  exports: [RouterModule]
 })
-export class AppRoutingModule{
+export class AppRoutingModule {
 
 }

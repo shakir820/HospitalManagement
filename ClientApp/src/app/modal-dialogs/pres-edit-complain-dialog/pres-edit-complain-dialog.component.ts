@@ -17,8 +17,8 @@ export class PresEditComplainDialogComponent implements OnInit {
   // @ViewChild('complainModal') complainModal: any;
   submitted: boolean = false;
   patient_complain: PrescriptionPatientComplain;
-  @Output() complainChanged: EventEmitter<{complain: PrescriptionPatientComplain, is_new: boolean}>
-  = new EventEmitter<{complain: PrescriptionPatientComplain, is_new: boolean}>();
+  @Output() complainChanged: EventEmitter<{ complain: PrescriptionPatientComplain, is_new: boolean }>
+    = new EventEmitter<{ complain: PrescriptionPatientComplain, is_new: boolean }>();
   isNew: boolean = false;
 
 
@@ -33,13 +33,13 @@ export class PresEditComplainDialogComponent implements OnInit {
 
 
 
-  onFormSubmit(){
-    this.submitted =true;
-    if(this.complainForm.valid){
+  onFormSubmit() {
+    this.submitted = true;
+    if (this.complainForm.valid) {
       this.submitted = false;
-      this.complainChanged.emit({complain: this.patient_complain, is_new: this.isNew});
-      var gg =  <HTMLButtonElement>document.getElementById('toggleComplainModalBtn');
-    gg.click();
+      this.complainChanged.emit({ complain: this.patient_complain, is_new: this.isNew });
+      var gg = <HTMLButtonElement>document.getElementById('toggleComplainModalBtn');
+      gg.click();
     }
     console.log(this.complainForm);
   }
@@ -47,12 +47,12 @@ export class PresEditComplainDialogComponent implements OnInit {
 
 
 
-  showModal(complain: PrescriptionPatientComplain, is_new: boolean){
+  showModal(complain: PrescriptionPatientComplain, is_new: boolean) {
     this.submitted = false;
     this.isNew = is_new;
     this.patient_complain = complain;
-    var gg =  <HTMLButtonElement>document.getElementById('toggleComplainModalBtn');
-    if(is_new){
+    var gg = <HTMLButtonElement>document.getElementById('toggleComplainModalBtn');
+    if (is_new) {
       this.complainForm.resetForm();
     }
 

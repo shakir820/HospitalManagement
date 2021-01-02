@@ -26,16 +26,16 @@ export class PatientDetailsComponent implements OnInit {
 
   _baseUrl: string;
   patient_id: number;
-  patient:User;
+  patient: User;
   fetchingPatientDetails: boolean = false;
   fetchingAppointmentList: boolean = false;
   fetchingInvestigationList: boolean = false;
-  appointmentList:DoctorAppointment[];
-  investigationGroupList: {group_name: string, investigations: InvestigationDoc[] }[] = [];
+  appointmentList: DoctorAppointment[];
+  investigationGroupList: { group_name: string, investigations: InvestigationDoc[] }[] = [];
   upcoming_appointment: DoctorAppointment;
   document_list: PatientDocument[] = [];
-  fetchingDocument:boolean = false;
-  showDocumentEmptyIcon:boolean = false;
+  fetchingDocument: boolean = false;
+  showDocumentEmptyIcon: boolean = false;
   docListSortOrderBy: string = 'Id';
   docListSortByAsscending: boolean = true;
 
@@ -43,8 +43,8 @@ export class PatientDetailsComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params:Params) => {
-       this.patient_id = params['patient_id'];
+    this.route.queryParams.subscribe((params: Params) => {
+      this.patient_id = params['patient_id'];
     });
     console.log(this.patient_id);
     this.getPatientDetails();
@@ -60,79 +60,79 @@ export class PatientDetailsComponent implements OnInit {
 
 
 
-  sortDocumentListDefault(){
-    switch(this.docListSortOrderBy){
+  sortDocumentListDefault() {
+    switch (this.docListSortOrderBy) {
       case 'Id':
-        if(this.docListSortByAsscending){
+        if (this.docListSortByAsscending) {
           this.document_list.sort(sortBy('id'));
         }
-        else{
+        else {
           this.document_list.sort(sortBy('-id'));
         }
-      break;
+        break;
 
       case 'Name':
-      if(this.docListSortByAsscending){
-        this.document_list.sort(sortBy('name'));
-      }
-      else{
-        this.document_list.sort(sortBy('-name'));
-      }
-      break;
+        if (this.docListSortByAsscending) {
+          this.document_list.sort(sortBy('name'));
+        }
+        else {
+          this.document_list.sort(sortBy('-name'));
+        }
+        break;
 
 
       case 'Date':
-      if(this.docListSortByAsscending){
-        this.document_list.sort(sortBy('created_date'));
-      }
-      else{
-        this.document_list.sort(sortBy('-created_date'));
-      }
-      break;
+        if (this.docListSortByAsscending) {
+          this.document_list.sort(sortBy('created_date'));
+        }
+        else {
+          this.document_list.sort(sortBy('-created_date'));
+        }
+        break;
     }
   }
 
-  sortDocumentList(event_data, order_name: string){
-    if(this.docListSortOrderBy == order_name){
+  sortDocumentList(event_data, order_name: string) {
+    if (this.docListSortOrderBy == order_name) {
       this.docListSortByAsscending = !this.docListSortByAsscending;
-   }
-
-   switch(this.docListSortOrderBy){
-    case 'Id':
-      if(this.docListSortByAsscending){
-        this.document_list.sort(sortBy('id'));
-      }
-      else{
-        this.document_list.sort(sortBy('-id'));
-      }
-    break;
-
-    case 'Name':
-    if(this.docListSortByAsscending){
-      this.document_list.sort(sortBy('name'));
     }
-    else{
-      this.document_list.sort(sortBy('-name'));
-    }
-    break;
+
+    switch (this.docListSortOrderBy) {
+      case 'Id':
+        if (this.docListSortByAsscending) {
+          this.document_list.sort(sortBy('id'));
+        }
+        else {
+          this.document_list.sort(sortBy('-id'));
+        }
+        break;
+
+      case 'Name':
+        if (this.docListSortByAsscending) {
+          this.document_list.sort(sortBy('name'));
+        }
+        else {
+          this.document_list.sort(sortBy('-name'));
+        }
+        break;
 
 
-    case 'Date':
-    if(this.docListSortByAsscending){
-      this.document_list.sort(sortBy('created_date'));
+      case 'Date':
+        if (this.docListSortByAsscending) {
+          this.document_list.sort(sortBy('created_date'));
+        }
+        else {
+          this.document_list.sort(sortBy('-created_date'));
+        }
+        break;
     }
-    else{
-      this.document_list.sort(sortBy('-created_date'));
-    }
-    break;
-  }
 
 
     this.docListSortOrderBy = order_name;
   }
 
 
-  getAllDocument(){
+  getAllDocument() {
     this.fetchingDocument = true;
     this.httpClient.get<{
       success: boolean,
@@ -145,10 +145,10 @@ export class PatientDetailsComponent implements OnInit {
       if (result.success) {
 
         this.document_list = result.document_list;
-        if(result.document_list.length == 0){
+        if (result.document_list.length == 0) {
           this.showDocumentEmptyIcon = true;
         }
-        else{
+        else {
           this.showDocumentEmptyIcon = false;
           this.document_list.sort(sortBy('id'));
         }
@@ -163,14 +163,14 @@ export class PatientDetailsComponent implements OnInit {
 
 
 
-  getPatientDetails(){
+  getPatientDetails() {
     this.fetchingPatientDetails = true;
     this.httpClient.get<{
       success: boolean,
       error: boolean,
       patient: User,
       error_msg: string
-    }>(this._baseUrl + 'api/doctor/GetPatientDetails', {params: {patient_id: this.patient_id.toString()}}).subscribe(result => {
+    }>(this._baseUrl + 'api/doctor/GetPatientDetails', { params: { patient_id: this.patient_id.toString() } }).subscribe(result => {
       console.log(result);
       this.fetchingPatientDetails = false;
       if (result.success) {
@@ -178,7 +178,7 @@ export class PatientDetailsComponent implements OnInit {
         this.patient = new User();
         this.patient.username = result.patient.username;
         this.patient.id = result.patient.id;
-        this.patient.age  =result.patient.age;
+        this.patient.age = result.patient.age;
         this.patient.bloodGroup = result.patient.bloodGroup;
         this.patient.city_name = result.patient.city_name;
         this.patient.country_name = result.patient.country_name;
@@ -188,7 +188,7 @@ export class PatientDetailsComponent implements OnInit {
         this.patient.gender = result.patient.gender;
         this.patient.isActive = result.patient.isActive;
         this.patient.name = result.patient.name;
-        this.patient.phoneNumber =result.patient.phoneNumber;
+        this.patient.phoneNumber = result.patient.phoneNumber;
         this.patient.roles = [];
         result.patient.roles.forEach(val => {
           this.patient.roles.push(val);
@@ -196,23 +196,23 @@ export class PatientDetailsComponent implements OnInit {
         this.patient.state_name = result.patient.state_name;
       }
     },
-    error => {
-      this.fetchingPatientDetails = false;
-    });
+      error => {
+        this.fetchingPatientDetails = false;
+      });
   }
 
 
 
 
-  getPatientAppointmentList(){
+  getPatientAppointmentList() {
     this.fetchingAppointmentList = true;
     this.httpClient.get<{
       success: boolean,
       error: boolean,
-      appointments:DoctorAppointment[],
+      appointments: DoctorAppointment[],
       upcoming_appointment: DoctorAppointment,
       error_msg: string
-    }>(this._baseUrl + 'api/Appointment/GetPatientAllAppointmentList', {params: {patient_id: this.patient_id.toString(), doctor_id: this.userService.user.id.toString()}}).subscribe(result => {
+    }>(this._baseUrl + 'api/Appointment/GetPatientAllAppointmentList', { params: { patient_id: this.patient_id.toString(), doctor_id: this.userService.user.id.toString() } }).subscribe(result => {
       console.log(result);
       this.fetchingAppointmentList = false;
       if (result.success) {
@@ -221,7 +221,7 @@ export class PatientDetailsComponent implements OnInit {
 
         result.appointments.forEach(doc_app => {
           var appointment = new DoctorAppointment();
-          appointment.appointment_date  = new Date(doc_app.appointment_date);
+          appointment.appointment_date = new Date(doc_app.appointment_date);
           appointment.consulted = true;
           appointment.created_date = new Date(doc_app.created_date);
           appointment.doctor_id = doc_app.doctor_id;
@@ -239,8 +239,8 @@ export class PatientDetailsComponent implements OnInit {
 
         this.appointmentList.sort(sortBy('appointment_date'));
 
-        console.log( result.upcoming_appointment);
-        if(result.upcoming_appointment != undefined){
+        console.log(result.upcoming_appointment);
+        if (result.upcoming_appointment != undefined) {
           console.log("I am in! hahah");
           this.upcoming_appointment = new DoctorAppointment();
           this.upcoming_appointment.appointment_date = new Date(result.upcoming_appointment.appointment_date);
@@ -259,9 +259,9 @@ export class PatientDetailsComponent implements OnInit {
 
       }
     },
-    error => {
-      this.fetchingAppointmentList = false;
-    });
+      error => {
+        this.fetchingAppointmentList = false;
+      });
   }
 
 
@@ -269,14 +269,14 @@ export class PatientDetailsComponent implements OnInit {
 
 
 
-  getAllInvestigations(){
+  getAllInvestigations() {
     this.fetchingInvestigationList = true;
     this.httpClient.get<{
       success: boolean,
       error: boolean,
-      investigations:InvestigationDoc[],
+      investigations: InvestigationDoc[],
       error_msg: string
-    }>(this._baseUrl + 'api/Investigation/GetAllInvestigationsByPatient', {params: {patient_id: this.patient_id.toString()}}).subscribe(result => {
+    }>(this._baseUrl + 'api/Investigation/GetAllInvestigationsByPatient', { params: { patient_id: this.patient_id.toString() } }).subscribe(result => {
       console.log(result);
       this.fetchingInvestigationList = false;
       if (result.success) {
@@ -284,37 +284,37 @@ export class PatientDetailsComponent implements OnInit {
         this.investigationGroupList = [];
 
         result.investigations.forEach(inv => {
-        //  var investigation = new InvestigationDoc();
-        //  investigation.abbreviation = inv.abbreviation;
-        //  investigation.created_date = new Date(inv.created_date);
-        //  investigation.doctor = inv.doctor_id;
+          //  var investigation = new InvestigationDoc();
+          //  investigation.abbreviation = inv.abbreviation;
+          //  investigation.created_date = new Date(inv.created_date);
+          //  investigation.doctor = inv.doctor_id;
 
-        //  investigation.id = inv.id;
-        //  investigation.investigation_tag_id = inv.investigation_tag_id;
-        //  investigation.investigator_id = inv.investigator_id;
-        //  investigation.name = inv.name;
-        //  investigation.patient_id = inv.patient_id;
-        //  investigation.prescription_id = inv.prescription_id;
+          //  investigation.id = inv.id;
+          //  investigation.investigation_tag_id = inv.investigation_tag_id;
+          //  investigation.investigator_id = inv.investigator_id;
+          //  investigation.name = inv.name;
+          //  investigation.patient_id = inv.patient_id;
+          //  investigation.prescription_id = inv.prescription_id;
 
-         var test_item = this.investigationGroupList.find( a => a.group_name == inv.abbreviation);
-         if(test_item != undefined || test_item != null){
-           test_item.investigations.push(inv);
-         }
-         else{
-           var gp = {
-             group_name: inv.abbreviation,
-             investigations: []
+          var test_item = this.investigationGroupList.find(a => a.group_name == inv.abbreviation);
+          if (test_item != undefined || test_item != null) {
+            test_item.investigations.push(inv);
+          }
+          else {
+            var gp = {
+              group_name: inv.abbreviation,
+              investigations: []
             };
             gp.investigations.push(inv);
             this.investigationGroupList.push(gp);
-         }
+          }
         });
         console.log(this.investigationGroupList);
       }
     },
-    error => {
-      this.fetchingInvestigationList = false;
-    });
+      error => {
+        this.fetchingInvestigationList = false;
+      });
   }
 
 
@@ -322,30 +322,30 @@ export class PatientDetailsComponent implements OnInit {
 
 
 
-  onCreatePrescriptionClicked(event_data){
+  onCreatePrescriptionClicked(event_data) {
     this.router.navigate(['Prescription/CreatePrescription'],
-    {queryParams: {patient_id: this.patient_id, appointment_id: this.upcoming_appointment.id, prescription_view: 0}});
+      { queryParams: { patient_id: this.patient_id, appointment_id: this.upcoming_appointment.id, prescription_view: 0 } });
   }
 
 
 
 
-  onUpComingAppointmentViewPrescriptionClicked(event_data){
+  onUpComingAppointmentViewPrescriptionClicked(event_data) {
     this.router.navigate(['Prescription/CreatePrescription'],
-    {queryParams: {patient_id: this.patient_id, appointment_id: this.upcoming_appointment.id, prescription_view: 1}});
+      { queryParams: { patient_id: this.patient_id, appointment_id: this.upcoming_appointment.id, prescription_view: 1 } });
   }
 
 
 
-  getUpcomingAppointmentDetails(){
+  getUpcomingAppointmentDetails() {
 
   }
 
 
 
 
-  pastAppointmentViewPrescription(event_data, appointment_id: number){
-    this.router.navigate(['Prescription/ViewPrescription'], {queryParams: {appointment_id: appointment_id}});
+  pastAppointmentViewPrescription(event_data, appointment_id: number) {
+    this.router.navigate(['Prescription/ViewPrescription'], { queryParams: { appointment_id: appointment_id } });
   }
 
 }

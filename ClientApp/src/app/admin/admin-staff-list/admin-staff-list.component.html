@@ -13,10 +13,10 @@
           <div class="d-flex align-items-center" style="min-width: 100px;"><h5 class="mb-0">Staff List</h5></div>
 
           <form #f="ngForm" (ngSubmit)="onSearchSubmit()" style="min-width: 250px;"
-          class="d-none d-sm-inline-block form-inline">
+                class="d-none d-sm-inline-block form-inline">
             <div class="input-group">
               <input type="text" id="search_string" name="search_string" [(ngModel)]="search_string"
-                    class="form-control small" placeholder="Search Staff" (input)="staffSearchOnInput($event)" aria-label="Search">
+                     class="form-control small" placeholder="Search Staff" (input)="staffSearchOnInput($event)" aria-label="Search">
               <div class="input-group-append">
                 <button class="btn btn-primary" type="submit">
                   <i class="fas fa-search fa-sm"></i>
@@ -27,22 +27,24 @@
           <div class="mx-2">
             <div class="btn-group">
               <button id="filter_btn" type="button"
-              [ngClass]="{'btn-primary': filterBy == 'All',
+                      [ngClass]="{'btn-primary': filterBy == 'All',
               'btn-danger': filterBy == 'Inactive',
               'btn-success': filterBy == 'Active'}"
-              class="btn">{{filterBy}}</button>
+                      class="btn">
+                {{filterBy}}
+              </button>
               <button type="button" id="dropDownToggleFilterBtn"
-              [ngClass]="{'btn-primary': filterBy == 'All',
+                      [ngClass]="{'btn-primary': filterBy == 'All',
               'btn-danger': filterBy == 'Inactive',
               'btn-success': filterBy == 'Active'}"
-              class="btn dropdown-toggle dropdown-toggle-split"
-              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      class="btn dropdown-toggle dropdown-toggle-split"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="sr-only">Toggle Dropdown</span>
               </button>
               <div class="dropdown-menu shadow">
                 <div class="dropdown-header">Filter by:</div>
                 <a class="dropdown-item text-primary" (click)="showAllStaffList($event)">All</a>
-                <a class="dropdown-item text-success" (click)="showActiveStaffList($event)" >Active</a>
+                <a class="dropdown-item text-success" (click)="showActiveStaffList($event)">Active</a>
                 <a class="dropdown-item text-danger" (click)="showInactiveStaffList($event)">Inactive</a>
               </div>
             </div>
@@ -50,8 +52,8 @@
 
           <!-- select option here -->
           <select (change)="selectedRoleChanged($event)" class="form-control"
-          aria-placeholder="Select Category"
-          style="max-width: 300px;" [(ngModel)]="selectedRole">
+                  aria-placeholder="Select Category"
+                  style="max-width: 300px;" [(ngModel)]="selectedRole">
             <option *ngFor="let item of allStaffRoles" [value]="item">{{item}}</option>
           </select>
 
@@ -70,28 +72,28 @@
           </div>
         </div> -->
       </div>
-       <hr>
+      <hr>
 
       <div class="row mt-3">
         <div class="col-sm-1">
           <div class="d-flex">
-           <a class="flex-fill text-dark" (click)="sortStaffList($event, 'Id')">
-             <div class="d-flex">
-               <div>Id</div>
-               <div class="ml-3" *ngIf="sortOrderBy == 'Id'"><i class="fas fa-sort"></i></div>
-             </div>
-           </a>
+            <a class="flex-fill text-dark" (click)="sortStaffList($event, 'Id')">
+              <div class="d-flex">
+                <div>Id</div>
+                <div class="ml-3" *ngIf="sortOrderBy == 'Id'"><i class="fas fa-sort"></i></div>
+              </div>
+            </a>
           </div>
-         </div>
+        </div>
         <div class="col">
-         <div class="d-flex">
-          <a class="flex-fill text-dark" (click)="sortStaffList($event, 'Name')">
-            <div class="d-flex">
-              <div>Name</div>
-              <div class="ml-3" *ngIf="sortOrderBy == 'Name'"><i class="fas fa-sort"></i></div>
-            </div>
-          </a>
-         </div>
+          <div class="d-flex">
+            <a class="flex-fill text-dark" (click)="sortStaffList($event, 'Name')">
+              <div class="d-flex">
+                <div>Name</div>
+                <div class="ml-3" *ngIf="sortOrderBy == 'Name'"><i class="fas fa-sort"></i></div>
+              </div>
+            </a>
+          </div>
         </div>
         <div class="col">
           <div class="d-flex">
@@ -100,7 +102,7 @@
                 <div>Role</div>
               </div>
             </a>
-           </div>
+          </div>
         </div>
 
         <div class="col">
@@ -111,7 +113,7 @@
                 <div class="ml-3" *ngIf="sortOrderBy == 'Date'"><i class="fas fa-sort"></i></div>
               </div>
             </a>
-           </div>
+          </div>
         </div>
         <div class="col">
           <div class="d-flex">
@@ -121,7 +123,7 @@
                 <div class="ml-3" *ngIf="sortOrderBy == 'Status'"><i class="fas fa-sort"></i></div>
               </div>
             </a>
-           </div>
+          </div>
         </div>
         <div class="col-sm-1">
           <!-- <div>
@@ -133,55 +135,55 @@
     </div>
     <!-- Card Body -->
     <div class="card-body p-0">
-     <div class="text-dark">
-      <div class="row p-2 mx-0" *ngFor="let item of filtered_staff_list; even as evenItem" [ngClass]="{'bg-gray-100': evenItem == true}">
-        <div class="col-sm-1">
-          <div class="d-flex align-items-center">
-            <div>{{ item.id }}</div>
-          </div>
-         </div>
-        <div class="col">
-         <div class="d-flex align-items-center">
-           <div style="width: 50px; height:50px;"> <app-profile-pic-preview  [user_id]="item.id"></app-profile-pic-preview></div>
-           <div class="ml-2 font-weight-bold">{{ item.name }}</div>
-         </div>
-        </div>
-        <div class="col">
-          <div class="d-flex flex-column">
-            <div class="d-flex align-items-center" *ngFor="let role_item of item.roles" >
-              <div *ngIf="role_item != 'Staff'" class=" border-success" style="width: 18px; height: 18px; border-radius: 50%; border:3px solid;"></div>
-              <div class="ml-2" *ngIf="role_item != 'Staff'">{{role_item}}</div>
+      <div class="text-dark">
+        <div class="row p-2 mx-0" *ngFor="let item of filtered_staff_list; even as evenItem" [ngClass]="{'bg-gray-100': evenItem == true}">
+          <div class="col-sm-1">
+            <div class="d-flex align-items-center">
+              <div>{{ item.id }}</div>
             </div>
           </div>
-        </div>
+          <div class="col">
+            <div class="d-flex align-items-center">
+              <div style="width: 50px; height:50px;"> <app-profile-pic-preview [user_id]="item.id"></app-profile-pic-preview></div>
+              <div class="ml-2 font-weight-bold">{{ item.name }}</div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="d-flex flex-column">
+              <div class="d-flex align-items-center" *ngFor="let role_item of item.roles">
+                <div *ngIf="role_item != 'Staff'" class=" border-success" style="width: 18px; height: 18px; border-radius: 50%; border:3px solid;"></div>
+                <div class="ml-2" *ngIf="role_item != 'Staff'">{{role_item}}</div>
+              </div>
+            </div>
+          </div>
 
-        <div class="col">
-          <div class="d-flex align-items-center">
-            <div >{{ item.created_date | date: 'mediumDate' }}</div>
-           </div>
-        </div>
-        <div class="col">
-          <div class="d-flex align-items-center">
-            <div [ngClass]="{'text-success': item.isActive == true, 'text-danger': item.isActive == false }">{{ item.isActive == true? 'Active': 'Inactive' }}</div>
-           </div>
-        </div>
-        <div class="col-sm-1">
-          <div class="d-flex flex-row-reverse">
-            <div class="dropdown no-arrow">
-              <a class="dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-              </a>
-              <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                <div class="dropdown-header">Action:</div>
-                <a class="dropdown-item text-success" *ngIf="!item.isActive" (click)="onStaffActivate($event, item.id)">Activate User</a>
-                <a class="dropdown-item text-danger" *ngIf="item.isActive" (click)="onStaffDeactivate($event, item.id)">Deactivate User</a>
-                <a class="dropdown-item" (click)="onEditUserRole($event, item.id)">Edit Role</a>
+          <div class="col">
+            <div class="d-flex align-items-center">
+              <div>{{ item.created_date | date: 'mediumDate' }}</div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="d-flex align-items-center">
+              <div [ngClass]="{'text-success': item.isActive == true, 'text-danger': item.isActive == false }">{{ item.isActive == true? 'Active': 'Inactive' }}</div>
+            </div>
+          </div>
+          <div class="col-sm-1">
+            <div class="d-flex flex-row-reverse">
+              <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                  <div class="dropdown-header">Action:</div>
+                  <a class="dropdown-item text-success" *ngIf="!item.isActive" (click)="onStaffActivate($event, item.id)">Activate User</a>
+                  <a class="dropdown-item text-danger" *ngIf="item.isActive" (click)="onStaffDeactivate($event, item.id)">Deactivate User</a>
+                  <a class="dropdown-item" (click)="onEditUserRole($event, item.id)">Edit Role</a>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-     </div>
 
 
 

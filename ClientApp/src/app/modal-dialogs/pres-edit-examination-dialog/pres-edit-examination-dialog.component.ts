@@ -16,8 +16,8 @@ export class PresEditExaminationDialogComponent implements OnInit {
   @ViewChild('examinationForm') examinationForm: NgForm;
   submitted: boolean = false;
   patient_examination: PrescriptionPatientExamination;
-  @Output() examinationChanged: EventEmitter<{examination: PrescriptionPatientExamination, is_new: boolean}>
-  = new EventEmitter<{examination: PrescriptionPatientExamination, is_new: boolean}>();
+  @Output() examinationChanged: EventEmitter<{ examination: PrescriptionPatientExamination, is_new: boolean }>
+    = new EventEmitter<{ examination: PrescriptionPatientExamination, is_new: boolean }>();
   isNew: boolean = false;
 
 
@@ -30,12 +30,12 @@ export class PresEditExaminationDialogComponent implements OnInit {
 
 
 
-  onFormSubmit(){
-    this.submitted =true;
-    if(this.examinationForm.valid){
+  onFormSubmit() {
+    this.submitted = true;
+    if (this.examinationForm.valid) {
       this.submitted = false;
-      this.examinationChanged.emit({examination: this.patient_examination, is_new: this.isNew});
-      var gg =  <HTMLButtonElement>document.getElementById('toggleExaminationModalBtn');
+      this.examinationChanged.emit({ examination: this.patient_examination, is_new: this.isNew });
+      var gg = <HTMLButtonElement>document.getElementById('toggleExaminationModalBtn');
       gg.click();
     }
 
@@ -44,12 +44,12 @@ export class PresEditExaminationDialogComponent implements OnInit {
 
 
 
-  showModal(examination: PrescriptionPatientExamination, is_new: boolean){
+  showModal(examination: PrescriptionPatientExamination, is_new: boolean) {
     this.submitted = false;
     this.isNew = is_new;
     this.patient_examination = examination;
-    var gg =  <HTMLButtonElement>document.getElementById('toggleExaminationModalBtn');
-    if(this.isNew){
+    var gg = <HTMLButtonElement>document.getElementById('toggleExaminationModalBtn');
+    if (this.isNew) {
       this.examinationForm.resetForm();
     }
     gg.click();

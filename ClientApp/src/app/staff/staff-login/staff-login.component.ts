@@ -15,14 +15,14 @@ export class StaffLoginComponent implements OnInit {
 
   _baseUrl: string;
   title: string = 'admin-login';
-  constructor( private userService: UserService,
+  constructor(private userService: UserService,
     private route: ActivatedRoute,
     private router: Router,
     private httpClient: HttpClient,
     @Inject('BASE_URL') baseUrl: string,
     private cookieService: CookieService) {
-      this._baseUrl = baseUrl;
-    }
+    this._baseUrl = baseUrl;
+  }
 
   ngOnInit(): void {
 
@@ -50,64 +50,64 @@ export class StaffLoginComponent implements OnInit {
       this.loggingIn = true;
 
       this.httpClient.post<
-      {
-        success: boolean,
-        error: boolean,
-        error_msg: string,
-        user: User
-      }>(this._baseUrl + 'api/Staff/Login', {username: this.signinForm.controls['username'].value, password: this.signinForm.controls['password'].value}).
-      subscribe(result => {
-      this.loggingIn = false;
-      console.log(result);
-      if(result.error){
-        this.error_msg = result.error_msg;
-      }
-      else if(result.success){
-        this.userService.user = new User();
-        this.userService.user.username = result.user.username;
-        this.userService.user.email = result.user.email;
-        this.userService.user.id = result.user.id;
-        this.userService.user.age = result.user.age;
-        this.userService.user.bloodGroup = result.user.bloodGroup;
-        this.userService.user.city_name = result.user.city_name;
-        this.userService.user.country_name = result.user.country_name;
-        this.userService.user.country_phone_code = result.user.country_phone_code;
-        this.userService.user.country_short_name = result.user.country_short_name;
-        this.userService.user.gender = result.user.gender;
-        this.userService.user.name = result.user.name;
-        this.userService.user.phoneNumber = result.user.phoneNumber;
-        this.userService.user.roles = [];
-        result.user.roles.forEach(val => {
-          this.userService.user.roles.push(val);
+        {
+          success: boolean,
+          error: boolean,
+          error_msg: string,
+          user: User
+        }>(this._baseUrl + 'api/Staff/Login', { username: this.signinForm.controls['username'].value, password: this.signinForm.controls['password'].value }).
+        subscribe(result => {
+          this.loggingIn = false;
+          console.log(result);
+          if (result.error) {
+            this.error_msg = result.error_msg;
+          }
+          else if (result.success) {
+            this.userService.user = new User();
+            this.userService.user.username = result.user.username;
+            this.userService.user.email = result.user.email;
+            this.userService.user.id = result.user.id;
+            this.userService.user.age = result.user.age;
+            this.userService.user.bloodGroup = result.user.bloodGroup;
+            this.userService.user.city_name = result.user.city_name;
+            this.userService.user.country_name = result.user.country_name;
+            this.userService.user.country_phone_code = result.user.country_phone_code;
+            this.userService.user.country_short_name = result.user.country_short_name;
+            this.userService.user.gender = result.user.gender;
+            this.userService.user.name = result.user.name;
+            this.userService.user.phoneNumber = result.user.phoneNumber;
+            this.userService.user.roles = [];
+            result.user.roles.forEach(val => {
+              this.userService.user.roles.push(val);
+            });
+            this.userService.user.state_name = result.user.state_name;
+            this.userService.isLoggedIn = true;
+            this.userService.fetchProfilePic(this.userService.user.id);
+            this.userService.clearUserData('/admin');
+            this.userService.clearUserData('/');
+            this.userService.SaveUserCredientials();
+            this.userService.roleChanged.emit(this.userService.user.roles);
+            this.router.navigate(['staff/dashboard']);
+          }
         });
-        this.userService.user.state_name = result.user.state_name;
-        this.userService.isLoggedIn = true;
-        this.userService.fetchProfilePic(this.userService.user.id);
-        this.userService.clearUserData('/admin');
-        this.userService.clearUserData('/');
-        this.userService.SaveUserCredientials();
-        this.userService.roleChanged.emit(this.userService.user.roles);
-        this.router.navigate(['staff/dashboard']);
-      }
-    });
 
-    //   if (result.success == true) {
-    //     this.userService.isLoggedIn = true;
-    //     this.router.navigate(['dashboard']);
+      //   if (result.success == true) {
+      //     this.userService.isLoggedIn = true;
+      //     this.router.navigate(['dashboard']);
 
-    //   }
-    //   else {
-    //     if (result.emailExist == false) {
-    //       this.emailDoesntExist = true;
-    //     }
-    //     else {
-    //       this.error_msg = result.msg;
-    //     }
-    //   }
-    // }
-    // else {
+      //   }
+      //   else {
+      //     if (result.emailExist == false) {
+      //       this.emailDoesntExist = true;
+      //     }
+      //     else {
+      //       this.error_msg = result.msg;
+      //     }
+      //   }
+      // }
+      // else {
 
-     }
+    }
   }
 
 

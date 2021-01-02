@@ -38,117 +38,6 @@ export class UserService {
 
 
 
-  // tryLoginUser(): Promise<boolean> {
-  //   this.loggingInProgress = true;
-  //   var promise = new Promise<boolean>((resolve, rejects) => {
-  //     let user_id_str = this.cookieService.get('skt_hospital_user_id');
-  //     if (user_id_str !== null && user_id_str !== '' && user_id_str != undefined) {
-
-  //       this.httpClient.get<{
-  //         error_msg: string,
-  //         error: boolean,
-  //         success: boolean,
-  //         user: {
-  //           age: number,
-  //           id: number,
-  //           name: string,
-  //           username: string,
-  //           role: string,
-  //           roles: string[],
-  //           gender: string,
-  //           email: string,
-  //           password: string,
-  //           bloodGroup: string,
-  //           bmdc_certifcate: string,
-  //           city_name: string,
-  //           country_name: string,
-  //           country_phone_code: number,
-  //           country_short_name: string,
-  //           state_name: string,
-  //           phoneNumber: string,
-  //           approved: boolean,
-  //           biography: string,
-  //           degree_title: string,
-  //           doctor_title: string,
-  //           experience: number,
-  //           languages: Language[],
-  //           new_patient_visiting_price: number,
-  //           old_patient_visiting_price: number,
-  //           schedules: Schedule[],
-  //           specialities: Speciality[],
-  //           types_of: string
-  //         },
-  //         msg: string
-  //       }>(this._baseUrl + 'api/UserManager/getUserById', { params: { id: user_id_str } }).subscribe(result => {
-  //         if (result.success) {
-  //           if (this.user === null || this.user === undefined) {
-  //             this.user = new User();
-  //           }
-
-  //           this.user.age = result.user.age;
-  //           this.user.email = result.user.email;
-  //           this.user.gender = result.user.gender;
-  //           this.user.id = result.user.id;
-  //           this.user.name = result.user.name;
-  //           this.user.username = result.user.username;
-  //           this.user.phoneNumber = result.user.phoneNumber;
-  //           this.user.city_name = result.user.city_name;
-  //           this.user.country_name = result.user.country_name;
-  //           this.user.country_phone_code = result.user.country_phone_code;
-  //           this.user.country_short_name = result.user.country_short_name;
-  //           this.user.state_name = result.user.state_name;
-  //           //console.log(result.user.roles);
-  //           this.user.roles = [];
-  //           result.user.roles.forEach(val => {
-  //             this.user.roles.push(val);
-  //           });
-
-  //           this.roleChanged.emit(this.user.roles);
-  //           this.user.bloodGroup = result.user.bloodGroup;
-
-  //           //docto info
-  //           this.user.bmdc_certifcate = result.user.bmdc_certifcate;
-  //           this.user.approved = result.user.approved;
-  //           this.user.biography = result.user.biography;
-  //           this.user.degree_title = result.user.degree_title;
-  //           this.user.doctor_title = result.user.doctor_title;
-  //           this.user.experience = result.user.experience;
-  //           this.user.languages = result.user.languages;
-  //           this.user.new_patient_visiting_price = result.user.new_patient_visiting_price;
-  //           this.user.old_patient_visiting_price = result.user.old_patient_visiting_price;
-  //           // this.user.schedules = result.user.schedules;
-  //           this.user.schedules = [];
-  //           Helper.resolveScheduleResult(result.user.schedules, this.user.schedules);
-
-  //           this.user.specialities = result.user.specialities;
-  //           this.user.types_of = result.user.types_of;
-  //           console.log(this.user);
-
-  //           this.fireUserApprovedChangedEvent();
-  //           this.fetchProfilePic(this.user.id);
-  //           this.isLoggedIn = true;
-  //           this.loggingInProgress = false;
-
-  //           resolve(true);
-  //         }
-  //         else {
-  //           // do some error stuff here
-  //           this.loggingInProgress = false;
-  //           resolve(false);
-  //         }
-  //       });
-  //     }
-  //     else {
-  //       this.loggingInProgress = false;
-  //       this.isLoggedIn = false;
-  //       resolve(false);
-  //     }
-  //   });
-
-
-  //   return promise;
-
-  // }
 
 
 
@@ -166,9 +55,7 @@ export class UserService {
           msg: string
         }>(this._baseUrl + 'api/UserManager/getUserById2', { params: { id: user_id_str } }).subscribe(result => {
           if (result.success) {
-            // if (this.user === null || this.user === undefined) {
-            //   this.user = new User();
-            // }
+
             this.user = result.user;
 
             this.roleChanged.emit(this.user.roles);
@@ -281,124 +168,6 @@ export class UserService {
 
 
 
-  // SignIn(email: string, password: string, remember_me: boolean): Promise<{ msg: string, success: boolean, emailExist: boolean }> {
-  //   let promise = new Promise<{ msg: string, success: boolean, emailExist: boolean }>((resolve, rejects) => {
-  //     this.httpClient.post<{
-  //       error_msg: string,
-  //       error: boolean,
-  //       success: boolean,
-  //       user: {
-  //         age: number,
-  //         id: number,
-  //         name: string,
-  //         username: string,
-  //         role: string,
-  //         roles: string[],
-  //         gender: string,
-  //         email: string,
-  //         password: string,
-  //         bloodGroup: string,
-  //         bmdc_certifcate: string,
-  //         city_name: string,
-  //         country_name: string,
-  //         country_phone_code: number,
-  //         country_short_name: string,
-  //         state_name: string,
-  //         phoneNumber: string,
-  //         approved: boolean,
-  //         biography: string,
-  //         degree_title: string,
-  //         doctor_title: string,
-  //         experience: number,
-  //         languages: Language[],
-  //         new_patient_visiting_price: number,
-  //         old_patient_visiting_price: number,
-  //         schedules: Schedule[],
-  //         specialities: Speciality[],
-  //         types_of: string
-  //       }
-  //       msg: string,
-  //       emailExist: boolean,
-  //       wrong_password: boolean
-  //     }>(this._baseUrl + 'api/UserManager/SigninUser', { email: email, Password: password }).subscribe(result => {
-  //       if (result.success == true) {
-  //         console.log(result);
-  //         this.user = new User();
-  //         this.user.age = result.user.age;
-  //         this.user.id = result.user.id;
-  //         this.user.email = email;
-  //         this.user.gender = result.user.gender;
-  //         this.user.name = result.user.name;
-  //         this.user.username = result.user.username;
-  //         this.user.phoneNumber = result.user.phoneNumber;
-  //         this.user.city_name = result.user.city_name;
-  //         this.user.country_name = result.user.country_name;
-  //         this.user.country_phone_code = result.user.country_phone_code;
-  //         this.user.country_short_name = result.user.country_short_name;
-  //         this.user.state_name = result.user.state_name;
-  //         this.user.bloodGroup = result.user.bloodGroup;
-  //         this.user.roles = [];
-  //         result.user.roles.forEach(val => {
-  //           this.user.roles.push(val);
-  //         });
-
-  //         this.roleChanged.emit(this.user.roles);
-  //         this.user.bloodGroup = result.user.bloodGroup;
-
-
-  //         //doctor info
-  //         this.user.bmdc_certifcate = result.user.bmdc_certifcate;
-  //         this.user.approved = result.user.approved;
-  //         this.user.bmdc_certifcate = result.user.bmdc_certifcate;
-  //         this.user.approved = result.user.approved;
-  //         this.user.city_name = result.user.city_name;
-
-  //         this.user.biography = result.user.biography;
-  //         this.user.degree_title = result.user.degree_title;
-  //         this.user.doctor_title = result.user.doctor_title;
-  //         this.user.experience = result.user.experience;
-
-  //         this.user.languages = result.user.languages;
-  //         this.user.new_patient_visiting_price = result.user.new_patient_visiting_price;
-  //         this.user.old_patient_visiting_price = result.user.old_patient_visiting_price;
-  //         this.user.schedules = [];
-  //         Helper.resolveScheduleResult(result.user.schedules, this.user.schedules);
-
-
-
-  //         this.user.specialities = result.user.specialities;
-  //         this.user.types_of = result.user.types_of;
-
-
-  //         this.fireUserApprovedChangedEvent();
-  //         this.fetchProfilePic(result.user.id);
-  //         this.clearUserData('/');
-  //         this.clearUserData('/admin');
-  //         if(remember_me){
-  //           this.SaveUserCredientials();
-  //         }
-
-  //         resolve({ msg: result.msg, success: true, emailExist: true });
-
-  //       }
-  //       else {
-  //         if (result.error) {
-  //           resolve({ msg: result.error_msg, success: false, emailExist: result.emailExist });
-  //         }
-  //         else {
-  //           resolve({ msg: result.msg, success: false, emailExist: result.emailExist });
-  //         }
-  //       }
-  //     }, error => {
-  //       console.error(error);
-  //       rejects();
-  //     });
-  //   });
-
-  //   return promise;
-  // }
-
-
 
 
 
@@ -408,7 +177,7 @@ export class UserService {
         error_msg: string,
         error: boolean,
         success: boolean,
-        user:User,
+        user: User,
         msg: string,
         emailExist: boolean,
         wrong_password: boolean
@@ -420,17 +189,13 @@ export class UserService {
           this.roleChanged.emit(this.user.roles);
 
 
-          //doctor info
-
-          // this.user.schedules = [];
-          // Helper.resolveScheduleResult(result.user.schedules, this.user.schedules);
 
 
           this.fireUserApprovedChangedEvent();
           this.fetchProfilePic(result.user.id);
           this.clearUserData('/');
           this.clearUserData('/admin');
-          if(remember_me){
+          if (remember_me) {
             this.SaveUserCredientials();
           }
 
@@ -474,9 +239,10 @@ export class UserService {
 
       this.httpClient.post<{
         success: boolean,
-        error:boolean,
-        user:User,
-        error_msg:string }>(
+        error: boolean,
+        user: User,
+        error_msg: string
+      }>(
         this._baseUrl + "api/usermanager/CreateNewUser2", { json_data: user_str }).subscribe(result => {
           if (result.success == true) {
 
@@ -502,46 +268,6 @@ export class UserService {
   }
 
 
-
-
-  // CreateNewUser(name: string, password: string, email: string, role: string, age: number, gender: string):
-  //   Promise<{ error: boolean, error_msg: string, success: boolean, msg: string }> {
-
-  //   let promise = new Promise<{ error: boolean, error_msg: string, success: boolean, msg: string }>((resolve, reject) => {
-  //     this.httpClient.post<{ success: boolean, user_id: number, username: string, approved: boolean, user_name: string, user_gender: string, user_age: number, error: boolean, error_msg: string, error_list: string[], role_list: string[] }>(
-  //       this._baseUrl + "api/usermanager/CreateNewUser", { name: name, password: password, email: email, role: role, gender: gender, age: age }).subscribe(result => {
-  //         if (result.success == true && result.user_id != null) {
-
-  //           this.user = new User();
-  //           this.user.email = email;
-  //           this.user.id = result.user_id;
-  //           this.user.name = name;
-  //           this.user.password = password;
-  //           this.user.age = age;
-  //           this.user.gender = gender;
-  //           result.role_list.forEach(val => {
-  //             this.user.roles.push(val);
-  //           });
-  //           this.user.username = email;
-  //           this.user.approved = result.approved;
-  //           this.SaveUserCredientials();
-  //           this.isLoggedIn = true;
-  //           this.roleChanged.emit(this.user.roles);
-  //           this.fireUserApprovedChangedEvent();
-  //           this.fetchProfilePic(result.user_id);
-  //           resolve({ error: false, error_msg: null, success: true, msg: null });
-  //         }
-  //         else {
-
-  //           resolve({ error: result.error, error_msg: result.error_msg, success: false, msg: null });
-  //         }
-
-  //       }, error => console.error(error)
-  //       );
-  //   });
-
-  //   return promise;
-  // }
 
 
 

@@ -28,10 +28,10 @@ export class PrescriptionListComponent implements OnInit {
   _baseUrl: string;
   search_string: string;
   sortOrderBy: string = 'Date';
-  filteredPrescriptionList:Prescription[] = [];
+  filteredPrescriptionList: Prescription[] = [];
   prescriptionList: Prescription[] = [];
   sortByAsscending: boolean = true;
-  fetchingPrescription:boolean = false;
+  fetchingPrescription: boolean = false;
 
   ngOnInit(): void {
     this.getPrescriptionList();
@@ -39,7 +39,7 @@ export class PrescriptionListComponent implements OnInit {
 
 
 
-  getPrescriptionList(){
+  getPrescriptionList() {
 
     this.fetchingPrescription = true;
     this.httpClient.get<{
@@ -77,7 +77,7 @@ export class PrescriptionListComponent implements OnInit {
 
 
 
-  onSearchSubmit(){
+  onSearchSubmit() {
     if (this.search_string != undefined) {
       if (this.search_string.replace(/\s/g, '').length) {
         var sk = this.search_string.toUpperCase();
@@ -87,15 +87,15 @@ export class PrescriptionListComponent implements OnInit {
   }
 
 
-  doctorSearchOnInput(event_data){
-    if(this.search_string.length == 0){
+  doctorSearchOnInput(event_data) {
+    if (this.search_string.length == 0) {
       this.filteredPrescriptionList = this.prescriptionList.slice();
     }
   }
 
 
 
-  sortPrescriptionList(event_data, order_name:string){
+  sortPrescriptionList(event_data, order_name: string) {
     switch (order_name) {
       case 'Date':
         if (this.sortOrderBy == order_name) {
@@ -126,7 +126,7 @@ export class PrescriptionListComponent implements OnInit {
   }
 
 
-  onViewPrescriptionClicked(event_data, prescription_id: number){
-    this.router.navigate(['Prescription/ViewPrescription'], {queryParams: { prescription_id: prescription_id}});
+  onViewPrescriptionClicked(event_data, prescription_id: number) {
+    this.router.navigate(['Prescription/ViewPrescription'], { queryParams: { prescription_id: prescription_id } });
   }
 }

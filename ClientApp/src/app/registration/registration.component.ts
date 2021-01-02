@@ -72,11 +72,6 @@ export class RegistrationComponent implements OnInit {
     }
 
 
-    // var emailAddress = <string>this.signinForm.controls['email'].value;
-    // var password = <string>this.signinForm.controls['password'].value;
-
-    // var result = this.userService.SignIn(emailAddress, password);
-
 
   }
 }

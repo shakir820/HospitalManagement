@@ -1,51 +1,51 @@
 
 
 <div class="container" id="section-to-print">
-<div class="card p-0 shadow" >
-  <div class="card-body p-0">
-    <div class="d-flex">
-      <div class="p-3 d-flex flex-column">
-        <div class="name-title">Prescription</div>
-        <!-- <div class="small font-weight-bold">Id: 56456</div> -->
-        <div class="small font-weight-bold mt-auto" >
-         Date: {{today_date | date: 'mediumDate'}}
+  <div class="card p-0 shadow">
+    <div class="card-body p-0">
+      <div class="d-flex">
+        <div class="p-3 d-flex flex-column">
+          <div class="name-title">Prescription</div>
+          <!-- <div class="small font-weight-bold">Id: 56456</div> -->
+          <div class="small font-weight-bold mt-auto">
+            Date: {{today_date | date: 'mediumDate'}}
+          </div>
         </div>
-      </div>
-      <div class="d-flex justify-content-between flex-grow-1 bg-gray-100" style="border-bottom-left-radius: 50px;">
-        <div class="d-flex p-3">
-          <h5 class="name-title">Patient</h5>
-          <div class="bg-gray-300 mx-2" style="width: 4px; border-radius: 2px;"></div>
-          <div class="d-flex">
-            <div style="width: 50px; height: 50px;">
-              <app-profile-pic-preview [user_id]="patient_id"></app-profile-pic-preview>
+        <div class="d-flex justify-content-between flex-grow-1 bg-gray-100" style="border-bottom-left-radius: 50px;">
+          <div class="d-flex p-3">
+            <h5 class="name-title">Patient</h5>
+            <div class="bg-gray-300 mx-2" style="width: 4px; border-radius: 2px;"></div>
+            <div class="d-flex">
+              <div style="width: 50px; height: 50px;">
+                <app-profile-pic-preview [user_id]="patient_id"></app-profile-pic-preview>
+              </div>
+              <div class="ml-2 d-flex flex-column">
+                <div class="name-title">{{patient.name}}</div>
+                <div class="small font-weight-bold">Age: {{patient.age}}</div>
+                <div class="small font-weight-bold">Sex: {{patient.gender}}</div>
+              </div>
             </div>
-            <div class="ml-2 d-flex flex-column">
-              <div class="name-title">{{patient.name}}</div>
-              <div class="small font-weight-bold">Age: {{patient.age}}</div>
-              <div class="small font-weight-bold">Sex: {{patient.gender}}</div>
+          </div>
+          <div class="text-light p-3 d-flex bg-primary" style="border-bottom-left-radius: 50px;">
+            <h5 class="name-title">Doctor</h5>
+            <div class="bg-light mx-2" style="width: 4px; border-radius: 2px;"></div>
+            <div class="d-flex">
+              <div style="width: 50px; height: 50px;">
+                <app-profile-pic-preview [user_id]="userService.user.id"></app-profile-pic-preview>
+              </div>
+              <div class="ml-2 d-flex flex-column">
+                <div class="name-title">{{userService.user.name}}</div>
+                <div class="small font-weight-bold">{{userService.user.doctor_title}}</div>
+                <div class="small font-weight-bold">{{userService.user.degree_title}}</div>
+                <div class="small mt-auto font-weight-bold">Mob: {{userService.user.phoneNumber}}</div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="text-light p-3 d-flex bg-primary" style="border-bottom-left-radius: 50px;">
-          <h5 class="name-title">Doctor</h5>
-          <div class="bg-light mx-2" style="width: 4px; border-radius: 2px;"></div>
-          <div class="d-flex">
-            <div style="width: 50px; height: 50px;">
-              <app-profile-pic-preview [user_id]="userService.user.id"></app-profile-pic-preview>
-            </div>
-            <div class="ml-2 d-flex flex-column">
-              <div class="name-title">{{userService.user.name}}</div>
-              <div class="small font-weight-bold">{{userService.user.doctor_title}}</div>
-              <div class="small font-weight-bold">{{userService.user.degree_title}}</div>
-              <div class="small mt-auto font-weight-bold">Mob: {{userService.user.phoneNumber}}</div>
-            </div>
-          </div>
-        </div>
+
       </div>
 
     </div>
-
-  </div>
   </div>
 
 
@@ -61,16 +61,16 @@
             <div *ngIf="prescription.patient_complains.length == 0 && showSaveBtn" class="d-flex justify-content-center d-print-none">
               <p class="my-3 small font-weight-bold">Add Complain</p>
             </div>
-           <div class="d-flex align-items-center justify-content-between" *ngFor="let item of prescription.patient_complains">
-            <div class="my-1 d-flex">
-              <div class="my-1 bg-gray-300" style="min-width:5px; border-radius: 2px;"></div>
-              <div class="mx-2 d-flex flex-column">
-                <a (click)="onComplainItemClicked($event, item.id)" class="name-title">{{item.title}}</a>
-                <div class="small">{{item.description}}</div>
+            <div class="d-flex align-items-center justify-content-between" *ngFor="let item of prescription.patient_complains">
+              <div class="my-1 d-flex">
+                <div class="my-1 bg-gray-300" style="min-width:5px; border-radius: 2px;"></div>
+                <div class="mx-2 d-flex flex-column">
+                  <a (click)="onComplainItemClicked($event, item.id)" class="name-title">{{item.title}}</a>
+                  <div class="small">{{item.description}}</div>
+                </div>
               </div>
+              <a *ngIf="showSaveBtn" class="text-danger d-print-none" (click)="onComplainDeleteBtnClicked($event, item.id)"><i class="fad fa-trash"></i></a>
             </div>
-            <a *ngIf="showSaveBtn" class="text-danger d-print-none" (click)="onComplainDeleteBtnClicked($event, item.id)"><i class="fad fa-trash"></i></a>
-           </div>
           </div>
           <div *ngIf="showSaveBtn" class="d-flex">
             <button class="btn d-print-none btn-sm flex-fill btn-primary" (click)="onAddMoreComplainBtnClicked($event)">
@@ -96,16 +96,16 @@
             <div *ngIf="prescription.patient_examinations.length == 0 && showSaveBtn" class="d-flex justify-content-center d-print-none">
               <p class="my-3 small font-weight-bold">Add Examination</p>
             </div>
-           <div class="d-flex justify-content-between align-items-center" *ngFor="let item of prescription.patient_examinations">
-            <div class="my-1 d-flex">
-              <div class="my-1 bg-gray-300" style="min-width: 5px; border-radius: 2px;"></div>
-              <div class="mx-2 d-flex flex-column">
-                <a (click)="onExaminationItemClicked($event, item.id)" class="name-title">{{item.title}}</a>
-                <div class="small">{{ item.description }}</div>
+            <div class="d-flex justify-content-between align-items-center" *ngFor="let item of prescription.patient_examinations">
+              <div class="my-1 d-flex">
+                <div class="my-1 bg-gray-300" style="min-width: 5px; border-radius: 2px;"></div>
+                <div class="mx-2 d-flex flex-column">
+                  <a (click)="onExaminationItemClicked($event, item.id)" class="name-title">{{item.title}}</a>
+                  <div class="small">{{ item.description }}</div>
+                </div>
               </div>
+              <a *ngIf="showSaveBtn" class="d-print-none text-danger" (click)="onExaminationDeleteBtnClicked($event, item.id)"><i class="fad fa-trash"></i></a>
             </div>
-            <a *ngIf="showSaveBtn" class="d-print-none text-danger" (click)="onExaminationDeleteBtnClicked($event, item.id)"><i class="fad fa-trash" ></i></a>
-           </div>
           </div>
           <div *ngIf="showSaveBtn" class="d-flex">
             <button class="btn d-print-none btn-sm flex-fill btn-primary" (click)="onAddMoreExaminationBtnClicked($event)">
@@ -132,15 +132,15 @@
             <div *ngIf="prescription.patient_investigations.length == 0 && showSaveBtn" class="d-flex justify-content-center d-print-none">
               <p class="my-3 small font-weight-bold">Add Investigation</p>
             </div>
-           <div class="d-flex justify-content-between align-items-center" *ngFor="let item of prescription.patient_investigations">
-            <div class="my-1 d-flex">
-              <div class="my-1 bg-gray-300" style="min-width: 5px; border-radius: 2px;"></div>
-              <div class="mx-2 d-flex flex-column">
-                <div class="name-title">{{item.abbreviation}}</div>
+            <div class="d-flex justify-content-between align-items-center" *ngFor="let item of prescription.patient_investigations">
+              <div class="my-1 d-flex">
+                <div class="my-1 bg-gray-300" style="min-width: 5px; border-radius: 2px;"></div>
+                <div class="mx-2 d-flex flex-column">
+                  <div class="name-title">{{item.abbreviation}}</div>
+                </div>
               </div>
+              <a *ngIf="showSaveBtn" class="d-print-none text-danger" (click)="onInvestigationDeleteBtnClicked($event, item.id)"><i class="fad fa-trash"></i></a>
             </div>
-            <a *ngIf="showSaveBtn" class="d-print-none text-danger" (click)="onInvestigationDeleteBtnClicked($event, item.id)"><i class="fad fa-trash"></i></a>
-           </div>
           </div>
           <div *ngIf="showSaveBtn" class="d-flex">
             <button class="btn d-print-none btn-sm flex-fill btn-primary" (click)="onAddMoreInvestigationBtnClicked($event)">
@@ -174,20 +174,22 @@
               <div class="bg-gray-300 my-1 mx-3" style="width: 5px; border-radius: 2px;"></div>
               <div class="d-flex flex-column">
                 <a class="name-title" (click)="onMedicineItemClicked($event, item.id)">{{item.title}}</a>
-                 <div class="d-flex small font-weight-bold">
-                  <div style="letter-spacing: 4px;" >{{item.schedule}}</div>
+                <div class="d-flex small font-weight-bold">
+                  <div style="letter-spacing: 4px;">{{item.schedule}}</div>
                   <div class="ml-4">{{ item.duration }}</div>
-                 </div>
+                </div>
                 <div class="small font-weight-bold">{{ item.note }}</div>
               </div>
-             <div *ngIf="showSaveBtn" class="flex-fill d-flex flex-row-reverse align-items-end d-print-none align-self-center">
-               <a  class="text-danger" (click)="onMedicineDeleteBtnClicked($event, item.id)"><i class="fad fa-trash"></i></a>
+              <div *ngIf="showSaveBtn" class="flex-fill d-flex flex-row-reverse align-items-end d-print-none align-self-center">
+                <a class="text-danger" (click)="onMedicineDeleteBtnClicked($event, item.id)"><i class="fad fa-trash"></i></a>
               </div>
             </div>
 
             <div *ngIf="showSaveBtn" class="">
               <button (click)="onAddMedicineBtnClicked($event)"
-               class="btn d-print-none shadow btn-primary ml-3 btn-circle"><i class="far fa-plus"></i></button>
+                      class="btn d-print-none shadow btn-primary ml-3 btn-circle">
+                <i class="far fa-plus"></i>
+              </button>
             </div>
           </div>
         </div>
@@ -223,29 +225,29 @@
 
 
       <!-- buttons area -->
-     <div class="d-flex align-self-end mt-2">
-      <button *ngIf="showSaveBtn && inEditMode" class="btn btn-outline-danger px-3 shadow" (click)="onCancelbtnClicked($event)">
-        Cancel
-      </button>
-      <button *ngIf="showSaveBtn" class="btn ml-2 btn-outline-primary px-3 shadow" (click)="onClearAllbtnClicked($event)">
-        Clear All
-      </button>
-      <button class="btn ml-2 btn-primary px-3 shadow" *ngIf="showSaveBtn"
-      (click)="onSavebtnClicked($event)" [disabled]="(saveBtnDisabled || savingPrescription)">
-        <div class=" d-flex align-items-center">
-          <div class="flex-grow-1 ml-3 mr-3">
-            {{savingPrescription? 'Saving': 'Save'}}
-          </div>
-          <div *ngIf="savingPrescription" class="align-self-center d-flex">
-            <div class="spinner-border align-self-center spinner-border-sm text-light" role="status">
+      <div class="d-flex align-self-end mt-2">
+        <button *ngIf="showSaveBtn && inEditMode" class="btn btn-outline-danger px-3 shadow" (click)="onCancelbtnClicked($event)">
+          Cancel
+        </button>
+        <button *ngIf="showSaveBtn" class="btn ml-2 btn-outline-primary px-3 shadow" (click)="onClearAllbtnClicked($event)">
+          Clear All
+        </button>
+        <button class="btn ml-2 btn-primary px-3 shadow" *ngIf="showSaveBtn"
+                (click)="onSavebtnClicked($event)" [disabled]="(saveBtnDisabled || savingPrescription)">
+          <div class=" d-flex align-items-center">
+            <div class="flex-grow-1 ml-3 mr-3">
+              {{savingPrescription? 'Saving': 'Save'}}
+            </div>
+            <div *ngIf="savingPrescription" class="align-self-center d-flex">
+              <div class="spinner-border align-self-center spinner-border-sm text-light" role="status">
+              </div>
             </div>
           </div>
-        </div>
-      </button>
-      <button class="btn ml-2 btn-primary px-3 shadow" (click)="onEidtbtnClicked($event)" *ngIf="showEditBtn">
-        Edit
-      </button>
-     </div>
+        </button>
+        <button class="btn ml-2 btn-primary px-3 shadow" (click)="onEidtbtnClicked($event)" *ngIf="showEditBtn">
+          Edit
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -257,7 +259,7 @@
 <app-pres-edit-complain-dialog #complainModalComponent (complainChanged)="onComplainChanged($event)"></app-pres-edit-complain-dialog>
 <app-pres-edit-examination-dialog #examinationModalComponent (examinationChanged)="onExaminationChanged($event)"></app-pres-edit-examination-dialog>
 <app-pres-edit-investigation-dialog #investigationModalComponent (investigationItemChanged)="onInvestigationItemChanged($event)"></app-pres-edit-investigation-dialog>
-<app-pres-edit-note-dialog #noteModalComponent (noteItemChanged)="onNoteItemChanged($event)" ></app-pres-edit-note-dialog>
+<app-pres-edit-note-dialog #noteModalComponent (noteItemChanged)="onNoteItemChanged($event)"></app-pres-edit-note-dialog>
 
 
 

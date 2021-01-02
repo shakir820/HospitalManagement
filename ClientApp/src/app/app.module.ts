@@ -56,6 +56,8 @@ import { PatientDocumentListComponent } from './patient_pages/patient-document-l
 import { SettingPageComponent } from './common_pages/setting-page/setting-page.component';
 import { AdminSettingsPageComponent } from './admin/admin-settings-page/admin-settings-page.component';
 import { AdminProfileComponent } from './admin/admin-profile/admin-profile.component';
+import { UserDetailsComponent } from './admin/user-details/user-details.component';
+import { DoctorAppointmentListComponent } from './admin/doctor-appointment-list/doctor-appointment-list.component';
 
 @NgModule({
   declarations: [
@@ -105,7 +107,9 @@ import { AdminProfileComponent } from './admin/admin-profile/admin-profile.compo
     PatientDocumentListComponent,
     SettingPageComponent,
     AdminSettingsPageComponent,
-    AdminProfileComponent
+    AdminProfileComponent,
+    UserDetailsComponent,
+    DoctorAppointmentListComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

@@ -19,11 +19,11 @@ export class AdminDoctorDetailsComponent implements OnInit {
     private httpClient: HttpClient,
     private route: ActivatedRoute,
     @Inject('BASE_URL') baseUrl: string) {
-      this._baseUrl = baseUrl;
-     }
+    this._baseUrl = baseUrl;
+  }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params:Params)=>{
+    this.route.queryParams.subscribe((params: Params) => {
       this.doctor_id = +params['id'];
     });
 
@@ -34,11 +34,11 @@ export class AdminDoctorDetailsComponent implements OnInit {
 
 
   doctor_status: string;
-  doctor_id:number;
+  doctor_id: number;
   _baseUrl: string;
   @ViewChild('imagePreview', { static: true }) imagePreviewRef: ElementRef;
   fetchingDoctorDetails: boolean = false;
-  doctor:User = new User();
+  doctor: User = new User();
 
 
   ShowProfileImage() {
@@ -48,36 +48,36 @@ export class AdminDoctorDetailsComponent implements OnInit {
 
 
 
-  getDoctorInfo(){
+  getDoctorInfo() {
     this.fetchingDoctorDetails = true;
     this.httpClient.get<{
       success: boolean,
       error: boolean,
       doctor: User,
       error_msg: string
-    }>(this._baseUrl + 'api/admin/GetDoctor', {params: {id: this.doctor_id.toString()}}).subscribe(result => {
+    }>(this._baseUrl + 'api/admin/GetDoctor', { params: { id: this.doctor_id.toString() } }).subscribe(result => {
       console.log(result);
       this.fetchingDoctorDetails = false;
       if (result.success) {
 
-       this.doctor.username = result.doctor.username;
-       this.doctor.email = result.doctor.email;
-       this.doctor.id = result.doctor.id;
-       this.doctor.age = result.doctor.age;
-       this.doctor.approved = result.doctor.approved;
-       this.doctor.biography = result.doctor.biography;
-       this.doctor.bloodGroup = result.doctor.bloodGroup;
-       this.doctor.bmdc_certifcate = result.doctor.bmdc_certifcate;
-       this.doctor.city_name = result.doctor.city_name;
-       this.doctor.country_name = result.doctor.country_name;
-       this.doctor.country_phone_code = result.doctor.country_phone_code;
-       this.doctor.country_short_name = result.doctor.country_short_name;
-       this.doctor.degree_title = result.doctor.degree_title;
-       this.doctor.doctor_title= result.doctor.doctor_title;
-       this.doctor.experience = result.doctor.experience;
-       this.doctor.gender = result.doctor.gender;
-       this.doctor.isActive = result.doctor.isActive;
-       this.doctor.languages =[];
+        this.doctor.username = result.doctor.username;
+        this.doctor.email = result.doctor.email;
+        this.doctor.id = result.doctor.id;
+        this.doctor.age = result.doctor.age;
+        this.doctor.approved = result.doctor.approved;
+        this.doctor.biography = result.doctor.biography;
+        this.doctor.bloodGroup = result.doctor.bloodGroup;
+        this.doctor.bmdc_certifcate = result.doctor.bmdc_certifcate;
+        this.doctor.city_name = result.doctor.city_name;
+        this.doctor.country_name = result.doctor.country_name;
+        this.doctor.country_phone_code = result.doctor.country_phone_code;
+        this.doctor.country_short_name = result.doctor.country_short_name;
+        this.doctor.degree_title = result.doctor.degree_title;
+        this.doctor.doctor_title = result.doctor.doctor_title;
+        this.doctor.experience = result.doctor.experience;
+        this.doctor.gender = result.doctor.gender;
+        this.doctor.isActive = result.doctor.isActive;
+        this.doctor.languages = [];
         result.doctor.languages.forEach(val => {
           var lang = new Language();
           lang.id = val.id;
@@ -92,29 +92,29 @@ export class AdminDoctorDetailsComponent implements OnInit {
         result.doctor.roles.forEach(val => {
           this.doctor.roles.push(val);
         });
-       this.doctor.schedules = [];
-       Helper.resolveScheduleResult(result.doctor.schedules, this.doctor.schedules);
-       this.doctor.specialities = [];
-       Helper.resolveSpecialitiesResult(result.doctor.specialities, this.doctor.specialities);
-       this.doctor.state_name = result.doctor.state_name;
-       this.doctor.types_of = result.doctor.types_of;
-       this.resolveDoctorStatus();
-       this.ShowProfileImage();
+        this.doctor.schedules = [];
+        Helper.resolveScheduleResult(result.doctor.schedules, this.doctor.schedules);
+        this.doctor.specialities = [];
+        Helper.resolveSpecialitiesResult(result.doctor.specialities, this.doctor.specialities);
+        this.doctor.state_name = result.doctor.state_name;
+        this.doctor.types_of = result.doctor.types_of;
+        this.resolveDoctorStatus();
+        this.ShowProfileImage();
       }
     });
   }
 
 
-  resolveDoctorStatus(){
-    if(this.doctor.isActive == true){
-      if(this.doctor.approved == true){
-       this.doctor_status = "Approved";
+  resolveDoctorStatus() {
+    if (this.doctor.isActive == true) {
+      if (this.doctor.approved == true) {
+        this.doctor_status = "Approved";
       }
-      else{
+      else {
         this.doctor_status = "Not Approved";
       }
     }
-    else{
+    else {
       this.doctor_status = "Inactive";
     }
   }
@@ -125,42 +125,42 @@ export class AdminDoctorDetailsComponent implements OnInit {
 
 
   // action methods
-  approveDoctor(event_data){
-    this.httpClient.get<{success: boolean, error: boolean, error_msg: string}>
-    (this._baseUrl + 'api/admin/ApproveDoctor', {params: { id: this.doctor_id.toString()} }).subscribe(result => {
-      if(result.success){
-        this.doctor.approved = true;
-      }
-    });
+  approveDoctor(event_data) {
+    this.httpClient.get<{ success: boolean, error: boolean, error_msg: string }>
+      (this._baseUrl + 'api/admin/ApproveDoctor', { params: { id: this.doctor_id.toString() } }).subscribe(result => {
+        if (result.success) {
+          this.doctor.approved = true;
+        }
+      });
   }
 
 
-  unApproveDoctor(event_data){
-    this.httpClient.get<{success: boolean, error: boolean, error_msg: string}>
-    (this._baseUrl + 'api/admin/UnapproveDoctor', {params: { id: this.doctor_id.toString()} }).subscribe(result => {
-      if(result.success){
-        this.doctor.approved = false;
-      }
-    });
+  unApproveDoctor(event_data) {
+    this.httpClient.get<{ success: boolean, error: boolean, error_msg: string }>
+      (this._baseUrl + 'api/admin/UnapproveDoctor', { params: { id: this.doctor_id.toString() } }).subscribe(result => {
+        if (result.success) {
+          this.doctor.approved = false;
+        }
+      });
   }
 
 
-  activeDoctor(event_data){
-    this.httpClient.get<{success: boolean, error: boolean, error_msg: string}>
-    (this._baseUrl + 'api/admin/ActivateUser', {params: { id: this.doctor_id.toString()} }).subscribe(result => {
-      if(result.success){
-        this.doctor.isActive = true;
-      }
-    });
+  activeDoctor(event_data) {
+    this.httpClient.get<{ success: boolean, error: boolean, error_msg: string }>
+      (this._baseUrl + 'api/admin/ActivateUser', { params: { id: this.doctor_id.toString() } }).subscribe(result => {
+        if (result.success) {
+          this.doctor.isActive = true;
+        }
+      });
   }
 
-  inActiveDoctor(event_data){
-    this.httpClient.get<{success: boolean, error: boolean, error_msg: string}>
-    (this._baseUrl + 'api/admin/DeactivateUser', {params: { id: this.doctor_id.toString()} }).subscribe(result => {
-      if(result.success){
-        this.doctor.isActive = false;
-      }
-    });
+  inActiveDoctor(event_data) {
+    this.httpClient.get<{ success: boolean, error: boolean, error_msg: string }>
+      (this._baseUrl + 'api/admin/DeactivateUser', { params: { id: this.doctor_id.toString() } }).subscribe(result => {
+        if (result.success) {
+          this.doctor.isActive = false;
+        }
+      });
   }
 
 }

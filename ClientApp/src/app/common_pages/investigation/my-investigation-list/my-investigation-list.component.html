@@ -5,10 +5,10 @@
       <div class="d-flex align-items-center">
         <div class=" font-weight-bold">Investigation List</div>
         <form #f="ngForm" (ngSubmit)="onSearchSubmit()"
-        class="d-none ml-3 d-sm-inline-block form-inline">
+              class="d-none ml-3 d-sm-inline-block form-inline">
           <div class="input-group">
             <input type="text" id="search_string" name="search_string" [(ngModel)]="search_string"
-                  class="form-control small" placeholder="Search" (input)="searchOnInput($event)" aria-label="Search">
+                   class="form-control small" placeholder="Search" (input)="searchOnInput($event)" aria-label="Search">
             <div class="input-group-append">
               <button class="btn btn-primary" type="submit">
                 <i class="fas fa-search fa-sm"></i>
@@ -19,8 +19,8 @@
 
         <!-- select option here -->
         <select (change)="selectInvestigationChanged($event)" class="ml-3 form-control"
-        aria-placeholder="Select Category"
-        style="max-width: 300px;" [(ngModel)]="selectedInvestigationName">
+                aria-placeholder="Select Category"
+                style="max-width: 300px;" [(ngModel)]="selectedInvestigationName">
           <option *ngFor="let item of all_Investigation_Name_List" [value]="item">{{item}}</option>
         </select>
 

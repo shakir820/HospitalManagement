@@ -17,14 +17,14 @@
             <div class=" d-flex flex-column">
               <div class="form-group">
                 <label for="document_name">Document Name</label>
-                <input [(ngModel)]="document_name" class="form-control" type="text" required name="document_name" id="document_name"/>
+                <input [(ngModel)]="document_name" class="form-control" type="text" required name="document_name" id="document_name" />
                 <small *ngIf="(!f.form.controls['document_name'].valid && f.form.controls['document_name'].touched) ||
                 (!f.form.controls['document_name'].valid && submitted)" class="text-danger">Name is required</small>
               </div>
 
               <div class="mb-3">
                 <label for="formFile" class="form-label">Document File</label>
-                <input #DocFile class="form-control"  ngModel required name="document_file" type="file" id="formFile">
+                <input #DocFile class="form-control" ngModel required name="document_file" type="file" id="formFile">
                 <small *ngIf="(!f.form.controls['document_file'].valid && f.form.controls['document_file'].touched) ||
                 (!f.form.controls['document_file'].valid && submitted)" class="text-danger">File is required</small>
               </div>
@@ -86,20 +86,22 @@
                 <td>{{ item.created_date | date: 'mediumDate' }}</td>
                 <td>
                   <!-- <div class="d-flex flex-row-reverse">
-                  <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <i class="fas fa-ellipsis-v fa-sm fa-fw"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                      <div class="dropdown-header">Action:</div>
+                    <div class="dropdown no-arrow">
+                      <a class="dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v fa-sm fa-fw"></i>
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                        <div class="dropdown-header">Action:</div>
 
+                      </div>
                     </div>
+                  </div> -->
+                  <div>
+                    <a class="text-danger" (click)="onDocumentDeleteClicked($event, item.id)">
+                      <i class="fas fa-trash"></i>
+                    </a>
                   </div>
-                </div> -->
-                <div><a  class="text-danger" (click)="onDocumentDeleteClicked($event, item.id)">
-                  <i class="fas fa-trash"></i>
-                </a></div>
-              </td>
+                </td>
               </tr>
             </tbody>
           </table>

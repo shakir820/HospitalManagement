@@ -8,7 +8,7 @@
       <div class="card-body font-weight-bold">
         <div class="row">
           <div class="col-sm-12 col-md-6">
-            <div class="align-self-center"  style="width: 150px; height: 150px;">
+            <div class="align-self-center" style="width: 150px; height: 150px;">
               <app-profile-pic-preview [user_id]="patient_id"></app-profile-pic-preview>
             </div>
 
@@ -37,7 +37,9 @@
             </div>
             <div class="mt-4">
               <button *ngIf="upcoming_appointment.consulted != true" (click)="onCreatePrescriptionClicked($event)"
-              class="btn btn-sm btn-primary rounded-pill px-4">Create Prescription</button>
+                      class="btn btn-sm btn-primary rounded-pill px-4">
+                Create Prescription
+              </button>
               <button *ngIf="upcoming_appointment.consulted" (click)="onUpComingAppointmentViewPrescriptionClicked($event)" class="btn btn-sm btn-primary rounded-pill px-4">View Prescription</button>
             </div>
           </div>
@@ -147,7 +149,7 @@
           </div>
           <div class="col-sm-12  col-md-6 col-lg-4">
             <div class=" d-flex justify-content-md-center align-items-center h-100">
-             <button class="btn btn-sm btn-outline-primary" (click)="pastAppointmentViewPrescription($event, item.id)">View Prescription</button>
+              <button class="btn btn-sm btn-outline-primary" (click)="pastAppointmentViewPrescription($event, item.id)">View Prescription</button>
             </div>
           </div>
         </div>
@@ -176,7 +178,7 @@
             <div class="card-header" [id]="'heading' + i">
               <h2 class="mb-0">
                 <button class="btn btn-block btn-link text-left" type="button" data-toggle="collapse" [attr.data-target]="'#collapseOne' + i"
-                aria-expanded="true" [attr.aria-controls]="'collapseOne' + i">
+                        aria-expanded="true" [attr.aria-controls]="'collapseOne' + i">
                   <div class="font-weight-bold">{{item.group_name}}</div>
                 </button>
               </h2>

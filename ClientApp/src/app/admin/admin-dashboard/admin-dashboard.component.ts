@@ -38,7 +38,7 @@ export class AdminDashboardComponent implements OnInit {
 
 
 
-  getAdminSummary(){
+  getAdminSummary() {
     this.fetchingSummary = true;
     this.httpClient.get<{
       success: boolean,
@@ -53,7 +53,7 @@ export class AdminDashboardComponent implements OnInit {
       total_staff: number
     }>(this._baseUrl + 'api/Admin/GetAdminSummary').subscribe(result => {
       this.fetchingSummary = false;
-      if(result.success){
+      if (result.success) {
         this.total_doctor = result.total_doctor;
         this.total_staff = result.total_staff;
         this.total_patient = result.total_patient;
@@ -62,14 +62,14 @@ export class AdminDashboardComponent implements OnInit {
         this.inprogress_investigation = result.total_inprogress_investigation;
         this.total_pending_doctor = result.total_pending_doctor;
       }
-      else{
+      else {
         console.log(result.error_msg);
       }
     },
-    error => {
-      this.fetchingSummary = false;
-      console.log(error);
-    });
+      error => {
+        this.fetchingSummary = false;
+        console.log(error);
+      });
   }
 
 }

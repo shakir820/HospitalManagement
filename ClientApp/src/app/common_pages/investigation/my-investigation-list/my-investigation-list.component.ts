@@ -31,7 +31,7 @@ export class MyInvestigationListComponent implements OnInit {
   showEmptyIcon: boolean = false;
   _baseUrl: string;
   sortOrderBy: string = 'Id';
-  sortByAsscending:boolean = true;
+  sortByAsscending: boolean = true;
 
   ngOnInit(): void {
     this.getAllInvestigations();
@@ -39,27 +39,27 @@ export class MyInvestigationListComponent implements OnInit {
   }
 
 
-  searchOnInput(event_data){
-    if(this.search_string.length == 0){
+  searchOnInput(event_data) {
+    if (this.search_string.length == 0) {
       this.filtered_investigation_List = this.all_Investigation_List.slice();
       this.selectedInvestigationName = 'All';
       this.sortInvestigationListDefault();
     }
   }
 
-  onSearchSubmit(){
-    if(this.search_string.length > 0){
+  onSearchSubmit() {
+    if (this.search_string.length > 0) {
       var sk = this.search_string.toUpperCase();
-      this.filtered_investigation_List =  this.all_Investigation_List.filter(a => a.abbreviation.toUpperCase().includes(sk) ||
-      a.doctor.name.toUpperCase().includes(sk) ||
-      a.investigator.name.toUpperCase().includes(sk));
+      this.filtered_investigation_List = this.all_Investigation_List.filter(a => a.abbreviation.toUpperCase().includes(sk) ||
+        a.doctor.name.toUpperCase().includes(sk) ||
+        a.investigator.name.toUpperCase().includes(sk));
       this.sortInvestigationListDefault();
     }
   }
 
 
-  selectInvestigationChanged(event_data){
-    if(this.selectedInvestigationName == 'All'){
+  selectInvestigationChanged(event_data) {
+    if (this.selectedInvestigationName == 'All') {
       this.filtered_investigation_List = this.all_Investigation_List.slice();
       this.sortInvestigationListDefault();
       return;
@@ -69,26 +69,26 @@ export class MyInvestigationListComponent implements OnInit {
   }
 
 
-  getAllInvestigations(){
+  getAllInvestigations() {
     this.fetchingInvestigations = true;
     this.httpClient.get<{
       success: boolean,
       error: boolean,
       investigations: InvestigationDoc[],
       error_msg: string
-    }>(this._baseUrl + 'api/Investigation/GetAllInvestigationsByPatient', { params: {patient_id: this.userService.user.id.toString() }}).subscribe(result => {
+    }>(this._baseUrl + 'api/Investigation/GetAllInvestigationsByPatient', { params: { patient_id: this.userService.user.id.toString() } }).subscribe(result => {
       console.log(result);
       this.fetchingInvestigations = false;
       if (result.success) {
-         this.all_Investigation_List = result.investigations;
-         this.filtered_investigation_List = this.all_Investigation_List.slice();
-         this.sortInvestigationListDefault();
+        this.all_Investigation_List = result.investigations;
+        this.filtered_investigation_List = this.all_Investigation_List.slice();
+        this.sortInvestigationListDefault();
       }
     });
   }
 
 
-  getAllInvestigationNames(){
+  getAllInvestigationNames() {
     this.httpClient.get<{
       success: boolean,
       error: boolean,
@@ -97,9 +97,9 @@ export class MyInvestigationListComponent implements OnInit {
     }>(this._baseUrl + 'api/Investigation/GetAllInvestigationAbbreviations').subscribe(result => {
       console.log(result);
       if (result.success) {
-         this.all_Investigation_Name_List = [];
-         this.all_Investigation_Name_List.push('All');
-          this.all_Investigation_Name_List.push(...result.investigation_abbreviation_list);
+        this.all_Investigation_Name_List = [];
+        this.all_Investigation_Name_List.push('All');
+        this.all_Investigation_Name_List.push(...result.investigation_abbreviation_list);
       }
     });
   }
@@ -115,60 +115,60 @@ export class MyInvestigationListComponent implements OnInit {
 
 
 
-  sortInvestigationList(event_data, order_name:string){
-    if(this.sortOrderBy == order_name){
+  sortInvestigationList(event_data, order_name: string) {
+    if (this.sortOrderBy == order_name) {
       this.sortByAsscending = !this.sortByAsscending;
-   }
-
-   switch(this.sortOrderBy){
-    case 'Id':
-      if(this.sortByAsscending){
-        this.filtered_investigation_List.sort(sortBy('id'));
-      }
-      else{
-        this.filtered_investigation_List.sort(sortBy('-id'));
-      }
-    break;
-
-    case 'Name':
-    if(this.sortByAsscending){
-      this.filtered_investigation_List.sort(sortBy('abbreviation'));
     }
-    else{
-      this.filtered_investigation_List.sort(sortBy('-abbreviation'));
+
+    switch (this.sortOrderBy) {
+      case 'Id':
+        if (this.sortByAsscending) {
+          this.filtered_investigation_List.sort(sortBy('id'));
+        }
+        else {
+          this.filtered_investigation_List.sort(sortBy('-id'));
+        }
+        break;
+
+      case 'Name':
+        if (this.sortByAsscending) {
+          this.filtered_investigation_List.sort(sortBy('abbreviation'));
+        }
+        else {
+          this.filtered_investigation_List.sort(sortBy('-abbreviation'));
+        }
+        break;
+
+
+      case 'Doctor':
+        if (this.sortByAsscending) {
+          this.filtered_investigation_List.sort(sortBy('doctor.name'));
+        }
+        else {
+          this.filtered_investigation_List.sort(sortBy('-doctor.name'));
+        }
+        break;
+
+
+      case 'Investigator':
+        if (this.sortByAsscending) {
+          this.filtered_investigation_List.sort(sortBy('investigator.name'));
+        }
+        else {
+          this.filtered_investigation_List.sort(sortBy('-investigator.name'));
+        }
+        break;
+
+
+      case 'Date':
+        if (this.sortByAsscending) {
+          this.filtered_investigation_List.sort(sortBy('result_publish_date'));
+        }
+        else {
+          this.filtered_investigation_List.sort(sortBy('-result_publish_date'));
+        }
+        break;
     }
-    break;
-
-
-    case 'Doctor':
-    if(this.sortByAsscending){
-      this.filtered_investigation_List.sort(sortBy('doctor.name'));
-    }
-    else{
-      this.filtered_investigation_List.sort(sortBy('-doctor.name'));
-    }
-    break;
-
-
-    case 'Investigator':
-    if(this.sortByAsscending){
-      this.filtered_investigation_List.sort(sortBy('investigator.name'));
-    }
-    else{
-      this.filtered_investigation_List.sort(sortBy('-investigator.name'));
-    }
-    break;
-
-
-    case 'Date':
-      if(this.sortByAsscending){
-        this.filtered_investigation_List.sort(sortBy('result_publish_date'));
-      }
-      else{
-        this.filtered_investigation_List.sort(sortBy('-result_publish_date'));
-      }
-      break;
-  }
 
 
     this.sortOrderBy = order_name;
@@ -179,52 +179,52 @@ export class MyInvestigationListComponent implements OnInit {
 
 
 
-  sortInvestigationListDefault(){
-    switch(this.sortOrderBy){
+  sortInvestigationListDefault() {
+    switch (this.sortOrderBy) {
       case 'Id':
-        if(this.sortByAsscending){
+        if (this.sortByAsscending) {
           this.filtered_investigation_List.sort(sortBy('id'));
         }
-        else{
+        else {
           this.filtered_investigation_List.sort(sortBy('-id'));
         }
-      break;
+        break;
 
       case 'Name':
-      if(this.sortByAsscending){
-        this.filtered_investigation_List.sort(sortBy('name'));
-      }
-      else{
-        this.filtered_investigation_List.sort(sortBy('-name'));
-      }
-      break;
+        if (this.sortByAsscending) {
+          this.filtered_investigation_List.sort(sortBy('name'));
+        }
+        else {
+          this.filtered_investigation_List.sort(sortBy('-name'));
+        }
+        break;
 
 
       case 'Doctor':
-      if(this.sortByAsscending){
-        this.filtered_investigation_List.sort(sortBy('doctor.name'));
-      }
-      else{
-        this.filtered_investigation_List.sort(sortBy('-doctor.name'));
-      }
-      break;
+        if (this.sortByAsscending) {
+          this.filtered_investigation_List.sort(sortBy('doctor.name'));
+        }
+        else {
+          this.filtered_investigation_List.sort(sortBy('-doctor.name'));
+        }
+        break;
 
 
       case 'Investigator':
-      if(this.sortByAsscending){
-        this.filtered_investigation_List.sort(sortBy('investigator.name'));
-      }
-      else{
-        this.filtered_investigation_List.sort(sortBy('-investigator.name'));
-      }
-      break;
+        if (this.sortByAsscending) {
+          this.filtered_investigation_List.sort(sortBy('investigator.name'));
+        }
+        else {
+          this.filtered_investigation_List.sort(sortBy('-investigator.name'));
+        }
+        break;
 
 
       case 'Date':
-        if(this.sortByAsscending){
+        if (this.sortByAsscending) {
           this.filtered_investigation_List.sort(sortBy('result_publish_date'));
         }
-        else{
+        else {
           this.filtered_investigation_List.sort(sortBy('-result_publish_date'));
         }
         break;
@@ -235,7 +235,7 @@ export class MyInvestigationListComponent implements OnInit {
 
 
 
-  onDeleteInvestigationClicked(event_data, investigation_id: number){
+  onDeleteInvestigationClicked(event_data, investigation_id: number) {
 
     Swal.fire({
       title: 'Are you sure?',
@@ -252,7 +252,7 @@ export class MyInvestigationListComponent implements OnInit {
           success: boolean,
           error: boolean,
           error_msg: string
-        }>(this._baseUrl + 'api/Investigation/DeleteInvestigaitonDocument', {id : investigation_id}, ).subscribe(result => {
+        }>(this._baseUrl + 'api/Investigation/DeleteInvestigaitonDocument', { id: investigation_id },).subscribe(result => {
           console.log(result);
           if (result.success) {
             Swal.fire(
@@ -267,13 +267,13 @@ export class MyInvestigationListComponent implements OnInit {
             inv_index = this.filtered_investigation_List.findIndex(a => a.id == investigation_id);
             this.filtered_investigation_List.splice(inv_index, 1);
 
-            if(this.filtered_investigation_List.length == 0){
+            if (this.filtered_investigation_List.length == 0) {
               this.showEmptyIcon = true;
             }
           }
-          else{
+          else {
             Swal.fire({
-              icon:'error',
+              icon: 'error',
               title: 'Error!',
               text: result.error_msg
             });

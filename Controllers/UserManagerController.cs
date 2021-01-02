@@ -489,6 +489,10 @@ namespace HospitalManagement.Controllers
                 if (user != null)
                 {
                     var canSignin = await _signInManager.CanSignInAsync(user);
+                    if (user.IsActive == false)
+                    {
+                        canSignin = false;
+                    }
 
                     if (canSignin)
                     {
@@ -534,7 +538,7 @@ namespace HospitalManagement.Controllers
                         return new JsonResult(new ViewModels.SignInResult
                         {
                             success = false,
-                            msg = "User cannot signin",
+                            msg = "You cannot login",
                             error = false
                         });
                     }
@@ -677,6 +681,17 @@ namespace HospitalManagement.Controllers
                 var user = await _context.Users.Include(a => a.Languages).Include(a => a.Specialities).Include(a => a.Schedules).AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
                 if (user != null)
                 {
+                    if(user.IsActive == false)
+                    {
+
+                        return new JsonResult(new
+                        {
+                            success = false,
+                            error = false,
+                            error_msg = "User is not active"
+                        });
+                    }
+
                     var userRoleIds = await _context.UserRoles.Where(a => a.UserId == user.Id).ToListAsync();
                     var roleCollection = new List<string>();
                     foreach (var identityRole in userRoleIds)

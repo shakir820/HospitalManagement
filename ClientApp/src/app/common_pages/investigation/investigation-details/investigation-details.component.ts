@@ -22,14 +22,14 @@ export class InvestigationDetailsComponent implements OnInit {
   }
 
 
-  _baseUrl:string;
+  _baseUrl: string;
   investigation_id: number;
   fetchingInvestigation: boolean = false;
   investigation: InvestigationDoc;
   investigationFile: File;
   canEdit: boolean = false;
   canAssignToMe: boolean = false;
-  canView:boolean = false;
+  canView: boolean = false;
   assigningToMe: boolean = false;
   unassigning: boolean = false;
   savingInvestigation: boolean = false;
@@ -37,13 +37,13 @@ export class InvestigationDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-       this.investigation_id =  params['investigation_id'];
-       this.getInvestigationDetails();
+      this.investigation_id = params['investigation_id'];
+      this.getInvestigationDetails();
     });
   }
 
 
-  onFileSelect(event_data){
+  onFileSelect(event_data) {
     console.log(event_data);
     this.investigationFile = event_data.addedFiles[0];
   }
@@ -56,36 +56,36 @@ export class InvestigationDetailsComponent implements OnInit {
 
 
 
-  getInvestigationDetails(){
+  getInvestigationDetails() {
     this.fetchingInvestigation = true;
     this.httpClient.get<{
       success: boolean,
       error: boolean,
       investigation: InvestigationDoc,
       error_msg: string
-    }>(this._baseUrl + 'api/Investigation/GetInvestigationById', {params: { id: this.investigation_id.toString() }}).subscribe(result => {
+    }>(this._baseUrl + 'api/Investigation/GetInvestigationById', { params: { id: this.investigation_id.toString() } }).subscribe(result => {
       console.log(result);
       this.fetchingInvestigation = false;
       if (result.success) {
         this.investigation = result.investigation;
 
-        switch(this.investigation.investigation_status){
+        switch (this.investigation.investigation_status) {
           case InvestigationStatus.Inprogress:
-            if(this.investigation.investigator.id == this.userService.user.id){
+            if (this.investigation.investigator.id == this.userService.user.id) {
               this.canEdit = true;
             }
             break;
 
-            case InvestigationStatus.Pending:
-              this.canAssignToMe = true;
-              break;
+          case InvestigationStatus.Pending:
+            this.canAssignToMe = true;
+            break;
 
-            case InvestigationStatus.Completed:
-              this.canView = true;
-              break;
+          case InvestigationStatus.Completed:
+            this.canView = true;
+            break;
         }
       }
-      else{
+      else {
         Swal.fire({
           title: 'Error!',
           text: result.error_msg,
@@ -94,16 +94,16 @@ export class InvestigationDetailsComponent implements OnInit {
         });
       }
     },
-    error => {
-      console.log(error);
-      this.fetchingInvestigation = false;
-    });
+      error => {
+        console.log(error);
+        this.fetchingInvestigation = false;
+      });
   }
 
 
 
 
-  onAssignToMeClicked(){
+  onAssignToMeClicked() {
     this.assigningToMe = true;
 
     var inv = new InvestigationDoc();
@@ -117,13 +117,13 @@ export class InvestigationDetailsComponent implements OnInit {
       success: boolean,
       error: boolean,
       error_msg: string
-    }>(this._baseUrl + 'api/Investigation/AssignInvestigationToInvestigator', {json_data: inv_str}).subscribe(result => {
+    }>(this._baseUrl + 'api/Investigation/AssignInvestigationToInvestigator', { json_data: inv_str }).subscribe(result => {
       console.log(result);
       this.assigningToMe = false;
-      if(result.success){
+      if (result.success) {
         this.canEdit = true;
         this.canView = false,
-        this.canAssignToMe = false;
+          this.canAssignToMe = false;
         this.investigation.investigation_status = InvestigationStatus.Inprogress;
         this.investigation.investigator = this.userService.user;
         Swal.fire({
@@ -134,7 +134,7 @@ export class InvestigationDetailsComponent implements OnInit {
         });
 
       }
-      else{
+      else {
         Swal.fire({
           icon: 'error',
           title: 'Error!',
@@ -149,18 +149,18 @@ export class InvestigationDetailsComponent implements OnInit {
 
 
 
-  onUnassignClicked(){
-    if(this.investigation.investigation_status == InvestigationStatus.Inprogress){
+  onUnassignClicked() {
+    if (this.investigation.investigation_status == InvestigationStatus.Inprogress) {
       this.unassigning = true;
 
       this.httpClient.post<{
-        success : boolean,
+        success: boolean,
         error: boolean,
         error_msg: string
-      }>(this._baseUrl + 'api/Investigation/UnassignInvestigation', { id: this.investigation.id }).subscribe(result =>{
+      }>(this._baseUrl + 'api/Investigation/UnassignInvestigation', { id: this.investigation.id }).subscribe(result => {
         this.unassigning = false;
 
-        if(result.success){
+        if (result.success) {
           Swal.fire({
             icon: 'success',
             title: 'Success',
@@ -172,7 +172,7 @@ export class InvestigationDetailsComponent implements OnInit {
           this.canEdit = false;
           this.canAssignToMe = true;
         }
-        else{
+        else {
           Swal.fire({
             icon: 'error',
             title: 'Error!',
@@ -188,8 +188,8 @@ export class InvestigationDetailsComponent implements OnInit {
 
 
 
-  onFileSubmit(){
-    if(this.investigationFile == undefined){
+  onFileSubmit() {
+    if (this.investigationFile == undefined) {
       this.fileIsRequiredError = true;
       return;
     }
@@ -207,9 +207,9 @@ export class InvestigationDetailsComponent implements OnInit {
       error: boolean,
       error_msg: string,
       investigation: InvestigationDoc
-    }>(this._baseUrl + 'api/investigation/UploadInvestigationFile', formData, { headers: { 'enctype': 'multipart/form-data' } }).subscribe(result =>{
+    }>(this._baseUrl + 'api/investigation/UploadInvestigationFile', formData, { headers: { 'enctype': 'multipart/form-data' } }).subscribe(result => {
       this.savingInvestigation = false;
-      if(result.success){
+      if (result.success) {
         this.investigation = result.investigation;
 
         // this.canEdit = false;
@@ -223,7 +223,7 @@ export class InvestigationDetailsComponent implements OnInit {
         });
 
       }
-      else{
+      else {
         Swal.fire({
           icon: 'error',
           title: 'Error!',

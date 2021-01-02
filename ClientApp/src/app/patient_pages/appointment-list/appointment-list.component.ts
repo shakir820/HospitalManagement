@@ -43,7 +43,7 @@ export class AppointmentListComponent implements OnInit {
 
 
 
-  onCancelAppointmentClicked(event_data, appointment_id: number){
+  onCancelAppointmentClicked(event_data, appointment_id: number) {
     this.error_msg = undefined;
     this.httpClient.post<{
       success: boolean,
@@ -56,7 +56,7 @@ export class AppointmentListComponent implements OnInit {
         var element_index = this.appointmentList.findIndex(a => a.id == appointment_id);
         this.appointmentList.splice(element_index, 1);
         var element_index = this.filteredAppointmentList.findIndex(a => a.id == appointment_id);
-        if(element_index != undefined){
+        if (element_index != undefined) {
           this.filteredAppointmentList.splice(element_index, 1);
         }
 
@@ -81,15 +81,15 @@ export class AppointmentListComponent implements OnInit {
 
 
 
-  appointmentSearchOnInput(event_data){
-    if(this.search_string.length == 0){
+  appointmentSearchOnInput(event_data) {
+    if (this.search_string.length == 0) {
       this.filteredAppointmentList = this.appointmentList.slice();
     }
   }
 
 
-  onViewPrescriptionClicked(event_data, appointment_id: number){
-    this.router.navigate(['Prescription/ViewPrescription'], {queryParams: {appointment_id: appointment_id}});
+  onViewPrescriptionClicked(event_data, appointment_id: number) {
+    this.router.navigate(['Prescription/ViewPrescription'], { queryParams: { appointment_id: appointment_id } });
   }
 
 
