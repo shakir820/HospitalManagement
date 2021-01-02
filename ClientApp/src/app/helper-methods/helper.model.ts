@@ -7,7 +7,7 @@ import { User } from "../models/user.model";
 export class Helper {
 
   static resolveLanguagesResult(result: Language[], model_lang: Language[]) {
-    if(result == undefined || result.length == 0) return model_lang;
+    if (result == undefined || result.length == 0) return model_lang;
 
     result.forEach(val => {
       var lang = new Language();
@@ -20,7 +20,7 @@ export class Helper {
 
 
   static resolveSpecialitiesResult(result: Speciality[], model_specialities: Speciality[]) {
-    if(result == undefined || result.length == 0) return model_specialities;
+    if (result == undefined || result.length == 0) return model_specialities;
 
     result.forEach(val => {
       var speciality = new Speciality();
@@ -33,7 +33,7 @@ export class Helper {
 
 
   static resolveScheduleResult(result: Schedule[], model_list: Schedule[]) {
-    if(result == undefined || result.length == 0) return model_list;
+    if (result == undefined || result.length == 0) return model_list;
 
     result.forEach(val => {
       var schedule = new Schedule();
@@ -56,7 +56,7 @@ export class Helper {
 
 
 
-  static resolveUserListResult(result_doctor_list:User[], doctor_list:User[]){
+  static resolveUserListResult(result_doctor_list: User[], doctor_list: User[]) {
     result_doctor_list.forEach(doctor_result => {
       var doctor = new User();
       doctor.username = doctor_result.username;
@@ -73,12 +73,12 @@ export class Helper {
       doctor.country_phone_code = doctor_result.country_phone_code;
       doctor.country_short_name = doctor_result.country_short_name;
       doctor.degree_title = doctor_result.degree_title;
-      doctor.doctor_title= doctor_result.doctor_title;
+      doctor.doctor_title = doctor_result.doctor_title;
       doctor.experience = doctor_result.experience;
       doctor.gender = doctor_result.gender;
       doctor.isActive = doctor_result.isActive;
-      doctor.languages =[];
-      if(doctor_result.languages != undefined && doctor_result.languages != null){
+      doctor.languages = [];
+      if (doctor_result.languages != undefined && doctor_result.languages != null) {
         doctor_result.languages.forEach(val => {
           var lang = new Language();
           lang.id = val.id;
@@ -87,45 +87,45 @@ export class Helper {
         });
       }
 
-       doctor.name = doctor_result.name;
-       doctor.new_patient_visiting_price = doctor_result.new_patient_visiting_price;
-       doctor.old_patient_visiting_price = doctor_result.old_patient_visiting_price;
-       doctor.phoneNumber = doctor_result.phoneNumber;
-       doctor.roles = [];
-       if(doctor_result.roles != undefined && doctor_result.roles != null){
+      doctor.name = doctor_result.name;
+      doctor.new_patient_visiting_price = doctor_result.new_patient_visiting_price;
+      doctor.old_patient_visiting_price = doctor_result.old_patient_visiting_price;
+      doctor.phoneNumber = doctor_result.phoneNumber;
+      doctor.roles = [];
+      if (doctor_result.roles != undefined && doctor_result.roles != null) {
         doctor_result.roles.forEach(val => {
           doctor.roles.push(val);
         });
-       }
+      }
 
       doctor.schedules = [];
-      if(doctor_result.schedules != undefined && doctor_result.schedules != null){
+      if (doctor_result.schedules != undefined && doctor_result.schedules != null) {
         Helper.resolveScheduleResult(doctor_result.schedules, doctor.schedules);
       }
 
       doctor.specialities = [];
-      if(doctor_result.specialities != undefined && doctor_result.specialities != null){
+      if (doctor_result.specialities != undefined && doctor_result.specialities != null) {
         Helper.resolveSpecialitiesResult(doctor_result.specialities, doctor.specialities);
       }
       doctor.state_name = doctor_result.state_name;
-      doctor.types_of =  doctor_result.types_of;
+      doctor.types_of = doctor_result.types_of;
 
 
       //appointment details
-      if(doctor_result.appointment != undefined){
+      if (doctor_result.appointment != undefined) {
         doctor.appointment = new DoctorAppointment();
-        if(doctor_result.appointment.appointment_date != undefined){
+        if (doctor_result.appointment.appointment_date != undefined) {
           doctor.appointment.appointment_date = new Date(doctor_result.appointment.appointment_date);
         }
 
         doctor.appointment.consulted = doctor_result.appointment.consulted;
-        if(doctor_result.appointment.created_date != undefined){
+        if (doctor_result.appointment.created_date != undefined) {
           doctor.appointment.created_date = new Date(doctor_result.appointment.created_date);
         }
 
         doctor.appointment.doctor_id = doctor_result.appointment.doctor_id;
         doctor.appointment.doctor_name = doctor_result.appointment.doctor_name;
-        if(doctor_result.appointment.end_time != undefined){
+        if (doctor_result.appointment.end_time != undefined) {
           doctor.appointment.end_time = new Date(doctor_result.appointment.end_time);
         }
 
@@ -133,7 +133,7 @@ export class Helper {
         doctor.appointment.patient_id = doctor_result.appointment.patient_id;
         doctor.appointment.patient_name = doctor_result.appointment.patient_name;
         doctor.appointment.serial_no = doctor_result.appointment.serial_no;
-        if(doctor_result.appointment.start_time != undefined){
+        if (doctor_result.appointment.start_time != undefined) {
           doctor.appointment.start_time = new Date(doctor_result.appointment.start_time)
         }
         doctor.appointment.visiting_price = doctor_result.appointment.visiting_price;
@@ -146,18 +146,18 @@ export class Helper {
   }
 
 
-  static resolveAppointments(result:DoctorAppointment[], model_List:DoctorAppointment[]){
+  static resolveAppointments(result: DoctorAppointment[], model_List: DoctorAppointment[]) {
     result.forEach(val => {
       var appointment = new DoctorAppointment();
-      if(val.appointment_date != undefined){
+      if (val.appointment_date != undefined) {
         appointment.appointment_date = new Date(val.appointment_date);
       }
 
-      if(val.created_date != undefined){
+      if (val.created_date != undefined) {
         appointment.created_date = new Date(val.created_date);
       }
 
-      if(val.modified_date != undefined){
+      if (val.modified_date != undefined) {
         appointment.modified_date = new Date(val.modified_date);
       }
 

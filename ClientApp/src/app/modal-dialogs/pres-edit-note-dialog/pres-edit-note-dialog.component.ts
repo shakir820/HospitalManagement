@@ -21,8 +21,8 @@ export class PresEditNoteDialogComponent implements OnInit {
   note: string;
   isNew: boolean = false;
   selectedNote: PrescriptionNote;
-  @Output() noteItemChanged: EventEmitter<{note: PrescriptionNote, is_new: boolean}>
-  = new EventEmitter<{note: PrescriptionNote, is_new: boolean}>();
+  @Output() noteItemChanged: EventEmitter<{ note: PrescriptionNote, is_new: boolean }>
+    = new EventEmitter<{ note: PrescriptionNote, is_new: boolean }>();
 
 
 
@@ -32,13 +32,13 @@ export class PresEditNoteDialogComponent implements OnInit {
 
 
 
-  onFormSubmit(){
-    this.submitted =true;
-    if(this.noteForm.valid){
+  onFormSubmit() {
+    this.submitted = true;
+    if (this.noteForm.valid) {
       this.submitted = false;
       this.selectedNote.note = this.note;
-      this.noteItemChanged.emit({note: this.selectedNote, is_new: this.isNew});
-      var gg =  <HTMLButtonElement>document.getElementById('toggleNoteModalBtn');
+      this.noteItemChanged.emit({ note: this.selectedNote, is_new: this.isNew });
+      var gg = <HTMLButtonElement>document.getElementById('toggleNoteModalBtn');
       gg.click();
     }
 
@@ -47,17 +47,17 @@ export class PresEditNoteDialogComponent implements OnInit {
 
 
 
-  showModal(note: PrescriptionNote, is_new: boolean){
+  showModal(note: PrescriptionNote, is_new: boolean) {
     this.isNew = is_new;
     this.submitted = false;
     this.selectedNote = note;
-    if(is_new){
+    if (is_new) {
       this.noteForm.reset();
     }
-    else{
+    else {
       this.note = this.selectedNote.note;
     }
-    var gg =  <HTMLButtonElement>document.getElementById('toggleNoteModalBtn');
+    var gg = <HTMLButtonElement>document.getElementById('toggleNoteModalBtn');
     gg.click();
   }
 

@@ -35,7 +35,7 @@ export class PatientListComponent implements OnInit {
   filteredPatients: User[];
   sortByAscending: boolean = true;
   @ViewChild('f') searchForm: NgForm;
-  searchPatientIcon:boolean = true;
+  searchPatientIcon: boolean = true;
 
 
 
@@ -100,6 +100,6 @@ export class PatientListComponent implements OnInit {
 
 
   onPatientDetailsBtnClicked(event_data, id: number) {
-    this.router.navigate(['Patients/PatientDetails'], { queryParams: { patient_id: id }});
+    this.router.navigate(['Patients/PatientDetails'], { queryParams: { patient_id: id } });
   }
 }

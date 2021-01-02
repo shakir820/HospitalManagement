@@ -12,29 +12,29 @@ import { PrescriptionMedicine } from 'src/app/models/prescription.model';
 })
 export class EditMedicineDialogComponent implements OnInit {
 
-  constructor( private httpClient: HttpClient, @Inject('BASE_URL') baseUrl: string,) {
+  constructor(private httpClient: HttpClient, @Inject('BASE_URL') baseUrl: string,) {
     this._baseUrl = baseUrl;
-   }
+  }
 
 
-   @ViewChild('medicineDropDown') medicineDropDown: NgbDropdown;
-   @ViewChild('medicineForm') medicineForm: NgForm;
-   @Output() medicineChanged: EventEmitter<{prescription_medicine: PrescriptionMedicine, is_new: boolean}>
-   = new EventEmitter<{prescription_medicine: PrescriptionMedicine, is_new: boolean}>();
+  @ViewChild('medicineDropDown') medicineDropDown: NgbDropdown;
+  @ViewChild('medicineForm') medicineForm: NgForm;
+  @Output() medicineChanged: EventEmitter<{ prescription_medicine: PrescriptionMedicine, is_new: boolean }>
+    = new EventEmitter<{ prescription_medicine: PrescriptionMedicine, is_new: boolean }>();
 
-   _baseUrl: string;
-   selectedPrescriptionMedicine: PrescriptionMedicine;
-   medicineName: string;
-   medicineSchedule: string;
-   medicineDuration: string;
-   medicineNote: string;
-   selectedMedicine: Medicine;
-   medicine_list:Medicine[] = [];
-   isNew: boolean = false;
-   fetchingMedicineList: boolean = false;
-   submitted: boolean = false;
-   selectedMedicineList: PrescriptionMedicine[];
-   medicineExist: boolean = false;
+  _baseUrl: string;
+  selectedPrescriptionMedicine: PrescriptionMedicine;
+  medicineName: string;
+  medicineSchedule: string;
+  medicineDuration: string;
+  medicineNote: string;
+  selectedMedicine: Medicine;
+  medicine_list: Medicine[] = [];
+  isNew: boolean = false;
+  fetchingMedicineList: boolean = false;
+  submitted: boolean = false;
+  selectedMedicineList: PrescriptionMedicine[];
+  medicineExist: boolean = false;
 
   ngOnInit(): void {
     this.selectedPrescriptionMedicine = new PrescriptionMedicine();
@@ -42,23 +42,23 @@ export class EditMedicineDialogComponent implements OnInit {
   }
 
 
-  onSubmit(){
+  onSubmit() {
     this.submitted = true;
-    if(this.medicineForm.valid && this.selectedMedicine != undefined && this.medicineExist == false){
+    if (this.medicineForm.valid && this.selectedMedicine != undefined && this.medicineExist == false) {
       this.submitted = false;
       this.selectedPrescriptionMedicine.duration = this.medicineDuration;
       this.selectedPrescriptionMedicine.medicine_id = this.selectedMedicine.id;
       this.selectedPrescriptionMedicine.note = this.medicineNote;
       this.selectedPrescriptionMedicine.schedule = this.medicineSchedule;
       this.selectedPrescriptionMedicine.title = this.medicineName;
-      this.medicineChanged.emit({prescription_medicine: this.selectedPrescriptionMedicine, is_new: this.isNew});
-      var gg =  <HTMLButtonElement>document.getElementById('toggleMedicineModalBtn');
+      this.medicineChanged.emit({ prescription_medicine: this.selectedPrescriptionMedicine, is_new: this.isNew });
+      var gg = <HTMLButtonElement>document.getElementById('toggleMedicineModalBtn');
       gg.click();
     }
 
   }
 
-  showMedicineDialog(prescription_medicine:PrescriptionMedicine, is_new: boolean, selected_medicine_list: PrescriptionMedicine[]){
+  showMedicineDialog(prescription_medicine: PrescriptionMedicine, is_new: boolean, selected_medicine_list: PrescriptionMedicine[]) {
     this.isNew = is_new;
     this.selectedPrescriptionMedicine = prescription_medicine;
     this.medicineName = prescription_medicine.title;
@@ -66,20 +66,20 @@ export class EditMedicineDialogComponent implements OnInit {
     this.medicineNote = prescription_medicine.note;
     this.medicineSchedule = prescription_medicine.schedule;
     this.selectedMedicineList = selected_medicine_list;
-    if(is_new == true){
+    if (is_new == true) {
       this.medicineForm.reset();
     }
-    var gg =  <HTMLButtonElement>document.getElementById('toggleMedicineModalBtn');
+    var gg = <HTMLButtonElement>document.getElementById('toggleMedicineModalBtn');
     gg.click();
   }
 
-  onMedicineItemClicked(event_data, medicine_id){
+  onMedicineItemClicked(event_data, medicine_id) {
     var medicine = this.medicine_list.find(a => a.id == medicine_id);
     this.medicineExist = false;
-    if(this.selectedMedicineList.length > 0){
+    if (this.selectedMedicineList.length > 0) {
       var existed_medicine = this.selectedMedicineList.find(a => a.medicine_id == medicine_id);
-      if(existed_medicine != undefined){
-        if(existed_medicine.medicine_id != this.selectedPrescriptionMedicine.medicine_id){
+      if (existed_medicine != undefined) {
+        if (existed_medicine.medicine_id != this.selectedPrescriptionMedicine.medicine_id) {
           this.medicineExist = true;
         }
       }
@@ -93,7 +93,7 @@ export class EditMedicineDialogComponent implements OnInit {
 
 
 
-  getMedicines(search_key: string){
+  getMedicines(search_key: string) {
 
     this.fetchingMedicineList = true;
     this.httpClient.get<{
@@ -101,12 +101,12 @@ export class EditMedicineDialogComponent implements OnInit {
       error: boolean,
       medicines: Medicine[],
       error_msg: string
-    }>(this._baseUrl + 'api/Medicine/GetMedicines', {params: {search_key: search_key}}).subscribe(result => {
+    }>(this._baseUrl + 'api/Medicine/GetMedicines', { params: { search_key: search_key } }).subscribe(result => {
       console.log(result);
       this.fetchingMedicineList = false;
       if (result.success) {
         this.medicine_list = [];
-        if(result.medicines != undefined){
+        if (result.medicines != undefined) {
           result.medicines.forEach(val => {
             var medicine = new Medicine();
             medicine.description = val.description;
@@ -118,22 +118,22 @@ export class EditMedicineDialogComponent implements OnInit {
         }
 
       }
-      else{
+      else {
         this.medicine_list = [];
       }
     },
-    error => {
-      this.fetchingMedicineList = false;
-    });
+      error => {
+        this.fetchingMedicineList = false;
+      });
   }
 
 
-  onMedicineInputFocusOut(event_data){
+  onMedicineInputFocusOut(event_data) {
     //console.log("focus out!");
   }
 
 
-  onDropDownOpenChanged(event_data){
+  onDropDownOpenChanged(event_data) {
     //console.log('dropdown changed detected!');
 
     // console.log(this.selectedMedicine);
@@ -146,23 +146,23 @@ export class EditMedicineDialogComponent implements OnInit {
 
 
 
-  onMedicineInput(event_data){
-    if(this.medicineName != undefined || this.medicineName != ''){
+  onMedicineInput(event_data) {
+    if (this.medicineName != undefined || this.medicineName != '') {
       var regExp = /[a-zA-Z]/;
-      if(regExp.test(this.medicineName)){
-        if(this.medicineDropDown.isOpen() == false){
+      if (regExp.test(this.medicineName)) {
+        if (this.medicineDropDown.isOpen() == false) {
           this.medicineDropDown.open();
         }
         this.getMedicines(this.medicineName);
 
       } else {
-        if(this.medicineExist){
+        if (this.medicineExist) {
           this.medicineExist = false;
         }
       }
     }
-    else{
-      if(this.medicineExist){
+    else {
+      if (this.medicineExist) {
         this.medicineExist = false;
       }
     }

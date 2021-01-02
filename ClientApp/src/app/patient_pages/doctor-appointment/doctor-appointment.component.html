@@ -10,26 +10,26 @@
   <div class="d-flex flex-wrap">
     <div class="card shadow m-2" style="min-width: 300px;">
       <div class=" card-body">
-       <div class="d-flex align-items-center justify-content-between">
-        <div style="width: 150px; height: 150px;">
-          <app-profile-pic-preview class="mr-3"
-                                   [user_id]="doctor_id"></app-profile-pic-preview>
-        </div>
-        <div class=" d-flex flex-column align-items-start">
-          <div class="border-left-primary pl-2 mb-2">
-            <h6 class="font-weight-bold mb-0 text-primary">{{doctor.new_patient_visiting_price}} TK.</h6>
-            <div>
-              <small class="text-muted"> New Patient</small>
+        <div class="d-flex align-items-center justify-content-between">
+          <div style="width: 150px; height: 150px;">
+            <app-profile-pic-preview class="mr-3"
+                                     [user_id]="doctor_id"></app-profile-pic-preview>
+          </div>
+          <div class=" d-flex flex-column align-items-start">
+            <div class="border-left-primary pl-2 mb-2">
+              <h6 class="font-weight-bold mb-0 text-primary">{{doctor.new_patient_visiting_price}} TK.</h6>
+              <div>
+                <small class="text-muted"> New Patient</small>
+              </div>
+            </div>
+            <div class="border-left-primary pl-2 mb-2">
+              <h6 class="font-weight-bold mb-0 text-primary">{{doctor.old_patient_visiting_price}} TK.</h6>
+              <div>
+                <small class="text-muted"> Old Patient</small>
+              </div>
             </div>
           </div>
-          <div class="border-left-primary pl-2 mb-2">
-            <h6 class="font-weight-bold mb-0 text-primary">{{doctor.old_patient_visiting_price}} TK.</h6>
-            <div>
-              <small class="text-muted"> Old Patient</small>
-            </div>
-          </div>
         </div>
-       </div>
 
 
         <div class="mt-3">

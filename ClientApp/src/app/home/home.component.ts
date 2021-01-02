@@ -11,15 +11,15 @@ export class HomeComponent {
 
   constructor(
     private httpClient: HttpClient,
-    @Inject('BASE_URL') baseUrl: string){
-      this._baseUrl = baseUrl;
+    @Inject('BASE_URL') baseUrl: string) {
+    this._baseUrl = baseUrl;
   }
 
 
   _baseUrl: string;
-  title:string = "Home";
+  title: string = "Home";
   @ViewChild('f') contactMsgForm: NgForm;
-  sendingMsg:boolean = false;
+  sendingMsg: boolean = false;
   submitted: boolean = false;
   phoneNumber: string;
   invalidMobileNumber: boolean = false;
@@ -54,11 +54,11 @@ export class HomeComponent {
   }
 
 
-  onSubmit(){
+  onSubmit() {
     this.sendingMsg = true;
     this.submitted = true;
 
-    if (this.contactMsgForm.valid  && !this.invalidMobileNumber){
+    if (this.contactMsgForm.valid && !this.invalidMobileNumber) {
       this.submitted = false;
 
       this.httpClient.post<{
@@ -86,12 +86,12 @@ export class HomeComponent {
           }
           else {
             this.msgSentSuccess = false;
-          Swal.fire({
-          title: 'Error!',
-          text: result.error_msg,
-          icon: 'error',
-          confirmButtonText: 'Ok'
-        });
+            Swal.fire({
+              title: 'Error!',
+              text: result.error_msg,
+              icon: 'error',
+              confirmButtonText: 'Ok'
+            });
 
           }
         });

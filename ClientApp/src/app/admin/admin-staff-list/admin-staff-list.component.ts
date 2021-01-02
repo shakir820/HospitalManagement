@@ -27,13 +27,13 @@ export class AdminStaffListComponent implements OnInit {
 
   _baseUrl: string;
   fetchingStaffList: boolean = false;
-  sortByAsscending:boolean = true;
-  all_staff_list:User[] = [];
+  sortByAsscending: boolean = true;
+  all_staff_list: User[] = [];
   filtered_staff_list: User[] = [];
-  filterBy:string = 'All';
+  filterBy: string = 'All';
   search_string: string;
   selectedRole: string = 'All';
-  allStaffRoles:string[] = [];
+  allStaffRoles: string[] = [];
   sortOrderBy: string = 'Id';
 
   ngOnInit(): void {
@@ -44,17 +44,17 @@ export class AdminStaffListComponent implements OnInit {
 
 
 
-  onSearchSubmit(){
-    if(this.search_string.length > 0){
+  onSearchSubmit() {
+    if (this.search_string.length > 0) {
       var sk = this.search_string.toUpperCase();
-      this.filtered_staff_list =  this.all_staff_list.filter(a => a.name.toUpperCase().includes(sk));
+      this.filtered_staff_list = this.all_staff_list.filter(a => a.name.toUpperCase().includes(sk));
       this.sortStaffListDefault();
     }
   }
 
 
-  staffSearchOnInput(event_data){
-    if(this.search_string.length == 0){
+  staffSearchOnInput(event_data) {
+    if (this.search_string.length == 0) {
       this.filtered_staff_list = this.all_staff_list.slice();
       this.filterBy = 'All';
       this.selectedRole = 'All'
@@ -63,28 +63,28 @@ export class AdminStaffListComponent implements OnInit {
   }
 
 
-  showAllStaffList(event_data){
+  showAllStaffList(event_data) {
     this.search_string = '';
     this.filtered_staff_list = this.all_staff_list.slice();
     this.filterBy = 'All';
     this.sortStaffListDefault();
   }
 
-  showActiveStaffList(event_data){
+  showActiveStaffList(event_data) {
     this.filtered_staff_list = this.all_staff_list.filter(a => a.isActive == true);
     this.filterBy = 'Active';
     this.sortStaffListDefault();
   }
-  showInactiveStaffList(event_data){
+  showInactiveStaffList(event_data) {
     this.filtered_staff_list = this.all_staff_list.filter(a => a.isActive == false);
     this.filterBy = 'Inactive'
     this.sortStaffListDefault();
   }
 
 
-  selectedRoleChanged(event_data){
+  selectedRoleChanged(event_data) {
     this.filtered_staff_list = [];
-    if(this.selectedRole == 'All'){
+    if (this.selectedRole == 'All') {
       this.filtered_staff_list = this.all_staff_list.slice();
       this.sortStaffListDefault();
       return;
@@ -92,7 +92,7 @@ export class AdminStaffListComponent implements OnInit {
 
     this.all_staff_list.forEach(val => {
       var roles = val.roles;
-      if(roles.includes(this.selectedRole)){
+      if (roles.includes(this.selectedRole)) {
         this.filtered_staff_list.push(val);
       }
     });
@@ -103,48 +103,48 @@ export class AdminStaffListComponent implements OnInit {
 
 
 
-  sortStaffList(event_data, order_name:string){
-    if(this.sortOrderBy == order_name){
+  sortStaffList(event_data, order_name: string) {
+    if (this.sortOrderBy == order_name) {
       this.sortByAsscending = !this.sortByAsscending;
-   }
-    switch(order_name){
+    }
+    switch (order_name) {
       case 'Id':
-        if(this.sortByAsscending){
+        if (this.sortByAsscending) {
           this.filtered_staff_list.sort(sortBy('id'));
         }
-        else{
+        else {
           this.filtered_staff_list.sort(sortBy('-id'));
         }
-      break;
+        break;
 
       case 'Name':
-      if(this.sortByAsscending){
-        this.filtered_staff_list.sort(sortBy('name'));
-      }
-      else{
-        this.filtered_staff_list.sort(sortBy('-name'));
-      }
-      break;
+        if (this.sortByAsscending) {
+          this.filtered_staff_list.sort(sortBy('name'));
+        }
+        else {
+          this.filtered_staff_list.sort(sortBy('-name'));
+        }
+        break;
 
 
       case 'Status':
-      if(this.sortByAsscending){
-        this.filtered_staff_list.sort(sortBy('isActive'));
-      }
-      else{
-        this.filtered_staff_list.sort(sortBy('-isActive'));
-      }
-      break;
+        if (this.sortByAsscending) {
+          this.filtered_staff_list.sort(sortBy('isActive'));
+        }
+        else {
+          this.filtered_staff_list.sort(sortBy('-isActive'));
+        }
+        break;
 
 
       case 'Date':
-      if(this.sortByAsscending){
-        this.filtered_staff_list.sort(sortBy('created_date'));
-      }
-      else{
-        this.filtered_staff_list.sort(sortBy('-created_date'));
-      }
-      break;
+        if (this.sortByAsscending) {
+          this.filtered_staff_list.sort(sortBy('created_date'));
+        }
+        else {
+          this.filtered_staff_list.sort(sortBy('-created_date'));
+        }
+        break;
 
     }
 
@@ -152,76 +152,76 @@ export class AdminStaffListComponent implements OnInit {
   }
 
 
-  sortStaffListDefault(){
-    switch(this.sortOrderBy){
+  sortStaffListDefault() {
+    switch (this.sortOrderBy) {
       case 'Id':
-        if(this.sortByAsscending){
+        if (this.sortByAsscending) {
           this.filtered_staff_list.sort(sortBy('id'));
         }
-        else{
+        else {
           this.filtered_staff_list.sort(sortBy('-id'));
         }
-      break;
+        break;
 
       case 'Name':
-      if(this.sortByAsscending){
-        this.filtered_staff_list.sort(sortBy('name'));
-      }
-      else{
-        this.filtered_staff_list.sort(sortBy('-name'));
-      }
-      break;
+        if (this.sortByAsscending) {
+          this.filtered_staff_list.sort(sortBy('name'));
+        }
+        else {
+          this.filtered_staff_list.sort(sortBy('-name'));
+        }
+        break;
 
 
       case 'Status':
-      if(this.sortByAsscending){
-        this.filtered_staff_list.sort(sortBy('isActive'));
-      }
-      else{
-        this.filtered_staff_list.sort(sortBy('-isActive'));
-      }
-      break;
+        if (this.sortByAsscending) {
+          this.filtered_staff_list.sort(sortBy('isActive'));
+        }
+        else {
+          this.filtered_staff_list.sort(sortBy('-isActive'));
+        }
+        break;
 
 
       case 'Date':
-      if(this.sortByAsscending){
-        this.filtered_staff_list.sort(sortBy('created_date'));
-      }
-      else{
-        this.filtered_staff_list.sort(sortBy('-created_date'));
-      }
-      break;
+        if (this.sortByAsscending) {
+          this.filtered_staff_list.sort(sortBy('created_date'));
+        }
+        else {
+          this.filtered_staff_list.sort(sortBy('-created_date'));
+        }
+        break;
 
     }
   }
 
 
-  onStaffDeactivate(event_data, staff_id){
+  onStaffDeactivate(event_data, staff_id) {
     var user = this.all_staff_list.find(a => a.id == staff_id);
-    this.httpClient.get<{success: boolean, error: boolean, error_msg: string}>
-    (this._baseUrl + 'api/admin/DeactivateUser', {params: { id: user.id.toString()} }).subscribe(result => {
-      if(result.success){
-        user.isActive = false;
-      }
-    });
+    this.httpClient.get<{ success: boolean, error: boolean, error_msg: string }>
+      (this._baseUrl + 'api/admin/DeactivateUser', { params: { id: user.id.toString() } }).subscribe(result => {
+        if (result.success) {
+          user.isActive = false;
+        }
+      });
   }
 
 
-  onStaffActivate(event_data, staff_id){
+  onStaffActivate(event_data, staff_id) {
     var user = this.all_staff_list.find(a => a.id == staff_id);
-    this.httpClient.get<{success: boolean, error: boolean, error_msg: string}>
-    (this._baseUrl + 'api/admin/ActivateUser', {params: { id: user.id.toString()} }).subscribe(result => {
-      if(result.success){
-        user.isActive = true;
-      }
-    });
+    this.httpClient.get<{ success: boolean, error: boolean, error_msg: string }>
+      (this._baseUrl + 'api/admin/ActivateUser', { params: { id: user.id.toString() } }).subscribe(result => {
+        if (result.success) {
+          user.isActive = true;
+        }
+      });
   }
 
 
 
 
 
-  getStaffList(){
+  getStaffList() {
     this.fetchingStaffList = true;
     this.httpClient.get<{
       success: boolean,
@@ -232,14 +232,14 @@ export class AdminStaffListComponent implements OnInit {
       console.log(result);
       this.fetchingStaffList = false;
       if (result.success) {
-         this.all_staff_list = result.staff_list;
-         this.filtered_staff_list = this.all_staff_list.slice();
+        this.all_staff_list = result.staff_list;
+        this.filtered_staff_list = this.all_staff_list.slice();
       }
     });
   }
 
 
-  getstaffRoles(){
+  getstaffRoles() {
     this.httpClient.get<{
       success: boolean,
       error: boolean,
@@ -248,13 +248,13 @@ export class AdminStaffListComponent implements OnInit {
     }>(this._baseUrl + 'api/Staff/GetStaffRoles').subscribe(result => {
       console.log(result);
       if (result.success) {
-         this.allStaffRoles = result.staff_roles;
+        this.allStaffRoles = result.staff_roles;
       }
     });
   }
 
 
-  onEditUserRole(event_data, user_id){
+  onEditUserRole(event_data, user_id) {
     var user = this.all_staff_list.find(a => a.id == user_id);
     var _user = new User();
     _user.id = user.id;
@@ -264,17 +264,17 @@ export class AdminStaffListComponent implements OnInit {
   }
 
 
-  onUserRoleChanged(role_changed_user: User){
+  onUserRoleChanged(role_changed_user: User) {
     this.httpClient.post<{
       success: boolean,
       error: boolean,
       error_msg: string
-    }>(this._baseUrl + 'api/UserManager/ChangeRole', { id: role_changed_user.id, roles: role_changed_user.roles }).subscribe( result => {
-      if(result.success){
+    }>(this._baseUrl + 'api/UserManager/ChangeRole', { id: role_changed_user.id, roles: role_changed_user.roles }).subscribe(result => {
+      if (result.success) {
         var user = this.all_staff_list.find(a => a.id == role_changed_user.id);
         user.roles = role_changed_user.roles.slice();
       }
-      else{
+      else {
         Swal.fire({
           title: 'Error!',
           text: result.error_msg,
@@ -283,8 +283,8 @@ export class AdminStaffListComponent implements OnInit {
         });
       }
     },
-    error => {
+      error => {
 
-    });
+      });
   }
 }

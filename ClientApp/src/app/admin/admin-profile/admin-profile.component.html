@@ -30,7 +30,7 @@
               </div>
 
               <div class="align-items-center d-flex">
-                <div  class="border-primary" style="width: 18px; height: 18px; border-radius: 50%; border:3px solid;"></div>
+                <div class="border-primary" style="width: 18px; height: 18px; border-radius: 50%; border:3px solid;"></div>
                 <div class="ml-2 font-weight-bold text-primary">Admin</div>
               </div>
             </div>
@@ -53,11 +53,11 @@
                 <div class="form-group ">
                   <div class="align-items-center d-flex">
                     <input class="form-control" [(ngModel)]="proposedUsername"
-                    name="username"
-                    id="username"
-                    (input)="onUsernameInput($event)"
-                    (change)="onUsernameChanged($event)"
-                    required type="text">
+                           name="username"
+                           id="username"
+                           (input)="onUsernameInput($event)"
+                           (change)="onUsernameChanged($event)"
+                           required type="text">
                     <div *ngIf="checkingUsername" class="ml-2">
                       <div class="spinner-border text-primary" role="status">
                         <span class="visually-hidden"></span>

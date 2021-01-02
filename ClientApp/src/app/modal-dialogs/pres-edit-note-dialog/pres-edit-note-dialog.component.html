@@ -1,49 +1,51 @@
 
 <button role="button" id="toggleNoteModalBtn" hidden data-toggle="modal" data-target="#PrescriptionNoteModal"
-class="btn d-print-none shadow btn-primary ml-3 btn-circle"><i class="far fa-plus"></i></button>
+        class="btn d-print-none shadow btn-primary ml-3 btn-circle">
+  <i class="far fa-plus"></i>
+</button>
 
 
 
 
 <div class="modal fade" id="PrescriptionNoteModal" #NoteModal tabindex="-1" role="dialog"
-aria-hidden="true">
+     aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <form #noteForm="ngForm" (ngSubmit)="onFormSubmit()">
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-sm-12">
-            <h5 class=" font-weight-bold">Note</h5>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-12">
+              <h5 class=" font-weight-bold">Note</h5>
+            </div>
           </div>
-        </div>
           <div class="row">
             <div class="col-sm-12">
               <div class="form-group">
                 <label for="note_description">Note</label>
 
                 <textarea class="form-control"
-                name="note_description"
-                id="note_description"
-                required
-                [(ngModel)]="note"
-                cols="30" rows="3"></textarea>
+                          name="note_description"
+                          id="note_description"
+                          required
+                          [(ngModel)]="note"
+                          cols="30" rows="3"></textarea>
 
                 <small id="noteError" class="text-danger"
-                *ngIf="((!noteForm.form.controls['note_description'].valid && noteForm.form.controls['note_description'].touched) ||
+                       *ngIf="((!noteForm.form.controls['note_description'].valid && noteForm.form.controls['note_description'].touched) ||
                 (!noteForm.form.controls['note_description'].valid && submitted == true ))">Note is required</small>
               </div>
             </div>
           </div>
 
-      </div>
+        </div>
 
 
-      <div class="modal-footer">
-        <button type="button" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" type="submit" class="btn btn-primary">Save changes</button>
-      </div>
+        <div class="modal-footer">
+          <button type="button" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" type="submit" class="btn btn-primary">Save changes</button>
+        </div>
 
-    </form>
+      </form>
     </div>
   </div>
 </div>

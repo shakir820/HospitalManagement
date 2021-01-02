@@ -14,9 +14,9 @@ import { PrescriptionPatientExamination } from 'src/app/models/prescription.mode
 })
 export class PresEditInvestigationDialogComponent implements OnInit {
 
-  constructor( private httpClient: HttpClient, @Inject('BASE_URL') baseUrl: string,) {
+  constructor(private httpClient: HttpClient, @Inject('BASE_URL') baseUrl: string,) {
     this._baseUrl = baseUrl;
-   }
+  }
 
 
 
@@ -28,8 +28,8 @@ export class PresEditInvestigationDialogComponent implements OnInit {
   investigation_tag_list: InvestigationTag[];
   selectedInvestigation: InvestigationTag;
   @ViewChild('investigationsDropDown') investigationDropDown: NgbDropdown;
-  @Output() investigationItemChanged: EventEmitter<{investigation: InvestigationTag}>
-  = new EventEmitter<{investigation: InvestigationTag}>();
+  @Output() investigationItemChanged: EventEmitter<{ investigation: InvestigationTag }>
+    = new EventEmitter<{ investigation: InvestigationTag }>();
 
   ngOnInit(): void {
 
@@ -39,12 +39,12 @@ export class PresEditInvestigationDialogComponent implements OnInit {
 
 
 
-  onFormSubmit(){
-    this.submitted =true;
-    if(this.investigaitonForm.valid){
+  onFormSubmit() {
+    this.submitted = true;
+    if (this.investigaitonForm.valid) {
       this.submitted = false;
-      this.investigationItemChanged.emit({investigation: this.selectedInvestigation});
-      var gg =  <HTMLButtonElement>document.getElementById('toggleInvestigationModalBtn');
+      this.investigationItemChanged.emit({ investigation: this.selectedInvestigation });
+      var gg = <HTMLButtonElement>document.getElementById('toggleInvestigationModalBtn');
       gg.click();
     }
 
@@ -53,10 +53,10 @@ export class PresEditInvestigationDialogComponent implements OnInit {
 
 
 
-  showModal(){
+  showModal() {
     this.submitted = false;
     this.investigaitonForm.reset();
-    var gg =  <HTMLButtonElement>document.getElementById('toggleInvestigationModalBtn');
+    var gg = <HTMLButtonElement>document.getElementById('toggleInvestigationModalBtn');
     gg.click();
   }
 
@@ -65,11 +65,11 @@ export class PresEditInvestigationDialogComponent implements OnInit {
 
 
 
-  onInvestigationInput(event_data){
-    if(this.investigationName != undefined || this.investigationName != ''){
+  onInvestigationInput(event_data) {
+    if (this.investigationName != undefined || this.investigationName != '') {
       var regExp = /[a-zA-Z]/;
-      if(regExp.test(this.investigationName)){
-        if(this.investigationDropDown.isOpen() == false){
+      if (regExp.test(this.investigationName)) {
+        if (this.investigationDropDown.isOpen() == false) {
           this.investigationDropDown.open();
         }
         this.getInvestigations(this.investigationName);
@@ -81,7 +81,7 @@ export class PresEditInvestigationDialogComponent implements OnInit {
   }
 
 
-  onInvestigationTagItemClicked(event_data, investigation_tag_id){
+  onInvestigationTagItemClicked(event_data, investigation_tag_id) {
     var investigation_item = this.investigation_tag_list.find(a => a.id == investigation_tag_id);
     this.investigationName = investigation_item.abbreviation;
     this.selectedInvestigation = investigation_item;
@@ -91,7 +91,7 @@ export class PresEditInvestigationDialogComponent implements OnInit {
 
 
 
-  getInvestigations(search_key){
+  getInvestigations(search_key) {
 
     this.fetchingInvestigaitonList = true;
     this.httpClient.get<{
@@ -99,12 +99,12 @@ export class PresEditInvestigationDialogComponent implements OnInit {
       error: boolean,
       investigations: InvestigationTag[],
       error_msg: string
-    }>(this._baseUrl + 'api/Investigation/GetInvestigations', {params: {search_key: search_key}}).subscribe(result => {
+    }>(this._baseUrl + 'api/Investigation/GetInvestigations', { params: { search_key: search_key } }).subscribe(result => {
       console.log(result);
       this.fetchingInvestigaitonList = false;
       if (result.success) {
         this.investigation_tag_list = [];
-        if(result.investigations != undefined){
+        if (result.investigations != undefined) {
           result.investigations.forEach(val => {
             var inv = new InvestigationTag();
             inv.abbreviation = val.abbreviation;
@@ -115,13 +115,13 @@ export class PresEditInvestigationDialogComponent implements OnInit {
         }
 
       }
-      else{
+      else {
         this.investigation_tag_list = [];
       }
     },
-    error => {
-      this.fetchingInvestigaitonList = false;
-    });
+      error => {
+        this.fetchingInvestigaitonList = false;
+      });
   }
 
 

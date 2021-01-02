@@ -30,37 +30,37 @@ export class ViewPrescriptionComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params:Params) => {
+    this.route.queryParams.subscribe((params: Params) => {
       this.appointment_id = params['appointment_id'];
       this.prescription_id = params['prescription_id'];
 
       console.log(this.prescription_id);
-      if(this.prescription_id != undefined && this.prescription_id != NaN && this.prescription_id != null){
+      if (this.prescription_id != undefined && this.prescription_id != NaN && this.prescription_id != null) {
         this.getPrescriptionDataByPrescriptionId();
       }
-      else{
+      else {
         this.getPrescriptionDataByAppointmentId();
       }
-   });
+    });
 
   }
 
 
 
 
-  getPrescriptionDataByPrescriptionId(){
+  getPrescriptionDataByPrescriptionId() {
     console.log("Getting Prescription data");
     this.httpClient.get<{
       success: boolean,
       error: boolean,
       prescription: Prescription,
       error_msg: string
-    }>(this._baseUrl + 'api/Prescription/GetPrescriptionById', {params: {prescription_id: this.prescription_id.toString()}}).subscribe(result => {
+    }>(this._baseUrl + 'api/Prescription/GetPrescriptionById', { params: { prescription_id: this.prescription_id.toString() } }).subscribe(result => {
       console.log(result);
       if (result.success) {
         this.prescription = result.prescription;
       }
-      else{
+      else {
 
         Swal.fire({
           title: 'Error!',
@@ -70,26 +70,26 @@ export class ViewPrescriptionComponent implements OnInit {
         });
       }
     },
-    error => {
-    });
+      error => {
+      });
   }
 
 
 
-  getPrescriptionDataByAppointmentId(){
+  getPrescriptionDataByAppointmentId() {
     console.log("Getting Prescription data");
     this.httpClient.get<{
       success: boolean,
       error: boolean,
       prescription: Prescription,
       error_msg: string
-    }>(this._baseUrl + 'api/Prescription/GetPrescriptionByAppointmentId', {params: {appointment_id: this.appointment_id.toString()}}).subscribe(result => {
+    }>(this._baseUrl + 'api/Prescription/GetPrescriptionByAppointmentId', { params: { appointment_id: this.appointment_id.toString() } }).subscribe(result => {
       console.log(result);
       if (result.success) {
 
         this.prescription = result.prescription;
       }
-      else{
+      else {
 
         Swal.fire({
           title: 'Error!',
@@ -99,8 +99,8 @@ export class ViewPrescriptionComponent implements OnInit {
         });
       }
     },
-    error => {
-    });
+      error => {
+      });
   }
 
 

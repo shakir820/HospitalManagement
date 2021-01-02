@@ -21,42 +21,42 @@ export class EditUserRoleDialogComponent implements OnInit {
 
 
 
-  onFormSubmit(){
-    if(this.investigatorRole){
-      if(!this.user.roles.includes('Investigator')){
+  onFormSubmit() {
+    if (this.investigatorRole) {
+      if (!this.user.roles.includes('Investigator')) {
         this.user.roles.push('Staff');
         this.user.roles.push('Investigator');
       }
     }
-    else{
-      if(this.user.roles.includes('Investigator')){
+    else {
+      if (this.user.roles.includes('Investigator')) {
         var inve_index = this.user.roles.findIndex(a => a == 'Investigator');
         this.user.roles.splice(inve_index, 1);
         var s_index = this.user.roles.findIndex(a => a == 'Staff');
-        if(s_index != undefined || s_index != -1){
+        if (s_index != undefined || s_index != -1) {
           this.user.roles.splice(s_index, 1);
         }
       }
     }
 
     this.roleChanged.emit(this.user);
-    var gg =  <HTMLButtonElement>document.getElementById('toggleUserRoleModalBtn');
+    var gg = <HTMLButtonElement>document.getElementById('toggleUserRoleModalBtn');
     gg.click();
   }
 
 
 
 
-  showModal(user: User){
+  showModal(user: User) {
     this.user = user;
     this.investigatorRole = false;
-    if(user.roles){
+    if (user.roles) {
       var inve_role = user.roles.includes('Investigator');
-      if(inve_role){
+      if (inve_role) {
         this.investigatorRole = true;
       }
     }
-    var gg =  <HTMLButtonElement>document.getElementById('toggleUserRoleModalBtn');
+    var gg = <HTMLButtonElement>document.getElementById('toggleUserRoleModalBtn');
     gg.click();
   }
 

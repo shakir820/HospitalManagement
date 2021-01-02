@@ -85,26 +85,26 @@ export class AdminProfileComponent implements OnInit, AfterViewInit {
 
 
 
-  onUsernameInput(event_data){
-    if(this.proposedUsername.length == 0){
+  onUsernameInput(event_data) {
+    if (this.proposedUsername.length == 0) {
       this.unique_username = true;
     }
   }
 
 
-  onUsernameChanged(event_data){
+  onUsernameChanged(event_data) {
 
-    if(this.username.length != 0){
-      if(this.proposedUsername == this.username){
+    if (this.username.length != 0) {
+      if (this.proposedUsername == this.username) {
         return;
       }
 
       this.checkingUsername = true;
       this.httpClient.get<{
         unique_username: boolean
-      }>(this._baseUrl + 'api/usermanager/CheckForUniqueUsername', {params: {username: this.proposedUsername}}).subscribe(result =>{
+      }>(this._baseUrl + 'api/usermanager/CheckForUniqueUsername', { params: { username: this.proposedUsername } }).subscribe(result => {
         this.checkingUsername = false;
-        this.unique_username =result.unique_username;
+        this.unique_username = result.unique_username;
 
       });
     }
@@ -115,8 +115,8 @@ export class AdminProfileComponent implements OnInit, AfterViewInit {
 
 
 
-  onFormSubmit(){
-    if(this.profileForm.valid && this.unique_username == true){
+  onFormSubmit() {
+    if (this.profileForm.valid && this.unique_username == true) {
       this.savingProfileData = true;
 
       var formData = new FormData();
@@ -137,11 +137,11 @@ export class AdminProfileComponent implements OnInit, AfterViewInit {
         error: boolean,
         error_msg: string,
         user: User
-      }>(this._baseUrl + 'api/Admin/UpdateAdminProfile', formData,  { headers: { 'enctype': 'multipart/form-data' } }).subscribe(result => {
+      }>(this._baseUrl + 'api/Admin/UpdateAdminProfile', formData, { headers: { 'enctype': 'multipart/form-data' } }).subscribe(result => {
         this.savingProfileData = false;
         console.log(result);
 
-        if(result.success){
+        if (result.success) {
           Swal.fire({
             icon: 'success',
             title: 'Success',
@@ -157,7 +157,7 @@ export class AdminProfileComponent implements OnInit, AfterViewInit {
           this.userService.clearUserData('/admin');
           this.userService.SaveUserCredientials();
         }
-        else{
+        else {
           Swal.fire({
             icon: 'error',
             title: 'Error!',
@@ -165,10 +165,10 @@ export class AdminProfileComponent implements OnInit, AfterViewInit {
           });
         }
       },
-      error => {
-        this.savingProfileData = false;
-        console.log(error);
-      });
+        error => {
+          this.savingProfileData = false;
+          console.log(error);
+        });
 
     }
 

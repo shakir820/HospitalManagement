@@ -1,14 +1,14 @@
 
 
 <div class="container" id="section-to-print">
-  <div class="card p-0 shadow" >
+  <div class="card p-0 shadow">
     <div class="card-body p-0">
       <div class="d-flex">
         <div class="p-3 d-flex flex-column">
           <div class="name-title">Prescription</div>
           <div class="small font-weight-bold">Id: {{prescription.id}}</div>
-          <div class="small font-weight-bold mt-auto" >
-           Date: {{prescription.created_date | date: 'mediumDate'}}
+          <div class="small font-weight-bold mt-auto">
+            Date: {{prescription.created_date | date: 'mediumDate'}}
           </div>
         </div>
         <div class="d-flex justify-content-between flex-grow-1 bg-gray-100" style="border-bottom-left-radius: 50px;">
@@ -46,19 +46,19 @@
       </div>
 
     </div>
-    </div>
+  </div>
 
 
-    <div class="d-flex mt-2">
-      <div class="d-flex flex-column" style="max-width: 300px;">
-        <div class="card shadow">
-          <div class=" card-header bg-light-gray d-flex">
-            <div><i class="text-primary fad fa-lungs-virus"></i></div>
-            <div class="name-title ml-3">Complain</div>
-          </div>
-          <div class="p-0 card-body">
-            <div class="d-flex m-2 flex-column">
-             <div class="d-flex align-items-center justify-content-between" *ngFor="let item of prescription.patient_complains">
+  <div class="d-flex mt-2">
+    <div class="d-flex flex-column" style="max-width: 300px;">
+      <div class="card shadow">
+        <div class=" card-header bg-light-gray d-flex">
+          <div><i class="text-primary fad fa-lungs-virus"></i></div>
+          <div class="name-title ml-3">Complain</div>
+        </div>
+        <div class="p-0 card-body">
+          <div class="d-flex m-2 flex-column">
+            <div class="d-flex align-items-center justify-content-between" *ngFor="let item of prescription.patient_complains">
               <div class="my-1 d-flex">
                 <div class="my-1 bg-gray-300" style="min-width:5px; border-radius: 2px;"></div>
                 <div class="mx-2 d-flex flex-column">
@@ -66,20 +66,20 @@
                   <div class="small">{{item.description}}</div>
                 </div>
               </div>
-             </div>
             </div>
           </div>
         </div>
+      </div>
 
 
-        <div class="card mt-2 shadow">
-          <div class=" card-header bg-light-gray d-flex">
-            <div><i class="fad fa-stethoscope text-primary"></i></div>
-            <div class="name-title ml-3">Examination</div>
-          </div>
-          <div class="p-0 card-body">
-            <div class="d-flex m-2 flex-column">
-             <div class="d-flex justify-content-between align-items-center" *ngFor="let item of prescription.patient_examinations">
+      <div class="card mt-2 shadow">
+        <div class=" card-header bg-light-gray d-flex">
+          <div><i class="fad fa-stethoscope text-primary"></i></div>
+          <div class="name-title ml-3">Examination</div>
+        </div>
+        <div class="p-0 card-body">
+          <div class="d-flex m-2 flex-column">
+            <div class="d-flex justify-content-between align-items-center" *ngFor="let item of prescription.patient_examinations">
               <div class="my-1 d-flex">
                 <div class="my-1 bg-gray-300" style="min-width: 5px; border-radius: 2px;"></div>
                 <div class="mx-2 d-flex flex-column">
@@ -87,86 +87,86 @@
                   <div class="small">{{ item.description }}</div>
                 </div>
               </div>
-             </div>
             </div>
           </div>
         </div>
+      </div>
 
 
 
-        <div class="card mt-2 shadow">
-          <div class=" card-header bg-light-gray d-flex">
-            <div><i class="fad fa-vial text-primary"></i></div>
-            <div class="name-title ml-3">Investigation(Lab Test)</div>
-          </div>
-          <div class="p-0 card-body">
-            <div class="d-flex m-2 flex-column">
-             <div class="d-flex justify-content-between align-items-center" *ngFor="let item of prescription.patient_investigations">
+      <div class="card mt-2 shadow">
+        <div class=" card-header bg-light-gray d-flex">
+          <div><i class="fad fa-vial text-primary"></i></div>
+          <div class="name-title ml-3">Investigation(Lab Test)</div>
+        </div>
+        <div class="p-0 card-body">
+          <div class="d-flex m-2 flex-column">
+            <div class="d-flex justify-content-between align-items-center" *ngFor="let item of prescription.patient_investigations">
               <div class="my-1 d-flex">
                 <div class="my-1 bg-gray-300" style="min-width: 5px; border-radius: 2px;"></div>
                 <div class="mx-2 d-flex flex-column">
                   <div class="name-title">{{item.abbreviation}}</div>
                 </div>
               </div>
-             </div>
             </div>
           </div>
         </div>
-      </div>
-
-
-      <div class="ml-2 d-flex flex-column flex-fill">
-        <div class="card shadow">
-          <div class="card-header d-flex">
-            <div><i class="fad fa-pills text-primary"></i></div>
-            <div class="name-title ml-3">Medicines</div>
-          </div>
-          <div class="card-body">
-            <div class="d-flex flex-column">
-              <div class="d-flex my-2" *ngFor="let item of prescription.medicines; index as i">
-                <div class="align-self-center font-weight-bold">{{i + 1}}</div>
-                <div class="bg-gray-300 my-1 mx-3" style="width: 5px; border-radius: 2px;"></div>
-                <div class="d-flex flex-column">
-                  <div class="name-title">{{item.title}}</div>
-                   <div class="d-flex small font-weight-bold">
-                    <div style="letter-spacing: 4px;" >{{item.schedule}}</div>
-                    <div class="ml-4">{{ item.duration }}</div>
-                   </div>
-                  <div class="small font-weight-bold">{{ item.note }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-
-
-        <div class="card mt-2 shadow">
-          <div class="card-header d-flex">
-            <div><i class="fad fa-notes-medical text-primary"></i></div>
-            <div class="name-title ml-3">Notes</div>
-          </div>
-          <div class="card-body">
-            <div class="d-flex flex-column">
-
-              <div class="d-flex my-2" *ngFor="let item of prescription.notes; index as i">
-                <div class="align-self-center font-weight-bold">{{i + 1}}</div>
-                <div class="bg-gray-300 my-1 mx-3" style="width: 5px; border-radius: 2px;"></div>
-                <div class="d-flex flex-column">
-                  <div class="name-title" >{{item.note}}</div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-
-
       </div>
     </div>
+
+
+    <div class="ml-2 d-flex flex-column flex-fill">
+      <div class="card shadow">
+        <div class="card-header d-flex">
+          <div><i class="fad fa-pills text-primary"></i></div>
+          <div class="name-title ml-3">Medicines</div>
+        </div>
+        <div class="card-body">
+          <div class="d-flex flex-column">
+            <div class="d-flex my-2" *ngFor="let item of prescription.medicines; index as i">
+              <div class="align-self-center font-weight-bold">{{i + 1}}</div>
+              <div class="bg-gray-300 my-1 mx-3" style="width: 5px; border-radius: 2px;"></div>
+              <div class="d-flex flex-column">
+                <div class="name-title">{{item.title}}</div>
+                <div class="d-flex small font-weight-bold">
+                  <div style="letter-spacing: 4px;">{{item.schedule}}</div>
+                  <div class="ml-4">{{ item.duration }}</div>
+                </div>
+                <div class="small font-weight-bold">{{ item.note }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+      <div class="card mt-2 shadow">
+        <div class="card-header d-flex">
+          <div><i class="fad fa-notes-medical text-primary"></i></div>
+          <div class="name-title ml-3">Notes</div>
+        </div>
+        <div class="card-body">
+          <div class="d-flex flex-column">
+
+            <div class="d-flex my-2" *ngFor="let item of prescription.notes; index as i">
+              <div class="align-self-center font-weight-bold">{{i + 1}}</div>
+              <div class="bg-gray-300 my-1 mx-3" style="width: 5px; border-radius: 2px;"></div>
+              <div class="d-flex flex-column">
+                <div class="name-title">{{item.note}}</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+
+    </div>
   </div>
+</div>
 
 
 

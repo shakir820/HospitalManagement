@@ -1,243 +1,245 @@
 <h4 class="m-3">Investigation Details</h4>
 
 <div class="container mt-5">
- <div class="d-flex justify-content-between">
-  <div class="">
-    <div class="d-flex">
-      <div class=" bg-gray-300" style="min-width: 4px; border-radius: 3px; min-height: fit-content;"></div>
-      <div class=" d-flex flex-column ml-2">
-        <h5 class=" font-weight-bold text-dark">{{ investigation.id }}</h5>
-        <small>Investigation Id</small>
+  <div class="d-flex justify-content-between">
+    <div class="">
+      <div class="d-flex">
+        <div class=" bg-gray-300" style="min-width: 4px; border-radius: 3px; min-height: fit-content;"></div>
+        <div class=" d-flex flex-column ml-2">
+          <h5 class=" font-weight-bold text-dark">{{ investigation.id }}</h5>
+          <small>Investigation Id</small>
 
-        <h5 class="mt-3 font-weight-bold text-dark">{{ investigation.created_date | date: 'mediumDate' }}</h5>
-        <small>Investigation Date</small>
+          <h5 class="mt-3 font-weight-bold text-dark">{{ investigation.created_date | date: 'mediumDate' }}</h5>
+          <small>Investigation Date</small>
 
+        </div>
       </div>
     </div>
-  </div>
-   <div class="">
-     <div class="d-flex">
-       <div class=" bg-gray-300" style="min-width: 4px; border-radius: 3px; min-height: fit-content;"></div>
-       <div class=" d-flex flex-column ml-2">
-         <h5 class=" font-weight-bold text-dark">{{ investigation.abbreviation }}</h5>
-         <small>Investigation Abbreviation</small>
+    <div class="">
+      <div class="d-flex">
+        <div class=" bg-gray-300" style="min-width: 4px; border-radius: 3px; min-height: fit-content;"></div>
+        <div class=" d-flex flex-column ml-2">
+          <h5 class=" font-weight-bold text-dark">{{ investigation.abbreviation }}</h5>
+          <small>Investigation Abbreviation</small>
 
-         <h5 class="mt-3 font-weight-bold text-dark">{{ investigation.name }}</h5>
-         <small>Investigation Name</small>
+          <h5 class="mt-3 font-weight-bold text-dark">{{ investigation.name }}</h5>
+          <small>Investigation Name</small>
 
-       </div>
-     </div>
-   </div>
-   <div class="">
-    <div class="d-flex">
-      <div class=" bg-gray-300" style="min-width: 4px; border-radius: 3px; min-height: fit-content;"></div>
-      <div class=" d-flex flex-column ml-2">
-        <h5 class=" font-weight-bold"
-        [ngClass]="{'text-danger': investigation.investigation_status == 2,
+        </div>
+      </div>
+    </div>
+    <div class="">
+      <div class="d-flex">
+        <div class=" bg-gray-300" style="min-width: 4px; border-radius: 3px; min-height: fit-content;"></div>
+        <div class=" d-flex flex-column ml-2">
+          <h5 class=" font-weight-bold"
+              [ngClass]="{'text-danger': investigation.investigation_status == 2,
         'text-warning': investigation.investigation_status == 0,
         'text-primary': investigation.investigation_status == 1,
-        'text-success': investigation.investigation_status == 3 }" >{{ investigation.investigation_status | investigationStatus }}</h5>
-        <small>Status</small>
+        'text-success': investigation.investigation_status == 3 }">
+            {{ investigation.investigation_status | investigationStatus }}
+          </h5>
+          <small>Status</small>
 
-        <div class="d-flex flex-column" *ngIf="investigation.investigator != undefined">
-          <h5 class="mt-3 font-weight-bold text-dark">{{ investigation.investigator.name }}</h5>
-          <small>Investigator Name</small>
-        </div>
-        <div class="d-flex flex-column" *ngIf="investigation.investigator == undefined">
-          <h5 class="mt-3 font-weight-bold">Not Assigned</h5>
-          <small>Investigator Name</small>
+          <div class="d-flex flex-column" *ngIf="investigation.investigator != undefined">
+            <h5 class="mt-3 font-weight-bold text-dark">{{ investigation.investigator.name }}</h5>
+            <small>Investigator Name</small>
+          </div>
+          <div class="d-flex flex-column" *ngIf="investigation.investigator == undefined">
+            <h5 class="mt-3 font-weight-bold">Not Assigned</h5>
+            <small>Investigator Name</small>
+          </div>
         </div>
       </div>
-    </div>
-   </div>
- </div>
-
- <div class=" mt-5 d-flex justify-content-between">
-   <div class="bg-gray-100 mr-3 flex-fill border-0 card">
-    <div class=" card-body">
-      <div>
-        <small class=" font-weight-bold">Doctor</small>
-      </div>
-      <div class="d-flex mt-2">
-        <div style="min-width: 50px; min-height: 50px; width: 50px; height: 50px;" ><app-profile-pic-preview  [user_id]="investigation.doctor.id"></app-profile-pic-preview></div>
-        <div class="mt-2 ml-3 d-flex flex-column">
-          <h5 class=" font-weight-bold text-dark">{{ investigation.doctor.name }}</h5>
-          <div class="d-flex mt-1 flex-wrap" style="max-width: 300px;">
-            <span class="badge bg-secondary mb-2 mr-2 text-light" *ngFor="let item of investigation.doctor.specialities">{{ item.specialityName }}</span>
-          </div>
-          <div class="mt-1">
-            <small class=" font-weight-bold">{{ investigation.doctor.degree_title }}</small>
-          </div>
-          <div class="mt-2 d-flex">
-            <div><i class="fas fa-envelope"></i></div>
-            <div class="ml-2 d-flex flex-column">
-              <div class=" font-weight-bold">{{ investigation.doctor.email }}</div>
-              <div> <small>Email</small></div>
-            </div>
-          </div>
-          <div class="mt-2 d-flex" *ngIf="investigation.doctor.phoneNumber != undefined">
-            <div><i class="fas fa-phone"></i></div>
-            <div class="ml-2 d-flex flex-column">
-              <div class=" font-weight-bold">{{ investigation.doctor.phoneNumber }}</div>
-              <div> <small>Phone</small></div>
-            </div>
-          </div>
-        </div>
-       </div>
-    </div>
-   </div>
-
-
-
-   <div class="flex-fill ml-3 bg-gray-100 card border-0">
-    <div class=" card-body">
-      <div>
-        <small class=" font-weight-bold">Patient</small>
-      </div>
-      <div class="d-flex mt-2">
-        <div style="min-width: 50px; min-height: 50px; width: 50px; height: 50px;" ><app-profile-pic-preview  [user_id]="investigation.patient.id"></app-profile-pic-preview></div>
-        <div class="mt-2 ml-3 d-flex flex-column">
-          <h5 class=" font-weight-bold text-dark">{{ investigation.patient.name }}</h5>
-
-          <div class="mt-2 d-flex">
-            <div><i class="fas fa-calendar-exclamation"></i></div>
-            <div class="ml-2 d-flex flex-column">
-              <div class=" font-weight-bold">{{ investigation.patient.age }}</div>
-              <div> <small>Age</small></div>
-            </div>
-          </div>
-          <div class="mt-2 d-flex" *ngIf="investigation.patient.bloodGroup != undefined">
-            <div><i class="fas fa-tint"></i></div>
-            <div class="ml-2 d-flex flex-column">
-              <div class=" font-weight-bold">{{ investigation.patient.bloodGroup }}</div>
-              <div> <small>Blood Group</small></div>
-            </div>
-          </div>
-          <div class="mt-2 d-flex">
-            <div><i class="fas fa-venus-mars"></i></div>
-            <div class="ml-2 d-flex flex-column">
-              <div class=" font-weight-bold">{{ investigation.patient.gender }}</div>
-              <div> <small>Gender</small></div>
-            </div>
-          </div>
-          <div class="mt-2 d-flex">
-            <div><i class="fas fa-envelope"></i></div>
-            <div class="ml-2 d-flex flex-column">
-              <div class=" font-weight-bold">{{ investigation.patient.email }}</div>
-              <div> <small>Email</small></div>
-            </div>
-          </div>
-          <div class="mt-2 d-flex" *ngIf="investigation.patient.phoneNumber != undefined">
-            <div><i class="fas fa-phone"></i></div>
-            <div class="ml-2 d-flex flex-column">
-              <div class=" font-weight-bold">{{ investigation.patient.phoneNumber }}</div>
-              <div> <small>Phone</small></div>
-            </div>
-          </div>
-        </div>
-       </div>
-    </div>
-   </div>
- </div>
-
-
- <hr>
-
- <div class="d-flex flex-column" *ngIf="canEdit">
-  <ngx-dropzone (change)="onFileSelect($event)" class="d-flex justify-content-center" [multiple]="false">
-    <!-- <ngx-dropzone-label>Drop it, baby!</ngx-dropzone-label> -->
-    <div *ngIf="investigationFile == undefined" class=" d-flex justify-content-center">
-      <div class="d-flex flex-column justify-content-center align-items-center">
-        <div><i class="fal fa-3x fa-cloud-upload"></i></div>
-        <div>Browse File</div>
-      </div>
-    </div>
-    <ngx-dropzone-preview class=" flex-fill" *ngIf="investigationFile != undefined" [removable]="true" (removed)="onFileRemove(f)">
-        <ngx-dropzone-label>{{ investigationFile.name }} ({{ investigationFile.type }})</ngx-dropzone-label>
-    </ngx-dropzone-preview>
-  </ngx-dropzone>
-  <div *ngIf="fileIsRequiredError">
-    <small class=" text-danger">File is required</small>
-  </div>
-
-  <div class="my-3 d-flex flex-column">
-    <div class="alert alert-danger" role="alert">
-      You cannot change the document after submission. So check thoroughly before you submit.
-    </div>
-    <div class="mb-3 d-flex align-self-end">
-      <button class=" btn btn-danger" (click)="onUnassignClicked()" [disabled]="unassigning">
-        <div class="d-flex flex-row justify-content-center align-items-center">
-          <div class=" font-weight-bold">{{unassigning == true? 'Unassigning': 'Unassign'}}</div>
-          <div *ngIf="unassigning" class="spinner-border spinner-border-sm text-light ml-3" role="status">
-            <span class="sr-only"></span>
-          </div>
-        </div>
-       </button>
-      <button class="btn btn-primary ml-3 px-5"  [disabled]="savingInvestigation" (click)="onFileSubmit()">
-        <div class="d-flex flex-row justify-content-center align-items-center">
-          <div class=" font-weight-bold">{{savingInvestigation == true? 'Saving': 'Submit'}}</div>
-          <div *ngIf="savingInvestigation" class="spinner-border spinner-border-sm text-light ml-3" role="status">
-            <span class="sr-only"></span>
-          </div>
-        </div>
-      </button>
     </div>
   </div>
 
- </div>
-
- <div class="d-flex justify-content-end" *ngIf="canAssignToMe">
-   <button class=" btn btn-primary" (click)="onAssignToMeClicked()" [disabled]="assigningToMe">
-    <div class="d-flex flex-row justify-content-center align-items-center">
-      <div class=" font-weight-bold">{{assigningToMe == true? 'Assigning': 'Assign To Me'}}</div>
-      <div *ngIf="assigningToMe" class="spinner-border spinner-border-sm text-light ml-3" role="status">
-        <span class="sr-only"></span>
+  <div class=" mt-5 d-flex justify-content-between">
+    <div class="bg-gray-100 mr-3 flex-fill border-0 card">
+      <div class=" card-body">
+        <div>
+          <small class=" font-weight-bold">Doctor</small>
+        </div>
+        <div class="d-flex mt-2">
+          <div style="min-width: 50px; min-height: 50px; width: 50px; height: 50px;"><app-profile-pic-preview [user_id]="investigation.doctor.id"></app-profile-pic-preview></div>
+          <div class="mt-2 ml-3 d-flex flex-column">
+            <h5 class=" font-weight-bold text-dark">{{ investigation.doctor.name }}</h5>
+            <div class="d-flex mt-1 flex-wrap" style="max-width: 300px;">
+              <span class="badge bg-secondary mb-2 mr-2 text-light" *ngFor="let item of investigation.doctor.specialities">{{ item.specialityName }}</span>
+            </div>
+            <div class="mt-1">
+              <small class=" font-weight-bold">{{ investigation.doctor.degree_title }}</small>
+            </div>
+            <div class="mt-2 d-flex">
+              <div><i class="fas fa-envelope"></i></div>
+              <div class="ml-2 d-flex flex-column">
+                <div class=" font-weight-bold">{{ investigation.doctor.email }}</div>
+                <div> <small>Email</small></div>
+              </div>
+            </div>
+            <div class="mt-2 d-flex" *ngIf="investigation.doctor.phoneNumber != undefined">
+              <div><i class="fas fa-phone"></i></div>
+              <div class="ml-2 d-flex flex-column">
+                <div class=" font-weight-bold">{{ investigation.doctor.phoneNumber }}</div>
+                <div> <small>Phone</small></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-   </button>
- </div>
 
 
- <div *ngIf="canView">
-  <h5 class=" mt-3">Investigation Document</h5>
+
+    <div class="flex-fill ml-3 bg-gray-100 card border-0">
+      <div class=" card-body">
+        <div>
+          <small class=" font-weight-bold">Patient</small>
+        </div>
+        <div class="d-flex mt-2">
+          <div style="min-width: 50px; min-height: 50px; width: 50px; height: 50px;"><app-profile-pic-preview [user_id]="investigation.patient.id"></app-profile-pic-preview></div>
+          <div class="mt-2 ml-3 d-flex flex-column">
+            <h5 class=" font-weight-bold text-dark">{{ investigation.patient.name }}</h5>
+
+            <div class="mt-2 d-flex">
+              <div><i class="fas fa-calendar-exclamation"></i></div>
+              <div class="ml-2 d-flex flex-column">
+                <div class=" font-weight-bold">{{ investigation.patient.age }}</div>
+                <div> <small>Age</small></div>
+              </div>
+            </div>
+            <div class="mt-2 d-flex" *ngIf="investigation.patient.bloodGroup != undefined">
+              <div><i class="fas fa-tint"></i></div>
+              <div class="ml-2 d-flex flex-column">
+                <div class=" font-weight-bold">{{ investigation.patient.bloodGroup }}</div>
+                <div> <small>Blood Group</small></div>
+              </div>
+            </div>
+            <div class="mt-2 d-flex">
+              <div><i class="fas fa-venus-mars"></i></div>
+              <div class="ml-2 d-flex flex-column">
+                <div class=" font-weight-bold">{{ investigation.patient.gender }}</div>
+                <div> <small>Gender</small></div>
+              </div>
+            </div>
+            <div class="mt-2 d-flex">
+              <div><i class="fas fa-envelope"></i></div>
+              <div class="ml-2 d-flex flex-column">
+                <div class=" font-weight-bold">{{ investigation.patient.email }}</div>
+                <div> <small>Email</small></div>
+              </div>
+            </div>
+            <div class="mt-2 d-flex" *ngIf="investigation.patient.phoneNumber != undefined">
+              <div><i class="fas fa-phone"></i></div>
+              <div class="ml-2 d-flex flex-column">
+                <div class=" font-weight-bold">{{ investigation.patient.phoneNumber }}</div>
+                <div> <small>Phone</small></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <hr>
-  <div>
-   <table class="table table-striped table-borderless table-responsive-lg text-dark">
-     <thead>
-       <tr>
-         <th scope="col">
 
-         </th>
-         <th scope="col">
-          <div class="d-flex">
-            <div>File Name</div>
+  <div class="d-flex flex-column" *ngIf="canEdit">
+    <ngx-dropzone (change)="onFileSelect($event)" class="d-flex justify-content-center" [multiple]="false">
+      <!-- <ngx-dropzone-label>Drop it, baby!</ngx-dropzone-label> -->
+      <div *ngIf="investigationFile == undefined" class=" d-flex justify-content-center">
+        <div class="d-flex flex-column justify-content-center align-items-center">
+          <div><i class="fal fa-3x fa-cloud-upload"></i></div>
+          <div>Browse File</div>
+        </div>
+      </div>
+      <ngx-dropzone-preview class=" flex-fill" *ngIf="investigationFile != undefined" [removable]="true" (removed)="onFileRemove(f)">
+        <ngx-dropzone-label>{{ investigationFile.name }} ({{ investigationFile.type }})</ngx-dropzone-label>
+      </ngx-dropzone-preview>
+    </ngx-dropzone>
+    <div *ngIf="fileIsRequiredError">
+      <small class=" text-danger">File is required</small>
+    </div>
+
+    <div class="my-3 d-flex flex-column">
+      <div class="alert alert-danger" role="alert">
+        You cannot change the document after submission. So check thoroughly before you submit.
+      </div>
+      <div class="mb-3 d-flex align-self-end">
+        <button class=" btn btn-danger" (click)="onUnassignClicked()" [disabled]="unassigning">
+          <div class="d-flex flex-row justify-content-center align-items-center">
+            <div class=" font-weight-bold">{{unassigning == true? 'Unassigning': 'Unassign'}}</div>
+            <div *ngIf="unassigning" class="spinner-border spinner-border-sm text-light ml-3" role="status">
+              <span class="sr-only"></span>
+            </div>
           </div>
-         </th>
-         <th scope="col">
-          <div class="d-flex">
-            <div>Submit Date</div>
+        </button>
+        <button class="btn btn-primary ml-3 px-5" [disabled]="savingInvestigation" (click)="onFileSubmit()">
+          <div class="d-flex flex-row justify-content-center align-items-center">
+            <div class=" font-weight-bold">{{savingInvestigation == true? 'Saving': 'Submit'}}</div>
+            <div *ngIf="savingInvestigation" class="spinner-border spinner-border-sm text-light ml-3" role="status">
+              <span class="sr-only"></span>
+            </div>
           </div>
-         </th>
-       </tr>
-     </thead>
-     <tbody>
-       <tr>
+        </button>
+      </div>
+    </div>
 
-         <td><i class="fad fa-2x fa-file-medical"></i></td>
-         <td><a [href]="investigation.file_link" target="_blank">{{ investigation.file_name }}</a></td>
-         <td>{{ investigation.sample_submit_date | date: 'mediumDate' }}</td>
-
-       </tr>
-     </tbody>
-   </table>
   </div>
- </div>
+
+  <div class="d-flex justify-content-end" *ngIf="canAssignToMe">
+    <button class=" btn btn-primary" (click)="onAssignToMeClicked()" [disabled]="assigningToMe">
+      <div class="d-flex flex-row justify-content-center align-items-center">
+        <div class=" font-weight-bold">{{assigningToMe == true? 'Assigning': 'Assign To Me'}}</div>
+        <div *ngIf="assigningToMe" class="spinner-border spinner-border-sm text-light ml-3" role="status">
+          <span class="sr-only"></span>
+        </div>
+      </div>
+    </button>
+  </div>
+
+
+  <div *ngIf="canView">
+    <h5 class=" mt-3">Investigation Document</h5>
+    <hr>
+    <div>
+      <table class="table table-striped table-borderless table-responsive-lg text-dark">
+        <thead>
+          <tr>
+            <th scope="col">
+
+            </th>
+            <th scope="col">
+              <div class="d-flex">
+                <div>File Name</div>
+              </div>
+            </th>
+            <th scope="col">
+              <div class="d-flex">
+                <div>Submit Date</div>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+
+            <td><i class="fad fa-2x fa-file-medical"></i></td>
+            <td><a [href]="investigation.file_link" target="_blank">{{ investigation.file_name }}</a></td>
+            <td>{{ investigation.sample_submit_date | date: 'mediumDate' }}</td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
 
 
- <!-- <div class="d-flex justify-content-end" *ngIf="canEdit">
+  <!-- <div class="d-flex justify-content-end" *ngIf="canEdit">
 
-</div> -->
+  </div> -->
 
 
 

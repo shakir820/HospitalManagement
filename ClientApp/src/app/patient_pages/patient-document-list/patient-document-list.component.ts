@@ -25,15 +25,15 @@ export class PatientDocumentListComponent implements OnInit {
 
 
   @ViewChild('f') documentForm: NgForm;
-  @ViewChild('DocFile', {static: true}) docFile: ElementRef;
+  @ViewChild('DocFile', { static: true }) docFile: ElementRef;
   savingDocument: boolean = false;
-  submitted:boolean = false;
+  submitted: boolean = false;
   document_file: File;
   document_name: string;
   _baseUrl: string;
   document_list: PatientDocument[] = [];
-  fetchingDocument:boolean = false;
-  showEmptyIcon:boolean = false;
+  fetchingDocument: boolean = false;
+  showEmptyIcon: boolean = false;
   sortOrderBy: string = 'Id';
   sortByAsscending: boolean = true;
 
@@ -43,13 +43,13 @@ export class PatientDocumentListComponent implements OnInit {
 
 
 
-  onDocItemClicked(event_data, doc_id: number){
+  onDocItemClicked(event_data, doc_id: number) {
 
   }
 
 
 
-  onDocumentDeleteClicked(event_data, doc_id: number){
+  onDocumentDeleteClicked(event_data, doc_id: number) {
 
     Swal.fire({
       title: 'Are you sure?',
@@ -78,13 +78,13 @@ export class PatientDocumentListComponent implements OnInit {
             var doc_index = this.document_list.findIndex(a => a.id == doc_id);
             this.document_list.splice(doc_index, 1);
 
-            if(this.document_list.length == 0){
+            if (this.document_list.length == 0) {
               this.showEmptyIcon = true;
             }
           }
-          else{
+          else {
             Swal.fire({
-              icon:'error',
+              icon: 'error',
               title: 'Error!',
               text: result.error_msg
             });
@@ -103,79 +103,79 @@ export class PatientDocumentListComponent implements OnInit {
 
 
 
-  sortDocumentListDefault(){
-    switch(this.sortOrderBy){
+  sortDocumentListDefault() {
+    switch (this.sortOrderBy) {
       case 'Id':
-        if(this.sortByAsscending){
+        if (this.sortByAsscending) {
           this.document_list.sort(sortBy('id'));
         }
-        else{
+        else {
           this.document_list.sort(sortBy('-id'));
         }
-      break;
+        break;
 
       case 'Name':
-      if(this.sortByAsscending){
-        this.document_list.sort(sortBy('name'));
-      }
-      else{
-        this.document_list.sort(sortBy('-name'));
-      }
-      break;
+        if (this.sortByAsscending) {
+          this.document_list.sort(sortBy('name'));
+        }
+        else {
+          this.document_list.sort(sortBy('-name'));
+        }
+        break;
 
 
       case 'Date':
-      if(this.sortByAsscending){
-        this.document_list.sort(sortBy('created_date'));
-      }
-      else{
-        this.document_list.sort(sortBy('-created_date'));
-      }
-      break;
+        if (this.sortByAsscending) {
+          this.document_list.sort(sortBy('created_date'));
+        }
+        else {
+          this.document_list.sort(sortBy('-created_date'));
+        }
+        break;
     }
   }
 
-  sortDocumentList(event_data, order_name: string){
-    if(this.sortOrderBy == order_name){
+  sortDocumentList(event_data, order_name: string) {
+    if (this.sortOrderBy == order_name) {
       this.sortByAsscending = !this.sortByAsscending;
-   }
-
-   switch(this.sortOrderBy){
-    case 'Id':
-      if(this.sortByAsscending){
-        this.document_list.sort(sortBy('id'));
-      }
-      else{
-        this.document_list.sort(sortBy('-id'));
-      }
-    break;
-
-    case 'Name':
-    if(this.sortByAsscending){
-      this.document_list.sort(sortBy('name'));
     }
-    else{
-      this.document_list.sort(sortBy('-name'));
-    }
-    break;
+
+    switch (this.sortOrderBy) {
+      case 'Id':
+        if (this.sortByAsscending) {
+          this.document_list.sort(sortBy('id'));
+        }
+        else {
+          this.document_list.sort(sortBy('-id'));
+        }
+        break;
+
+      case 'Name':
+        if (this.sortByAsscending) {
+          this.document_list.sort(sortBy('name'));
+        }
+        else {
+          this.document_list.sort(sortBy('-name'));
+        }
+        break;
 
 
-    case 'Date':
-    if(this.sortByAsscending){
-      this.document_list.sort(sortBy('created_date'));
+      case 'Date':
+        if (this.sortByAsscending) {
+          this.document_list.sort(sortBy('created_date'));
+        }
+        else {
+          this.document_list.sort(sortBy('-created_date'));
+        }
+        break;
     }
-    else{
-      this.document_list.sort(sortBy('-created_date'));
-    }
-    break;
-  }
 
 
     this.sortOrderBy = order_name;
   }
 
 
-  getAllDocument(){
+  getAllDocument() {
     this.fetchingDocument = true;
     this.httpClient.get<{
       success: boolean,
@@ -188,10 +188,10 @@ export class PatientDocumentListComponent implements OnInit {
       if (result.success) {
 
         this.document_list = result.document_list;
-        if(result.document_list.length == 0){
+        if (result.document_list.length == 0) {
           this.showEmptyIcon = true;
         }
-        else{
+        else {
           this.showEmptyIcon = false;
           this.document_list.sort(sortBy('id'));
         }
@@ -200,9 +200,9 @@ export class PatientDocumentListComponent implements OnInit {
   }
 
 
-  onSubmit(){
+  onSubmit() {
     this.submitted = true;
-    if(this.documentForm.valid){
+    if (this.documentForm.valid) {
       this.submitted = false;
 
       this.savingDocument = true;
@@ -216,13 +216,13 @@ export class PatientDocumentListComponent implements OnInit {
 
 
       this.httpClient.post<{
-        success:boolean,
-        error:boolean,
-        error_msg:string,
-        patient_document:PatientDocument
+        success: boolean,
+        error: boolean,
+        error_msg: string,
+        patient_document: PatientDocument
       }>(this._baseUrl + 'api/PatientDocument/CreatePatientDocument', formData, { headers: { 'enctype': 'multipart/form-data' } }).subscribe(result => {
         this.savingDocument = false;
-        if(result.success){
+        if (result.success) {
 
           Swal.fire({
             title: 'Success',
@@ -233,11 +233,11 @@ export class PatientDocumentListComponent implements OnInit {
           this.document_list.push(result.patient_document);
           this.sortDocumentListDefault();
 
-          if(this.document_list.length > 0){
+          if (this.document_list.length > 0) {
             this.showEmptyIcon = false;
           }
         }
-        else{
+        else {
           Swal.fire({
             title: 'Error',
             text: result.error_msg,
@@ -246,9 +246,9 @@ export class PatientDocumentListComponent implements OnInit {
           });
         }
       },
-      error =>{
-        console.log(error);
-      });
+        error => {
+          console.log(error);
+        });
 
     }
   }

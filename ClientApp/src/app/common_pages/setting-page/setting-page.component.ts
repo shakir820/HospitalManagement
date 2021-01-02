@@ -29,8 +29,8 @@ export class SettingPageComponent implements OnInit {
 
 
 
-  onOldPasswordInput(){
-    if(this.old_password.length == 0){
+  onOldPasswordInput() {
+    if (this.old_password.length == 0) {
       this.old_password_incorrect = false;
     }
   }
@@ -48,9 +48,9 @@ export class SettingPageComponent implements OnInit {
 
 
 
-  onSubmit(){
+  onSubmit() {
     this.submitted = true;
-    if(this.passwordForm.valid){
+    if (this.passwordForm.valid) {
       this.submitted = false;
 
       this.changingPassword = true;
@@ -60,13 +60,13 @@ export class SettingPageComponent implements OnInit {
       var json_obj = JSON.stringify(user_model);
 
       this.httpClient.post<{
-        success : boolean,
+        success: boolean,
         error: boolean,
         error_msg: string,
         old_password_incorrect: boolean
-      }>(this._baseUrl + 'api/UserManager/ChangePassword', { json_data: json_obj }).subscribe(result =>{
+      }>(this._baseUrl + 'api/UserManager/ChangePassword', { json_data: json_obj }).subscribe(result => {
         this.changingPassword = false;
-        if(result.success){
+        if (result.success) {
           Swal.fire({
             icon: 'success',
             title: 'Success!',
@@ -76,10 +76,10 @@ export class SettingPageComponent implements OnInit {
           this.old_password = '';
           this.new_password = '';
         }
-        else if(result.old_password_incorrect){
+        else if (result.old_password_incorrect) {
           this.old_password_incorrect = true;
         }
-        else{
+        else {
           Swal.fire({
             icon: 'error',
             title: 'Error!',

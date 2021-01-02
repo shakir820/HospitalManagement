@@ -3,33 +3,33 @@
     <div class="card-header d-flex flex-row align-items-center justify-content-between">
       <h5 class="my-auto">Today's Patients</h5>
       <div class="d-flex">
-       <div>
-        <form #f="ngForm" (ngSubmit)="onSearchSubmit()"
-        class="d-none d-sm-inline-block form-inline">
-    <div class="input-group">
-      <input type="text" id="search_string"
-             name="search_string"
-             [(ngModel)]="search_string"
-             class="form-control bg-light small"
-             placeholder="Search patient" aria-label="Search">
-      <div class="input-group-append">
-        <button class="btn btn-primary" type="submit">
-          <i class="fas fa-search fa-sm"></i>
-        </button>
-      </div>
-    </div>
-  </form>
-       </div>
-       <div class="dropdown ml-2">
-        <button class="btn btn-primary dropdown-toggle" type="button" id="sortOrderDropdownMenuButton"
-        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Sort by {{sortBy}}
-        </button>
-        <div class="dropdown-menu" aria-labelledby="sortOrderDropdownMenuButton">
-          <a class="dropdown-item" (click)="sortOrderChanged($event, 'Name')">Name</a>
-          <a class="dropdown-item" (click)="sortOrderChanged($event, 'Serial No')">Serial No</a>
+        <div>
+          <form #f="ngForm" (ngSubmit)="onSearchSubmit()"
+                class="d-none d-sm-inline-block form-inline">
+            <div class="input-group">
+              <input type="text" id="search_string"
+                     name="search_string"
+                     [(ngModel)]="search_string"
+                     class="form-control bg-light small"
+                     placeholder="Search patient" aria-label="Search">
+              <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">
+                  <i class="fas fa-search fa-sm"></i>
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
-      </div>
+        <div class="dropdown ml-2">
+          <button class="btn btn-primary dropdown-toggle" type="button" id="sortOrderDropdownMenuButton"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Sort by {{sortBy}}
+          </button>
+          <div class="dropdown-menu" aria-labelledby="sortOrderDropdownMenuButton">
+            <a class="dropdown-item" (click)="sortOrderChanged($event, 'Name')">Name</a>
+            <a class="dropdown-item" (click)="sortOrderChanged($event, 'Serial No')">Serial No</a>
+          </div>
+        </div>
         <button type="button" (click)="toggleDoctorListSort($event)" class="btn ml-4 "><i class="fad text-dark fa-sort"></i></button>
       </div>
     </div>

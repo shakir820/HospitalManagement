@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using HospitalManagement.Data;
 using HospitalManagement.Helper;
 using HospitalManagement.Models;
+using HospitalManagement.Models.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -706,5 +707,107 @@ namespace HospitalManagement.Controllers
         }
 
 
+
+
+
+
+
+
+
+        public async Task<IActionResult> GetUserDetails(long user_id)
+        {
+            try
+            {
+                var db_user = await _context.Users.Include(a => a.Specialities).Include(a => a.Languages).
+                    Include(a => a.Schedules).AsNoTracking().FirstOrDefaultAsync(a => a.Id == user_id);
+                var db_user_roles = await _context.UserRoles.Join(_context.Roles, o => o.RoleId, i => i.Id, (o, i) => new
+                {
+                    user_role = o,
+                    role = i
+                }).AsNoTracking().Where(a => a.user_role.UserId == user_id).ToListAsync();
+
+                var roles = new List<string>();
+                foreach(var item in db_user_roles)
+                {
+                    roles.Add(item.role.Name);
+                }
+
+                var user =  ModelBindingResolver.ResolveUser(db_user, roles);
+
+
+                return new JsonResult(new
+                {
+                    success = true,
+                    error = false,
+                    user
+                });
+
+            }
+            catch(Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = ex.Message
+                });
+            }
+        }
+
+
+
+        public async Task<IActionResult> GetDoctorAppointmentList(string selected_date, long doctor_id)
+        {
+            try
+            {
+                DateTime sd = DateTime.Parse(selected_date);
+                var db_app = await _context.DoctorAppointments.Join(_context.Users, o => o.PatientId, i => i.Id, (o, i) => new 
+                {
+                    app = o,
+                    patient = i
+                }).Where(a => a.app.AppointmentDate.Date == sd.Date && 
+                a.app.DoctorId == doctor_id).ToListAsync();
+                var today = DateTime.Now;
+
+                var appointments = new List<DoctorAppointmentModel>();
+
+                foreach (var item in db_app)
+                {
+                    if (item.app.AppointmentDate.Date <= today.Date)
+                    {
+                        if(item.app.Consulted == true)
+                        {
+                            var doc_app = ModelBindingResolver.ResovleAppointment(item.app);
+                            appointments.Add(doc_app);
+                        }
+                    }
+                    else
+                    {
+                        var doc_app = ModelBindingResolver.ResovleAppointment(item.app);
+                        appointments.Add(doc_app);
+                    }
+                }
+
+
+                return new JsonResult(new
+                {
+                    success = true,
+                    error = false,
+                    appointments
+                });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = true,
+                    error_msg = ex.Message
+                });
+            }
+            
+            
+
+        }
     }
 }

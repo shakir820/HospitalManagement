@@ -33,7 +33,7 @@ export class AssignedInvestigationListComponent implements OnInit {
   fetchingInvestigations: boolean = false;
   _baseUrl: string;
   sortOrderBy: string = 'Id';
-  sortByAsscending:boolean = true;
+  sortByAsscending: boolean = true;
 
   ngOnInit(): void {
     this.getAllInvestigations();
@@ -41,27 +41,27 @@ export class AssignedInvestigationListComponent implements OnInit {
   }
 
 
-  searchOnInput(event_data){
-    if(this.search_string.length == 0){
+  searchOnInput(event_data) {
+    if (this.search_string.length == 0) {
       this.filtered_investigation_List = this.all_Investigation_List.slice();
       this.selectedInvestigationName = 'All';
       this.sortInvestigationListDefault();
     }
   }
 
-  onSearchSubmit(){
-    if(this.search_string.length > 0){
+  onSearchSubmit() {
+    if (this.search_string.length > 0) {
       var sk = this.search_string.toUpperCase();
-      this.filtered_investigation_List =  this.all_Investigation_List.filter(a => a.abbreviation.toUpperCase().includes(sk) ||
-      a.doctor.name.toUpperCase().includes(sk) ||
-      a.patient.name.toUpperCase().includes(sk));
+      this.filtered_investigation_List = this.all_Investigation_List.filter(a => a.abbreviation.toUpperCase().includes(sk) ||
+        a.doctor.name.toUpperCase().includes(sk) ||
+        a.patient.name.toUpperCase().includes(sk));
       this.sortInvestigationListDefault();
     }
   }
 
 
-  selectInvestigationChanged(event_data){
-    if(this.selectedInvestigationName == 'All'){
+  selectInvestigationChanged(event_data) {
+    if (this.selectedInvestigationName == 'All') {
       this.filtered_investigation_List = this.all_Investigation_List.slice();
       this.sortInvestigationListDefault();
       return;
@@ -71,26 +71,26 @@ export class AssignedInvestigationListComponent implements OnInit {
   }
 
 
-  getAllInvestigations(){
+  getAllInvestigations() {
     this.fetchingInvestigations = true;
     this.httpClient.get<{
       success: boolean,
       error: boolean,
       investigation_list: InvestigationDoc[],
       error_msg: string
-    }>(this._baseUrl + 'api/Investigation/GetAllAssignedInvestigations', { params: {investigator_id: this.userService.user.id.toString() }}).subscribe(result => {
+    }>(this._baseUrl + 'api/Investigation/GetAllAssignedInvestigations', { params: { investigator_id: this.userService.user.id.toString() } }).subscribe(result => {
       console.log(result);
       this.fetchingInvestigations = false;
       if (result.success) {
-         this.all_Investigation_List = result.investigation_list;
-         this.filtered_investigation_List = result.investigation_list.slice();
-         this.sortInvestigationListDefault();
+        this.all_Investigation_List = result.investigation_list;
+        this.filtered_investigation_List = result.investigation_list.slice();
+        this.sortInvestigationListDefault();
       }
     });
   }
 
 
-  getAllInvestigationNames(){
+  getAllInvestigationNames() {
     this.httpClient.get<{
       success: boolean,
       error: boolean,
@@ -99,9 +99,9 @@ export class AssignedInvestigationListComponent implements OnInit {
     }>(this._baseUrl + 'api/Investigation/GetAllInvestigationAbbreviations').subscribe(result => {
       console.log(result);
       if (result.success) {
-         this.all_Investigation_Name_List = [];
-         this.all_Investigation_Name_List.push('All');
-          this.all_Investigation_Name_List.push(...result.investigation_abbreviation_list);
+        this.all_Investigation_Name_List = [];
+        this.all_Investigation_Name_List.push('All');
+        this.all_Investigation_Name_List.push(...result.investigation_abbreviation_list);
       }
     });
   }
@@ -117,60 +117,60 @@ export class AssignedInvestigationListComponent implements OnInit {
 
 
 
-  sortInvestigationList(event_data, order_name:string){
-    if(this.sortOrderBy == order_name){
+  sortInvestigationList(event_data, order_name: string) {
+    if (this.sortOrderBy == order_name) {
       this.sortByAsscending = !this.sortByAsscending;
-   }
-
-   switch(this.sortOrderBy){
-    case 'Id':
-      if(this.sortByAsscending){
-        this.filtered_investigation_List.sort(sortBy('id'));
-      }
-      else{
-        this.filtered_investigation_List.sort(sortBy('-id'));
-      }
-    break;
-
-    case 'Name':
-    if(this.sortByAsscending){
-      this.filtered_investigation_List.sort(sortBy('abbreviation'));
     }
-    else{
-      this.filtered_investigation_List.sort(sortBy('-abbreviation'));
+
+    switch (this.sortOrderBy) {
+      case 'Id':
+        if (this.sortByAsscending) {
+          this.filtered_investigation_List.sort(sortBy('id'));
+        }
+        else {
+          this.filtered_investigation_List.sort(sortBy('-id'));
+        }
+        break;
+
+      case 'Name':
+        if (this.sortByAsscending) {
+          this.filtered_investigation_List.sort(sortBy('abbreviation'));
+        }
+        else {
+          this.filtered_investigation_List.sort(sortBy('-abbreviation'));
+        }
+        break;
+
+
+      case 'Doctor':
+        if (this.sortByAsscending) {
+          this.filtered_investigation_List.sort(sortBy('doctor.name'));
+        }
+        else {
+          this.filtered_investigation_List.sort(sortBy('-doctor.name'));
+        }
+        break;
+
+
+      case 'Patient':
+        if (this.sortByAsscending) {
+          this.filtered_investigation_List.sort(sortBy('patient.name'));
+        }
+        else {
+          this.filtered_investigation_List.sort(sortBy('-patient.name'));
+        }
+        break;
+
+
+      case 'Date':
+        if (this.sortByAsscending) {
+          this.filtered_investigation_List.sort(sortBy('created_date'));
+        }
+        else {
+          this.filtered_investigation_List.sort(sortBy('-created_date'));
+        }
+        break;
     }
-    break;
-
-
-    case 'Doctor':
-    if(this.sortByAsscending){
-      this.filtered_investigation_List.sort(sortBy('doctor.name'));
-    }
-    else{
-      this.filtered_investigation_List.sort(sortBy('-doctor.name'));
-    }
-    break;
-
-
-    case 'Patient':
-    if(this.sortByAsscending){
-      this.filtered_investigation_List.sort(sortBy('patient.name'));
-    }
-    else{
-      this.filtered_investigation_List.sort(sortBy('-patient.name'));
-    }
-    break;
-
-
-    case 'Date':
-      if(this.sortByAsscending){
-        this.filtered_investigation_List.sort(sortBy('created_date'));
-      }
-      else{
-        this.filtered_investigation_List.sort(sortBy('-created_date'));
-      }
-      break;
-  }
 
 
     this.sortOrderBy = order_name;
@@ -181,52 +181,52 @@ export class AssignedInvestigationListComponent implements OnInit {
 
 
 
-  sortInvestigationListDefault(){
-    switch(this.sortOrderBy){
+  sortInvestigationListDefault() {
+    switch (this.sortOrderBy) {
       case 'Id':
-        if(this.sortByAsscending){
+        if (this.sortByAsscending) {
           this.filtered_investigation_List.sort(sortBy('id'));
         }
-        else{
+        else {
           this.filtered_investigation_List.sort(sortBy('-id'));
         }
-      break;
+        break;
 
       case 'Name':
-      if(this.sortByAsscending){
-        this.filtered_investigation_List.sort(sortBy('name'));
-      }
-      else{
-        this.filtered_investigation_List.sort(sortBy('-name'));
-      }
-      break;
+        if (this.sortByAsscending) {
+          this.filtered_investigation_List.sort(sortBy('name'));
+        }
+        else {
+          this.filtered_investigation_List.sort(sortBy('-name'));
+        }
+        break;
 
 
       case 'Doctor':
-      if(this.sortByAsscending){
-        this.filtered_investigation_List.sort(sortBy('doctor.name'));
-      }
-      else{
-        this.filtered_investigation_List.sort(sortBy('-doctor.name'));
-      }
-      break;
+        if (this.sortByAsscending) {
+          this.filtered_investigation_List.sort(sortBy('doctor.name'));
+        }
+        else {
+          this.filtered_investigation_List.sort(sortBy('-doctor.name'));
+        }
+        break;
 
 
       case 'Patient':
-      if(this.sortByAsscending){
-        this.filtered_investigation_List.sort(sortBy('patient.name'));
-      }
-      else{
-        this.filtered_investigation_List.sort(sortBy('-patient.name'));
-      }
-      break;
+        if (this.sortByAsscending) {
+          this.filtered_investigation_List.sort(sortBy('patient.name'));
+        }
+        else {
+          this.filtered_investigation_List.sort(sortBy('-patient.name'));
+        }
+        break;
 
 
       case 'Date':
-        if(this.sortByAsscending){
+        if (this.sortByAsscending) {
           this.filtered_investigation_List.sort(sortBy('created_date'));
         }
-        else{
+        else {
           this.filtered_investigation_List.sort(sortBy('-created_date'));
         }
         break;
@@ -236,12 +236,12 @@ export class AssignedInvestigationListComponent implements OnInit {
 
 
 
-  onInvestigationViewClicked(event_data, investigation_id: number){
-    this.router.navigate(['Investigation/InvestigationDetails'], {queryParams: {investigation_id: investigation_id}});
+  onInvestigationViewClicked(event_data, investigation_id: number) {
+    this.router.navigate(['Investigation/InvestigationDetails'], { queryParams: { investigation_id: investigation_id } });
   }
 
 
-  onInvestigationAssignedToMeClicked(event_data, investigation_id: number){
+  onInvestigationAssignedToMeClicked(event_data, investigation_id: number) {
 
     var inv = new InvestigationDoc();
     inv.id = investigation_id;
@@ -254,9 +254,9 @@ export class AssignedInvestigationListComponent implements OnInit {
       success: boolean,
       error: boolean,
       error_msg: string
-    }>(this._baseUrl + 'api/Investigation/AssignInvestigationToInvestigator', {json_data: inv_str}).subscribe(result => {
+    }>(this._baseUrl + 'api/Investigation/AssignInvestigationToInvestigator', { json_data: inv_str }).subscribe(result => {
       console.log(result);
-      if(result.success){
+      if (result.success) {
 
         var inv = this.all_Investigation_List.find(a => a.id == investigation_id);
         inv.investigation_status = InvestigationStatus.Inprogress;
@@ -269,7 +269,7 @@ export class AssignedInvestigationListComponent implements OnInit {
         });
 
       }
-      else{
+      else {
         Swal.fire({
           icon: 'error',
           title: 'Error!',
@@ -282,13 +282,13 @@ export class AssignedInvestigationListComponent implements OnInit {
 
 
 
-  onInvestigationUnassignedToMeClicked(event_data, investigation_id: number){
+  onInvestigationUnassignedToMeClicked(event_data, investigation_id: number) {
     this.httpClient.post<{
-      success : boolean,
+      success: boolean,
       error: boolean,
       error_msg: string
-    }>(this._baseUrl + 'api/Investigation/UnassignInvestigation', { id: investigation_id }).subscribe(result =>{
-      if(result.success){
+    }>(this._baseUrl + 'api/Investigation/UnassignInvestigation', { id: investigation_id }).subscribe(result => {
+      if (result.success) {
         Swal.fire({
           icon: 'success',
           title: 'Success',
@@ -298,7 +298,7 @@ export class AssignedInvestigationListComponent implements OnInit {
         inv.investigator = undefined;
         inv.investigation_status = InvestigationStatus.Pending;
       }
-      else{
+      else {
         Swal.fire({
           icon: 'error',
           title: 'Error!',

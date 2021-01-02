@@ -187,7 +187,7 @@ export class DoctorAppointmentComponent implements OnInit {
 
 
   getAppointmentInfoOnSelectedDate() {
- this.gettingAppointmentSerialNo = true;
+    this.gettingAppointmentSerialNo = true;
     this.httpClient.post<{
       success: boolean,
       error: boolean,
@@ -297,7 +297,7 @@ export class DoctorAppointmentComponent implements OnInit {
             Swal.fire({
               icon: 'error',
               title: 'Error!',
-              text:  result.error_msg
+              text: result.error_msg
             });
           }
         });
