@@ -27,51 +27,156 @@ export class AdminDoctorListComponent implements OnInit {
   @ViewChild('f') searchForm: NgForm;
 
   _baseUrl: string;
+  search_string: string;
   fetchingDoctorList: boolean = false;
-  sortBy: string = 'ascending';
+  sortByAscending: boolean = true;
+  sortOrderBy: string = 'Id';
   allDoctorList: User[] = [];
   doctorList: User[] = [];
   filerBy: string = 'All';
 
 
 
+  doctorSearchOnInput(event_data){
+    if(this.search_string.length == 0){
+
+      this.sortDoctorListDefault();
+    }
+  }
+
+
+
+  sortDoctorListDefault(){
+    var temp_doctor_list = [];
+
+    switch(this.filerBy){
+      case 'All':
+        temp_doctor_list = this.allDoctorList.slice();
+        break;
+
+      case 'Active':
+        temp_doctor_list = this.allDoctorList.filter(a => a.isActive == true);
+        break;
+
+      case 'Inactive':
+        temp_doctor_list = this.allDoctorList.filter( a => a.isActive == false);
+        break;
+
+      case 'Pending':
+        temp_doctor_list = this.allDoctorList.filter( a => a.approved == false);
+        break;
+    }
+
+    switch(this.sortOrderBy){
+      case 'Id':
+        if(this.sortByAscending){
+          temp_doctor_list.sort(sortBy('id'));
+        }
+        else{
+          temp_doctor_list.sort(sortBy('-id'));
+        }
+        break;
+
+      case 'Name':
+        if(this.sortByAscending){
+          temp_doctor_list.sort(sortBy('name'));
+        }
+        else{
+          temp_doctor_list.sort(sortBy('-name'))
+        }
+        break;
+
+      case 'Date':
+        if(this.sortByAscending){
+          temp_doctor_list.sort(sortBy('created_date'));
+        }
+        else{
+          temp_doctor_list.sort(sortBy('-created_date'));
+        }
+        break;
+    }
+
+    this.doctorList = temp_doctor_list;
+  }
+
+
+  sortDoctorList(event_data, order_name: string){
+
+    if(order_name == this.sortOrderBy){
+      this.sortByAscending = !this.sortByAscending;
+    }
+
+    switch(order_name){
+      case 'Id':
+        if(this.sortByAscending){
+          this.doctorList.sort(sortBy('id'));
+        }
+        else{
+          this.doctorList.sort(sortBy('-id'));
+        }
+        break;
+
+      case 'Name':
+        if(this.sortByAscending){
+          this.doctorList.sort(sortBy('name'));
+        }
+        else{
+          this.doctorList.sort(sortBy('-name'))
+        }
+        break;
+
+      case 'Date':
+        if(this.sortByAscending){
+          this.doctorList.sort(sortBy('created_date'));
+        }
+        else{
+          this.doctorList.sort(sortBy('-created_date'));
+        }
+        break;
+    }
+
+    this.sortOrderBy = order_name;
+  }
+
 
 
   onSearchSubmit() {
-    var search_key: string = this.searchForm.controls['search_string'].value;
+   if(this.search_string.length == 0){
+     return;
+   }
 
-    var filtered_doc_list = [];
-    switch (this.filerBy) {
-      case 'Pending':
-        filtered_doc_list = this.allDoctorList.filter(a => a.approved == false)
-        break;
-      case 'Active':
-        filtered_doc_list = this.allDoctorList.filter(a => a.isActive == true);
-        break;
-      case 'Inactive':
-        filtered_doc_list = this.allDoctorList.filter(a => a.isActive == false);
-        break;
-      default:
-        filtered_doc_list = this.allDoctorList.slice();
-        break;
-    }
+   this.filerBy = 'All';
+   var sk = this.search_string.toUpperCase();
+   this.doctorList = this.allDoctorList.filter(a => a.name.toUpperCase().includes(sk) || a.id.toString() == sk );
 
-    filtered_doc_list = filtered_doc_list.filter((val: User) => {
-      var search_param = search_key.toUpperCase();
-      if (val.name.toUpperCase().includes(search_param) || val.doctor_title.toUpperCase().includes(search_param)) {
-        return val;
+   switch(this.sortOrderBy){
+    case 'Id':
+      if(this.sortByAscending){
+        this.doctorList.sort(sortBy('id'));
       }
-    });
+      else{
+        this.doctorList.sort(sortBy('-id'));
+      }
+      break;
 
-    if (this.sortBy == 'ascending') {
-      //this.sortBy = 'descending'
-      filtered_doc_list = filtered_doc_list.sort(sortBy('-name'));
-    }
-    else {
-      filtered_doc_list = filtered_doc_list.sort(sortBy('name'));
-    }
+    case 'Name':
+      if(this.sortByAscending){
+        this.doctorList.sort(sortBy('name'));
+      }
+      else{
+        this.doctorList.sort(sortBy('-name'))
+      }
+      break;
 
-    this.doctorList = filtered_doc_list;
+    case 'Date':
+      if(this.sortByAscending){
+        this.doctorList.sort(sortBy('created_date'));
+      }
+      else{
+        this.doctorList.sort(sortBy('-created_date'));
+      }
+      break;
+    }
 
   }
 
@@ -88,14 +193,9 @@ export class AdminDoctorListComponent implements OnInit {
       console.log(result);
       this.fetchingDoctorList = false;
       if (result.success) {
-        result.doctor_list.forEach(val => {
-          //val.baseUrl = this._baseUrl;
-          this.doctorList.push(val);
-
-          this.allDoctorList.push(val);
-        });
-
-        this.doctorList = this.doctorList.sort(sortBy('name'));
+        this.filerBy = 'All';
+        this.allDoctorList = result.doctor_list;
+        this.sortDoctorListDefault();
       }
     });
 
@@ -106,61 +206,35 @@ export class AdminDoctorListComponent implements OnInit {
 
   showAllDoctorList(event_data) {
     this.filerBy = 'All';
-    this.doctorList = this.allDoctorList.slice();
-    var searchInput = <HTMLInputElement>document.getElementById('search_string');
-    searchInput.value = '';
+    this.search_string = '';
+    this.sortDoctorListDefault();
   }
 
 
   showPendingDoctorList(event_data) {
     this.filerBy = 'Pending';
-    this.doctorList = this.allDoctorList.filter((val) => {
-      if (val.approved == false) {
-        return val;
-      }
-    });
-    var searchInput = <HTMLInputElement>document.getElementById('search_string');
-    searchInput.value = '';
+    this.search_string = '';
+    this.sortDoctorListDefault();
   }
 
 
   showActiveDoctorList(event_data) {
     this.filerBy = 'Active';
-    this.doctorList = this.allDoctorList.filter((val) => {
-      if (val.isActive == true) {
-        return val;
-      }
-    });
-    var searchInput = <HTMLInputElement>document.getElementById('search_string');
-    searchInput.value = '';
+    this.search_string = '';
+    this.sortDoctorListDefault();
   }
 
 
 
   showInactiveDoctorList(event_data) {
     this.filerBy = 'Inactive';
-    this.doctorList = this.allDoctorList.filter((val) => {
-      if (val.isActive == false) {
-        return val;
-      }
-    });
-    var searchInput = <HTMLInputElement>document.getElementById('search_string');
-    searchInput.value = '';
+    this.search_string = '';
+    this.sortDoctorListDefault();
   }
 
 
 
-  toggleDoctorListSort(event_data) {
-    if (this.sortBy == 'ascending') {
-      this.sortBy = 'descending'
-      this.doctorList = this.doctorList.sort(sortBy('-name'));
-    }
-    else {
-      this.sortBy = 'ascending'
-      this.doctorList = this.doctorList.sort(sortBy('name'));
-    }
 
-  }
 
 
 
@@ -214,7 +288,7 @@ export class AdminDoctorListComponent implements OnInit {
 
   viewDoctorDetails(event_data, doctor_id: number) {
     console.log('doctor id before navigate: ' + doctor_id);
-    this.router.navigate(['admin/doctorList/DoctorDetails'], { queryParams: { id: doctor_id } });
+    this.router.navigate(['admin/UserDetails'], { queryParams: { user_id: doctor_id } });
   }
 
 }

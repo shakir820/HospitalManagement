@@ -24,7 +24,6 @@ import { AdminDoctorListComponent } from './admin/admin-doctor-list/admin-doctor
 import { SpecialityTagComponent } from './custom_controls/speciality-tag/speciality-tag.component';
 import { LanguageTagComponent } from './custom_controls/language-tag/language-tag.component';
 import { ProfilePicPreviewComponent } from './custom_controls/profile-pic-preview/profile-pic-preview.component';
-import { AdminDoctorDetailsComponent } from './admin/admin-doctor-details/admin-doctor-details.component';
 import { WeekDayPipe } from './pipes/week-day.pipe';
 import { DoctorAppointmentComponent } from './patient_pages/doctor-appointment/doctor-appointment.component';
 import { DoctorListComponent } from './patient_pages/doctor-list/doctor-list.component';
@@ -77,7 +76,6 @@ import { DoctorAppointmentListComponent } from './admin/doctor-appointment-list/
     SpecialityTagComponent,
     LanguageTagComponent,
     ProfilePicPreviewComponent,
-    AdminDoctorDetailsComponent,
     WeekDayPipe,
     DoctorAppointmentComponent,
     DoctorListComponent,
