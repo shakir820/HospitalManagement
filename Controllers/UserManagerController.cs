@@ -10,15 +10,13 @@ using HospitalManagement.Models;
 using HospitalManagement.Models.ViewModels;
 using HospitalManagement.Services;
 using HospitalManagement.ViewModels;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.V3.Pages.Internal.Account;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+
 
 namespace HospitalManagement.Controllers
 {
@@ -775,6 +773,16 @@ namespace HospitalManagement.Controllers
         }
 
 
+
+
+        public IActionResult GetDefaultProfilePic()
+        {
+            var rootDirectory = _webHostEnvironment.ContentRootPath;
+            var imageData = System.IO.File.ReadAllBytes(Path.Combine(rootDirectory, "Resources/default-avatar.png"));
+            return File(imageData, "image/jpeg");
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> UpdateProfileData([FromForm] UserModel userModel)
         {
@@ -835,6 +843,10 @@ namespace HospitalManagement.Controllers
                                 await userModel.profilePic.CopyToAsync(memoryStream);
                                 user.ProfilePic = memoryStream.ToArray();
                             }
+                        }
+                        else if (userModel.use_default_photo)
+                        {
+                            user.ProfilePic = null;
                         }
 
 
