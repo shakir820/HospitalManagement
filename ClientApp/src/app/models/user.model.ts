@@ -31,6 +31,7 @@ export class User{
   public bloodGroup: string;
   public created_date:Date;
   public address: string;
+  public use_default_photo: boolean;
 
 
   //appointment info

@@ -70,6 +70,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   //#region  variables
   //variables
   user_address: string;
+  useDefaultProfilePic: boolean = false;
   _baseUrl: string
   genders: string[] = ["Male", "Female", "Other"];
   location_service: LocationService;
@@ -334,6 +335,8 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     reader.onload = e => {
       let result_data = e.target.result;
       (<HTMLElement>this.imagePreviewRef.nativeElement).style.backgroundImage = `url(${result_data})`;
+
+      this.useDefaultProfilePic = false;
     }
     reader.readAsDataURL(event_data.target.files[0]);
   }
@@ -742,12 +745,20 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
         formData.append('bloodGroup', this.selectedBlood);
 
-        var selectedFiles = (<HTMLInputElement>this.imageInputRef.nativeElement).files;
+        if(this.useDefaultProfilePic == false){
+          var selectedFiles = (<HTMLInputElement>this.imageInputRef.nativeElement).files;
 
-        if (selectedFiles.length > 0) {
-          var profile_pic_fie = selectedFiles[0];
-          formData.append('profilePic', profile_pic_fie, profile_pic_fie.name);
+          if (selectedFiles.length > 0) {
+            var profile_pic_fie = selectedFiles[0];
+            formData.append('profilePic', profile_pic_fie, profile_pic_fie.name);
+          }
         }
+        else{
+          formData.append('use_default_photo', 'true');
+        }
+
+
+
 
         if (this.selectedRole == 'Doctor') {
           var bmdc_cert_no = this.profileForm.controls['bmdc'].value;
@@ -964,6 +975,20 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
     }
   }
+
+
+
+
+
+
+  onRemovePhoto(event_data){
+    (<HTMLElement>this.imagePreviewRef.nativeElement).style.backgroundImage = `url(${this._baseUrl}` +
+      'api/usermanager/GetDefaultProfilePic';
+      this.useDefaultProfilePic = true;
+  }
+
+
+
 
 
   ProgressProfileComplete(event_data) {

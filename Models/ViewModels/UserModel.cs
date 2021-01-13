@@ -32,6 +32,7 @@ namespace HospitalManagement.Models
         public bool isActive { get; set; }
         public string address { get; set; }
         public DateTime created_date { get; set; }
+        public bool use_default_photo { get; set; } = false;
 
 
 
